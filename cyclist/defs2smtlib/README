@@ -1,0 +1,8 @@
+Tool for translating Cyclist format 'defs' to SMTLIB format for SLRD.
+
+WARNING: 
+For the moment, the translation is obtained from the Cyclist satisfiability solver (slsat_check)
+by modifications done on the following files:
+src/slsat/slsat_check.ml
+src/seplog/symheap.ml[i]
+
