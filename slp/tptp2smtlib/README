@@ -1,0 +1,9 @@
+Translation from the TPTP format of SLP to SMTLIB format for SL with ls predicate.
+
+This translator uses the JJParser [1] for the TPTP format to which it adds/changes the following files:
+
+TPTP_to_SMTLIB.c
+Makefile
+
+
+[1] http://www.cs.miami.edu/~tptp/
