@@ -1,0 +1,9 @@
+Benchmark of Cyclist solver.
+
+Origin: CSL-LICS 2014 paper [1], directory tests/cc of [2].
+
+
+[1] http://www.cs.mdx.ac.uk/staffpages/nikosgkorogiannis/publications/2014-csl-lics.pdf
+
+[2] https://github.com/ngorogiannis/cyclist/releases/tag/CSL-LICS14
+
