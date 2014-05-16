@@ -1,0 +1,13 @@
+Parser for the SMTLIB2 format for SL theory.
+
+Uses the Alberto Griggio's parser for SMTLIB v2  language available at
+
+https://es-static.fbk.eu/people/griggio/misc/smtlib2parser.html
+
+The following files are added:
+
+smtlib2sl.h
+smtlib2sl.c
+sl.c
+sl.h
+Makefile
