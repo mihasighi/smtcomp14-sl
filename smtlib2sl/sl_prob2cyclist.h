@@ -16,26 +16,22 @@
 /*                                                                        */
 /**************************************************************************/
 
-#ifndef _SMTLIB2SL_H
-#define _SMTLIB2SL_H
-
-#include "smtlib2abstractparser.h"
-#include "smtlib2abstractparser_private.h"
-#include "sl.h"
-
-/** Internal data for the parser.
+/* Translation to Cyclist format
  */
-typedef struct smtlib2_sl_parser
+
+#ifndef _SL_PROB2CYC_H_
+#define _SL_PROB2CYC_H_
+
+#ifdef __cplusplus
+extern "C"
 {
-  smtlib2_abstract_parser parent_;
-  sl_context_t *ctx_;		// used for local variables and quantifiers 
-  smtlib2_hashtable *sorts_;	// all the declared sort symbols
-  smtlib2_hashtable *funs_;	// all the declared function symbols 
-} smtlib2_sl_parser;
+#endif
 
-/** Constructor/destructor.
- */
-smtlib2_sl_parser *smtlib2_sl_parser_new (void);
-void smtlib2_sl_parser_delete (smtlib2_sl_parser * p);
+  void sl_prob_2cyclist (const char *fname);
+  /* Translates into file fname.defs */
 
-#endif /* _SMTLIB2SL_H */
+#ifdef __cplusplus
+}
+#endif
+
+#endif				/* _SL_PROB2CYC_H_ */

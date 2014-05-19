@@ -1,34 +1,30 @@
-/**************************************************************************
- *
- *  NOLL decision procedure
- *
- *  Copyright (C) 2012-2013
- *    LIAFA (University of Paris Diderot and CNRS)
- *
- *
- *  you can redistribute it and/or modify it under the terms of the GNU
- *  Lesser General Public License as published by the Free Software
- *  Foundation, version 3.
- *
- *  It is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser General Public License for more details.
- *
- *  See the GNU Lesser General Public License version 3.
- *  for more details (enclosed in the file LICENSE).
- *
- **************************************************************************/
+/**************************************************************************/
+/*                                                                        */
+/*  Compiler for SMTLIB2 frmat for Separation Logic                       */
+/*                                                                        */
+/*  you can redistribute it and/or modify it under the terms of the GNU   */
+/*  Lesser General Public License as published by the Free Software       */
+/*  Foundation, version 3.                                                */
+/*                                                                        */
+/*  It is distributed in the hope that it will be useful,                 */
+/*  but WITHOUT ANY WARRANTY; without even the implied warranty of        */
+/*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         */
+/*  GNU Lesser General Public License for more details.                   */
+/*                                                                        */
+/*  See the GNU Lesser General Public License version 3.                  */
+/*  for more details (enclosed in the file LICENSE).                      */
+/*                                                                        */
+/**************************************************************************/
 
 #include <stdlib.h>
 #include <string.h>
-#include "smtlib2noll.h"
+#include "smtlib2sl.h"
 
 /**
  * Mapping of types from smtlib2abstractparser (file smtlib2types.h)
- * to types from NOLL parser (files noll.h and noll_types.h):
- * - smtlib2_sort (void*)  to     noll_type_t*
- * - smtlib2_term (void*)  to     noll_exp_t*
+ * to types from SL parser (files sl.h and sl_types.h):
+ * - smtlib2_sort (void*)  to     sl_type_t*
+ * - smtlib2_term (void*)  to     sl_exp_t*
  */
 
 /* =========================================================================
@@ -38,107 +34,98 @@
 
 /* Commands */
 
-static void smtlib2_noll_parser_set_logic (smtlib2_parser_interface * p,
-					   const char *logic);
-static void smtlib2_noll_parser_declare_sort (smtlib2_parser_interface * p,
-					      const char *sortname,
-					      int arity);
-static void smtlib2_noll_parser_declare_function (smtlib2_parser_interface *
-						  p, const char *name,
-						  smtlib2_sort sort);
-static void smtlib2_noll_parser_define_function (smtlib2_parser_interface * p,
-						 const char *name,
-						 smtlib2_vector * params,
-						 smtlib2_sort sort,
-						 smtlib2_term term);
-static void smtlib2_noll_parser_assert_formula (smtlib2_parser_interface * p,
-						smtlib2_term term);
-static void smtlib2_noll_parser_check_sat (smtlib2_parser_interface * p);
+static void smtlib2_sl_parser_set_logic (smtlib2_parser_interface * p,
+					 const char *logic);
+static void smtlib2_sl_parser_declare_sort (smtlib2_parser_interface * p,
+					    const char *sortname, int arity);
+static void smtlib2_sl_parser_declare_function (smtlib2_parser_interface *
+						p, const char *name,
+						smtlib2_sort sort);
+static void smtlib2_sl_parser_define_function (smtlib2_parser_interface * p,
+					       const char *name,
+					       smtlib2_vector * params,
+					       smtlib2_sort sort,
+					       smtlib2_term term);
+static void smtlib2_sl_parser_assert_formula (smtlib2_parser_interface * p,
+					      smtlib2_term term);
+static void smtlib2_sl_parser_check_sat (smtlib2_parser_interface * p);
 
 /* Sorts */
 
-static smtlib2_sort smtlib2_noll_parser_make_sort (smtlib2_parser_interface *
-						   p, const char *sortname,
-						   smtlib2_vector * index);
+static smtlib2_sort smtlib2_sl_parser_make_sort (smtlib2_parser_interface *
+						 p, const char *sortname,
+						 smtlib2_vector * index);
 static smtlib2_sort
-smtlib2_noll_parser_make_parametric_sort (smtlib2_parser_interface * p,
-					  const char *sortname,
-					  smtlib2_vector * tps);
-static smtlib2_sort
-smtlib2_noll_parser_make_function_sort (smtlib2_parser_interface * p,
+smtlib2_sl_parser_make_parametric_sort (smtlib2_parser_interface * p,
+					const char *sortname,
 					smtlib2_vector * tps);
+static smtlib2_sort
+smtlib2_sl_parser_make_function_sort (smtlib2_parser_interface * p,
+				      smtlib2_vector * tps);
 
 /* Terms */
 
-static void smtlib2_noll_parser_declare_variable (smtlib2_parser_interface *
-						  parser, const char *name,
-						  smtlib2_sort sort);
+static void smtlib2_sl_parser_declare_variable (smtlib2_parser_interface *
+						parser, const char *name,
+						smtlib2_sort sort);
 static smtlib2_term
-smtlib2_noll_parser_push_quantifier_scope (smtlib2_parser_interface * p);
+smtlib2_sl_parser_push_quantifier_scope (smtlib2_parser_interface * p);
 static smtlib2_term
-smtlib2_noll_parser_pop_quantifier_scope (smtlib2_parser_interface * p);
+smtlib2_sl_parser_pop_quantifier_scope (smtlib2_parser_interface * p);
 static smtlib2_term
-smtlib2_noll_parser_make_forall_term (smtlib2_parser_interface * p,
-				      smtlib2_term term);
+smtlib2_sl_parser_make_forall_term (smtlib2_parser_interface * p,
+				    smtlib2_term term);
 static smtlib2_term
-smtlib2_noll_parser_make_exists_term (smtlib2_parser_interface * p,
-				      smtlib2_term term);
-static smtlib2_term smtlib2_noll_parser_mk_function (smtlib2_context ctx,
-						     const char *symbol,
-						     smtlib2_sort sort,
-						     smtlib2_vector * index,
-						     smtlib2_vector * args);
-#define SMTLIB2_NOLL_DECLHANDLER(name)				      \
-    static smtlib2_term smtlib2_noll_parser_mk_ ## name (              \
+smtlib2_sl_parser_make_exists_term (smtlib2_parser_interface * p,
+				    smtlib2_term term);
+static smtlib2_term smtlib2_sl_parser_mk_function (smtlib2_context ctx,
+						   const char *symbol,
+						   smtlib2_sort sort,
+						   smtlib2_vector * index,
+						   smtlib2_vector * args);
+#define SMTLIB2_SL_DECLHANDLER(name)				      \
+    static smtlib2_term smtlib2_sl_parser_mk_ ## name (              \
         smtlib2_context ctx,                                            \
         const char *symbol,                                             \
         smtlib2_sort sort,                                              \
         smtlib2_vector *idx,                                            \
         smtlib2_vector *args)
-SMTLIB2_NOLL_DECLHANDLER (and);
-SMTLIB2_NOLL_DECLHANDLER (or);
-SMTLIB2_NOLL_DECLHANDLER (not);
-SMTLIB2_NOLL_DECLHANDLER (eq);
-SMTLIB2_NOLL_DECLHANDLER (distinct);
-//SMTLIB2_NOLL_DECLHANDLER (emp);
-//SMTLIB2_NOLL_DECLHANDLER (junk);
-SMTLIB2_NOLL_DECLHANDLER (wsep);
-SMTLIB2_NOLL_DECLHANDLER (ssep);
-SMTLIB2_NOLL_DECLHANDLER (pto);
-SMTLIB2_NOLL_DECLHANDLER (ref);
-SMTLIB2_NOLL_DECLHANDLER (sref);
-SMTLIB2_NOLL_DECLHANDLER (index);
-SMTLIB2_NOLL_DECLHANDLER (sloc);
-SMTLIB2_NOLL_DECLHANDLER (unloc);
-SMTLIB2_NOLL_DECLHANDLER (inloc);
-SMTLIB2_NOLL_DECLHANDLER (eqloc);
-SMTLIB2_NOLL_DECLHANDLER (leloc);
-SMTLIB2_NOLL_DECLHANDLER (seloc);
-SMTLIB2_NOLL_DECLHANDLER (tobool);
-SMTLIB2_NOLL_DECLHANDLER (tospace);
-SMTLIB2_NOLL_DECLHANDLER (loop);
+SMTLIB2_SL_DECLHANDLER (and);
+SMTLIB2_SL_DECLHANDLER (or);
+SMTLIB2_SL_DECLHANDLER (not);
+SMTLIB2_SL_DECLHANDLER (eq);
+SMTLIB2_SL_DECLHANDLER (distinct);
+//SMTLIB2_SL_DECLHANDLER (emp);
+//SMTLIB2_SL_DECLHANDLER (junk);
+SMTLIB2_SL_DECLHANDLER (ssep);
+SMTLIB2_SL_DECLHANDLER (pto);
+SMTLIB2_SL_DECLHANDLER (ref);
+SMTLIB2_SL_DECLHANDLER (sref);
+SMTLIB2_SL_DECLHANDLER (tobool);
+SMTLIB2_SL_DECLHANDLER (tospace);
+SMTLIB2_SL_DECLHANDLER (loop);
 
-#define SMTLIB2_NOLL_SETHANDLER(tp, s, name) \
-    smtlib2_term_parser_set_handler(tp, s, smtlib2_noll_parser_mk_ ## name)
+#define SMTLIB2_SL_SETHANDLER(tp, s, name) \
+    smtlib2_term_parser_set_handler(tp, s, smtlib2_sl_parser_mk_ ## name)
 
 /* =========================================================================
- * NOLL parser creation/destruction.
+ * SL parser creation/destruction.
  * ========================================================================= */
 
-#define noll_ctx(p) (((smtlib2_noll_parser *)(p))->ctx_)
-#define noll_sorts(p) (((smtlib2_noll_parser *)(p))->sorts_)
-#define noll_funs(p) (((smtlib2_noll_parser *)(p))->funs_)
+#define sl_ctx(p) (((smtlib2_sl_parser *)(p))->ctx_)
+#define sl_sorts(p) (((smtlib2_sl_parser *)(p))->sorts_)
+#define sl_funs(p) (((smtlib2_sl_parser *)(p))->funs_)
 
-smtlib2_noll_parser *
-smtlib2_noll_parser_new (void)
+smtlib2_sl_parser *
+smtlib2_sl_parser_new (void)
 {
-  smtlib2_noll_parser *ret =
-    (smtlib2_noll_parser *) malloc (sizeof (smtlib2_noll_parser));
+  smtlib2_sl_parser *ret =
+    (smtlib2_sl_parser *) malloc (sizeof (smtlib2_sl_parser));
   smtlib2_parser_interface *pi;
   smtlib2_term_parser *tp;
   smtlib2_abstract_parser *ap;
 
-  ret->ctx_ = noll_mk_context ();
+  ret->ctx_ = sl_mk_context ();
   smtlib2_abstract_parser_init ((smtlib2_abstract_parser *) ret,
 				(smtlib2_context) ret);
   ret->sorts_ =
@@ -148,68 +135,60 @@ smtlib2_noll_parser_new (void)
   /* initialize the parser interface and override virtual methods */
   pi = SMTLIB2_PARSER_INTERFACE (ret);
   /* Commands */
-  pi->set_logic = smtlib2_noll_parser_set_logic;
-  pi->declare_sort = smtlib2_noll_parser_declare_sort;
-  pi->declare_function = smtlib2_noll_parser_declare_function;
-  pi->define_function = smtlib2_noll_parser_define_function;
-  pi->assert_formula = smtlib2_noll_parser_assert_formula;
-  pi->check_sat = smtlib2_noll_parser_check_sat;
+  pi->set_logic = smtlib2_sl_parser_set_logic;
+  pi->declare_sort = smtlib2_sl_parser_declare_sort;
+  pi->declare_function = smtlib2_sl_parser_declare_function;
+  pi->define_function = smtlib2_sl_parser_define_function;
+  pi->assert_formula = smtlib2_sl_parser_assert_formula;
+  pi->check_sat = smtlib2_sl_parser_check_sat;
   /* Terms */
-  pi->declare_variable = smtlib2_noll_parser_declare_variable;
-  pi->push_quantifier_scope = smtlib2_noll_parser_push_quantifier_scope;
-  pi->pop_quantifier_scope = smtlib2_noll_parser_pop_quantifier_scope;
-  pi->make_forall_term = smtlib2_noll_parser_make_forall_term;
-  pi->make_exists_term = smtlib2_noll_parser_make_exists_term;
+  pi->declare_variable = smtlib2_sl_parser_declare_variable;
+  pi->push_quantifier_scope = smtlib2_sl_parser_push_quantifier_scope;
+  pi->pop_quantifier_scope = smtlib2_sl_parser_pop_quantifier_scope;
+  pi->make_forall_term = smtlib2_sl_parser_make_forall_term;
+  pi->make_exists_term = smtlib2_sl_parser_make_exists_term;
   /* Sorts */
-  pi->make_sort = smtlib2_noll_parser_make_sort;
-  pi->make_parametric_sort = smtlib2_noll_parser_make_parametric_sort;
-  pi->make_function_sort = smtlib2_noll_parser_make_function_sort;
+  pi->make_sort = smtlib2_sl_parser_make_sort;
+  pi->make_parametric_sort = smtlib2_sl_parser_make_parametric_sort;
+  pi->make_function_sort = smtlib2_sl_parser_make_function_sort;
   /* Term parser */
   tp = ((smtlib2_abstract_parser *) ret)->termparser_;
   /* for symbols and user-defined function application */
   smtlib2_term_parser_set_function_handler (tp,
-					    smtlib2_noll_parser_mk_function);
+					    smtlib2_sl_parser_mk_function);
   /* for logic pre-defined operators */
-  SMTLIB2_NOLL_SETHANDLER (tp, "or", or);
-  SMTLIB2_NOLL_SETHANDLER (tp, "and", and);
-  SMTLIB2_NOLL_SETHANDLER (tp, "not", not);
-  SMTLIB2_NOLL_SETHANDLER (tp, "=", eq);
-  SMTLIB2_NOLL_SETHANDLER (tp, "distinct", distinct);
-  SMTLIB2_NOLL_SETHANDLER (tp, "wsep", wsep);
-  SMTLIB2_NOLL_SETHANDLER (tp, "ssep", ssep);
-  SMTLIB2_NOLL_SETHANDLER (tp, "pto", pto);
-  SMTLIB2_NOLL_SETHANDLER (tp, "ref", ref);
-  SMTLIB2_NOLL_SETHANDLER (tp, "sref", sref);
-  SMTLIB2_NOLL_SETHANDLER (tp, "index", index);
-  SMTLIB2_NOLL_SETHANDLER (tp, "sloc", sloc);
-  SMTLIB2_NOLL_SETHANDLER (tp, "unloc", unloc);
-  SMTLIB2_NOLL_SETHANDLER (tp, "inloc", inloc);
-  SMTLIB2_NOLL_SETHANDLER (tp, "eqloc", eqloc);
-  SMTLIB2_NOLL_SETHANDLER (tp, "leloc", leloc);
-  SMTLIB2_NOLL_SETHANDLER (tp, "seloc", seloc);
-  SMTLIB2_NOLL_SETHANDLER (tp, "tobool", tobool);
-  SMTLIB2_NOLL_SETHANDLER (tp, "tospace", tospace);
-  SMTLIB2_NOLL_SETHANDLER (tp, "loop", loop);
+  SMTLIB2_SL_SETHANDLER (tp, "or", or);
+  SMTLIB2_SL_SETHANDLER (tp, "and", and);
+  SMTLIB2_SL_SETHANDLER (tp, "not", not);
+  SMTLIB2_SL_SETHANDLER (tp, "=", eq);
+  SMTLIB2_SL_SETHANDLER (tp, "distinct", distinct);
+  SMTLIB2_SL_SETHANDLER (tp, "ssep", ssep);
+  SMTLIB2_SL_SETHANDLER (tp, "pto", pto);
+  SMTLIB2_SL_SETHANDLER (tp, "ref", ref);
+  SMTLIB2_SL_SETHANDLER (tp, "sref", sref);
+  SMTLIB2_SL_SETHANDLER (tp, "tobool", tobool);
+  SMTLIB2_SL_SETHANDLER (tp, "tospace", tospace);
+  SMTLIB2_SL_SETHANDLER (tp, "loop", loop);
 
   /* Initialize the logic pre-defined sorts */
   smtlib2_hashtable_set (ret->sorts_,
 			 (intptr_t) (void *) smtlib2_strdup ("Bool"),
-			 (intptr_t) (void *) noll_mk_type_bool ());
+			 (intptr_t) (void *) sl_mk_type_bool ());
   smtlib2_hashtable_set (ret->sorts_,
 			 (intptr_t) (void *) smtlib2_strdup ("Int"),
-			 (intptr_t) (void *) noll_mk_type_int ());
+			 (intptr_t) (void *) sl_mk_type_int ());
   smtlib2_hashtable_set (ret->sorts_,
 			 (intptr_t) (void *) smtlib2_strdup ("Field"),
-			 (intptr_t) (void *) noll_mk_type_field (0, 0));
+			 (intptr_t) (void *) sl_mk_type_field (0, 0));
   smtlib2_hashtable_set (ret->sorts_,
 			 (intptr_t) (void *) smtlib2_strdup ("SetLoc"),
-			 (intptr_t) (void *) noll_mk_type_setloc ());
+			 (intptr_t) (void *) sl_mk_type_setloc ());
   smtlib2_hashtable_set (ret->sorts_,
 			 (intptr_t) (void *) smtlib2_strdup ("SetRef"),
-			 (intptr_t) (void *) noll_mk_type_setref (0));
+			 (intptr_t) (void *) sl_mk_type_setref (0));
   smtlib2_hashtable_set (ret->sorts_,
 			 (intptr_t) (void *) smtlib2_strdup ("Space"),
-			 (intptr_t) (void *) noll_mk_type_space ());
+			 (intptr_t) (void *) sl_mk_type_space ());
 
   /* set options in the abstract parser */
   ap = (smtlib2_abstract_parser *) pi;
@@ -219,12 +198,12 @@ smtlib2_noll_parser_new (void)
 }
 
 void
-smtlib2_noll_parser_delete (smtlib2_noll_parser * p)
+smtlib2_sl_parser_delete (smtlib2_sl_parser * p)
 {
-  smtlib2_hashtable_delete (noll_sorts (p), NULL, NULL);
-  smtlib2_hashtable_delete (noll_funs (p), NULL, NULL);
+  smtlib2_hashtable_delete (sl_sorts (p), NULL, NULL);
+  smtlib2_hashtable_delete (sl_funs (p), NULL, NULL);
   smtlib2_abstract_parser_deinit (&(p->parent_));
-  noll_del_context (noll_ctx (p));
+  sl_del_context (sl_ctx (p));
   free (p);
 }
 
@@ -234,19 +213,18 @@ smtlib2_noll_parser_delete (smtlib2_noll_parser * p)
 
 /**
  * Command (set-logic logic)
- * Only "QF_NOLL" is supported.
+ * Only "QF_SL" is supported.
  */
 static void
-smtlib2_noll_parser_set_logic (smtlib2_parser_interface * p,
-			       const char *logic)
+smtlib2_sl_parser_set_logic (smtlib2_parser_interface * p, const char *logic)
 {
   smtlib2_abstract_parser *ap = (smtlib2_abstract_parser *) p;
 
   /* fix logic only one time */
   if (ap->response_ != SMTLIB2_RESPONSE_ERROR)
     {
-      /* check that the logic is supported, i.e., QF_SLRD or QF_NOLL */
-      if (strcmp (logic, "QF_NOLL") > 0 && strcmp (logic, "QF_SLRD") > 0)
+      /* check that the logic is supported, i.e., QF_SLRD or QF_SL */
+      if (strcmp (logic, "QF_SL") > 0 && strcmp (logic, "QF_SLRD") > 0)
 	{
 	  ap->response_ = SMTLIB2_RESPONSE_ERROR;
 	  ap->errmsg_ =
@@ -254,21 +232,21 @@ smtlib2_noll_parser_set_logic (smtlib2_parser_interface * p,
 	}
       /* if it is, declare primitive sorts */
       /* register the SetLoc sort */
-      noll_type_t *ty = noll_mk_type_setloc ();
-      smtlib2_hashtable_set (noll_sorts (p),
+      sl_type_t *ty = sl_mk_type_setloc ();
+      smtlib2_hashtable_set (sl_sorts (p),
 			     (intptr_t) (void *) smtlib2_strdup ("SetLoc"),
 			     (intptr_t) (void *) ty);
     }
   else
-    noll_error (0, "smtlib2parser_set_logic", "previous syntax error");
+    sl_error (0, "smtlib2parser_set_logic", "previous syntax error");
 }
 
 /** Command (declare-sort sortname arity).
  *  Used to declare record types; their arity shall be 0.
  */
 static void
-smtlib2_noll_parser_declare_sort (smtlib2_parser_interface * p,
-				  const char *sortname, int arity)
+smtlib2_sl_parser_declare_sort (smtlib2_parser_interface * p,
+				const char *sortname, int arity)
 {
   smtlib2_abstract_parser *ap = (smtlib2_abstract_parser *) p;
 
@@ -276,7 +254,7 @@ smtlib2_noll_parser_declare_sort (smtlib2_parser_interface * p,
     {
       intptr_t k;
       /* check that the sort is not already declared */
-      if (smtlib2_hashtable_find (noll_sorts (p), (intptr_t) sortname, &k))
+      if (smtlib2_hashtable_find (sl_sorts (p), (intptr_t) sortname, &k))
 	{
 	  ap->response_ = SMTLIB2_RESPONSE_ERROR;
 	  ap->errmsg_ =
@@ -292,11 +270,11 @@ smtlib2_noll_parser_declare_sort (smtlib2_parser_interface * p,
       else
 	{
 	  /* register the record */
-	  noll_type_t *ty = noll_record_register (sortname);
+	  sl_type_t *ty = sl_record_register (sortname);
 	  if (ty != NULL)
 	    {
 	      ap->response_ = SMTLIB2_RESPONSE_SUCCESS;
-	      smtlib2_hashtable_set (noll_sorts (p),
+	      smtlib2_hashtable_set (sl_sorts (p),
 				     (intptr_t) (void *)
 				     smtlib2_strdup (sortname),
 				     (intptr_t) (void *) ty);
@@ -311,11 +289,11 @@ smtlib2_noll_parser_declare_sort (smtlib2_parser_interface * p,
 	}
     }
   else
-    noll_error (0, "smtlib2parser_declare_sort", "previous syntax error");
+    sl_error (0, "smtlib2parser_declare_sort", "previous syntax error");
 }
 
 /** Command (declare-fun name args res)
- *  Used to declare NOLL fields and variables (location or set of locations).
+ *  Used to declare SL fields and variables (location or set of locations).
  *  The args shall be empty.
  * @param name the name of the function declared
  * @param sort the res sort,
@@ -323,17 +301,17 @@ smtlib2_noll_parser_declare_sort (smtlib2_parser_interface * p,
  *
  */
 static void
-smtlib2_noll_parser_declare_function (smtlib2_parser_interface * p,
-				      const char *name, smtlib2_sort sort)
+smtlib2_sl_parser_declare_function (smtlib2_parser_interface * p,
+				    const char *name, smtlib2_sort sort)
 {
-  smtlib2_noll_parser *sp = (smtlib2_noll_parser *) p;
+  smtlib2_sl_parser *sp = (smtlib2_sl_parser *) p;
   smtlib2_abstract_parser *ap = (smtlib2_abstract_parser *) p;
 
   if (ap->response_ != SMTLIB2_RESPONSE_ERROR)
     {
       /* check that it is not already defined */
       intptr_t k;
-      if (smtlib2_hashtable_find (noll_funs (p), (intptr_t) name, &k))
+      if (smtlib2_hashtable_find (sl_funs (p), (intptr_t) name, &k))
 	{
 	  ap->response_ = SMTLIB2_RESPONSE_ERROR;
 	  ap->errmsg_ = smtlib2_sprintf ("function `%s' already declared",
@@ -342,8 +320,8 @@ smtlib2_noll_parser_declare_function (smtlib2_parser_interface * p,
       else
 	{
 	  /* check that the function is supported */
-	  noll_type_t *ty =
-	    noll_mk_fun_decl (noll_ctx (p), name, (noll_type_t *) sort);
+	  sl_type_t *ty =
+	    sl_mk_fun_decl (sl_ctx (p), name, (sl_type_t *) sort);
 	  if (ty != NULL)
 	    {
 	      ap->response_ = SMTLIB2_RESPONSE_SUCCESS;
@@ -362,7 +340,7 @@ smtlib2_noll_parser_declare_function (smtlib2_parser_interface * p,
 	}
     }
   else
-    noll_error (0, "smtlib2parser_declare_fun", "previous syntax error");
+    sl_error (0, "smtlib2parser_declare_fun", "previous syntax error");
 }
 
 /** Term (exists ...), (forall ...), (let ...), and
@@ -374,14 +352,14 @@ smtlib2_noll_parser_declare_function (smtlib2_parser_interface * p,
  *  @param sort variable type; it shall be a record
  */
 static void
-smtlib2_noll_parser_declare_variable (smtlib2_parser_interface * p,
-				      const char *name, smtlib2_sort sort)
+smtlib2_sl_parser_declare_variable (smtlib2_parser_interface * p,
+				    const char *name, smtlib2_sort sort)
 {
   smtlib2_abstract_parser *ap = (smtlib2_abstract_parser *) p;
 
   if (ap->response_ != SMTLIB2_RESPONSE_ERROR)
     {
-      noll_type_t *ty = (noll_type_t *) sort;
+      sl_type_t *ty = (sl_type_t *) sort;
       if (ty != NULL)
 	{
 	  // variable declaration
@@ -393,8 +371,7 @@ smtlib2_noll_parser_declare_variable (smtlib2_parser_interface * p,
 		smtlib2_sprintf ("local variable `%s' is not a constant.",
 				 name);
 	    }
-	  else if ((ty->kind != NOLL_TYP_RECORD) && (ty->kind
-						     != NOLL_TYP_SETLOC))
+	  else if ((ty->kind != SL_TYP_RECORD) && (ty->kind != SL_TYP_SETLOC))
 	    {
 	      ap->response_ = SMTLIB2_RESPONSE_ERROR;
 	      ap->errmsg_ =
@@ -403,12 +380,12 @@ smtlib2_noll_parser_declare_variable (smtlib2_parser_interface * p,
 	    }
 	  else
 	    {
-	      noll_push_var (noll_ctx (p), name, ty);
+	      sl_push_var (sl_ctx (p), name, ty);
 	    }
 	}
     }
   else
-    noll_error (0, "smtlib2parser_declare_var", "previous syntax error");
+    sl_error (0, "smtlib2parser_declare_var", "previous syntax error");
 }
 
 /** Command (define-fun name ( params ) sort term)
@@ -423,10 +400,10 @@ smtlib2_noll_parser_declare_variable (smtlib2_parser_interface * p,
  *
  */
 static void
-smtlib2_noll_parser_define_function (smtlib2_parser_interface * p,
-				     const char *name,
-				     smtlib2_vector * params,
-				     smtlib2_sort sort, smtlib2_term term)
+smtlib2_sl_parser_define_function (smtlib2_parser_interface * p,
+				   const char *name,
+				   smtlib2_vector * params,
+				   smtlib2_sort sort, smtlib2_term term)
 {
   smtlib2_abstract_parser *ap = (smtlib2_abstract_parser *) p;
 
@@ -440,7 +417,7 @@ smtlib2_noll_parser_define_function (smtlib2_parser_interface * p,
     {
       /* check that it is not already defined */
       intptr_t k;
-      if (smtlib2_hashtable_find (noll_funs (p), (intptr_t) name, &k))
+      if (smtlib2_hashtable_find (sl_funs (p), (intptr_t) name, &k))
 	{
 	  ap->response_ = SMTLIB2_RESPONSE_ERROR;
 	  ap->errmsg_ =
@@ -461,14 +438,14 @@ smtlib2_noll_parser_define_function (smtlib2_parser_interface * p,
 	    }
 	  else
 	    {
-	      /* register the predicate in the NOLL global array;
+	      /* register the predicate in the SL global array;
 	       * the predicate name used for the recursive call is in the context
 	       */
-	      noll_context_t *ctx = noll_ctx (p);
-	      size_t pid = noll_mk_fun_def (ctx, name,
-					    smtlib2_vector_size (params),
-					    (noll_type_t *) sort,
-					    (noll_exp_t *) term);
+	      sl_context_t *ctx = sl_ctx (p);
+	      size_t pid = sl_mk_fun_def (ctx, name,
+					  smtlib2_vector_size (params),
+					  (sl_type_t *) sort,
+					  (sl_exp_t *) term);
 	      if (pid == UNDEFINED_ID)
 		{
 		  ap->response_ = SMTLIB2_RESPONSE_ERROR;
@@ -477,41 +454,41 @@ smtlib2_noll_parser_define_function (smtlib2_parser_interface * p,
 		    ("predicate definition `%s' is not correct.", name);
 		}
 	      /* remove the local context */
-	      noll_pop_context (ctx);
+	      sl_pop_context (ctx);
 	    }
 	}
     }
   else
-    noll_error (0, "smtlib2parser_define_fun", "previous syntax error");
+    sl_error (0, "smtlib2parser_define_fun", "previous syntax error");
 }
 
 static void
-smtlib2_noll_parser_assert_formula (smtlib2_parser_interface * p,
-				    smtlib2_term term)
+smtlib2_sl_parser_assert_formula (smtlib2_parser_interface * p,
+				  smtlib2_term term)
 {
   smtlib2_abstract_parser *ap = (smtlib2_abstract_parser *) p;
 
   if (ap->response_ != SMTLIB2_RESPONSE_ERROR)
     {
       // check also that assert has a good formula
-      if (noll_assert (noll_ctx (p), (noll_exp_t *) term) == false)
+      if (sl_assert (sl_ctx (p), (sl_exp_t *) term) == false)
 	{
 	  ap->response_ = SMTLIB2_RESPONSE_ERROR;
-	  ap->errmsg_ = smtlib2_strdup ("assert not a NOLL formula");
+	  ap->errmsg_ = smtlib2_strdup ("assert not a SL formula");
 	}
     }
   else
-    noll_error (0, "smtlib2parser_assert", "previous syntax error");
+    sl_error (0, "smtlib2parser_assert", "previous syntax error");
 }
 
 static void
-smtlib2_noll_parser_check_sat (smtlib2_parser_interface * p)
+smtlib2_sl_parser_check_sat (smtlib2_parser_interface * p)
 {
   smtlib2_abstract_parser *ap = (smtlib2_abstract_parser *) p;
 
   if (ap->response_ != SMTLIB2_RESPONSE_ERROR)
     {
-      int s = noll_check (noll_ctx (p));
+      int s = sl_check (sl_ctx (p));
       // returns status of phi1 /\ not(phi2) 
       ap->response_ = SMTLIB2_RESPONSE_STATUS;
       switch (s)
@@ -528,7 +505,7 @@ smtlib2_noll_parser_check_sat (smtlib2_parser_interface * p)
 	}
     }
   else
-    noll_error (0, "smtlib2parser_check_sat", "previous syntax error");
+    sl_error (0, "smtlib2parser_check_sat", "previous syntax error");
 }
 
 /* =========================================================================
@@ -538,18 +515,18 @@ smtlib2_noll_parser_check_sat (smtlib2_parser_interface * p)
 /** Called for a sort use.
  */
 static smtlib2_sort
-smtlib2_noll_parser_make_sort (smtlib2_parser_interface * p,
-			       const char *sortname, smtlib2_vector * index)
+smtlib2_sl_parser_make_sort (smtlib2_parser_interface * p,
+			     const char *sortname, smtlib2_vector * index)
 {
   smtlib2_abstract_parser *ap = (smtlib2_abstract_parser *) p;
 
-  noll_type_t *ret = NULL;
+  sl_type_t *ret = NULL;
 
   if (ap->response_ != SMTLIB2_RESPONSE_ERROR)
     {
       intptr_t k;
       /* check that the sort is already declared */
-      if (!smtlib2_hashtable_find (noll_sorts (p), (intptr_t) sortname, &k))
+      if (!smtlib2_hashtable_find (sl_sorts (p), (intptr_t) sortname, &k))
 	{
 	  ap->response_ = SMTLIB2_RESPONSE_ERROR;
 	  ap->errmsg_ = smtlib2_sprintf ("sort `%s' not declared", sortname);
@@ -561,10 +538,10 @@ smtlib2_noll_parser_make_sort (smtlib2_parser_interface * p,
 					 sortname);
 	}
       else
-	ret = (noll_type_t *) k;
+	ret = (sl_type_t *) k;
     }
   else
-    noll_error (0, "smtlib2parser_make_sort", "previous syntax error");
+    sl_error (0, "smtlib2parser_make_sort", "previous syntax error");
   return (smtlib2_sort) ret;
 }
 
@@ -574,8 +551,8 @@ smtlib2_noll_parser_make_sort (smtlib2_parser_interface * p,
  * @param tps vector of types for the args and result, will be deleted
  */
 static smtlib2_sort
-smtlib2_noll_parser_make_function_sort (smtlib2_parser_interface * p,
-					smtlib2_vector * tps)
+smtlib2_sl_parser_make_function_sort (smtlib2_parser_interface * p,
+				      smtlib2_vector * tps)
 {
   smtlib2_abstract_parser *ap = (smtlib2_abstract_parser *) p;
 
@@ -594,8 +571,7 @@ smtlib2_noll_parser_make_function_sort (smtlib2_parser_interface * p,
       ret = (smtlib2_sort) smtlib2_vector_at (tps, 0);
     }
   else
-    noll_error (0, "smtlib2parser_make_function_sort",
-		"previous syntax error");
+    sl_error (0, "smtlib2parser_make_function_sort", "previous syntax error");
   return ret;
 }
 
@@ -604,9 +580,9 @@ smtlib2_noll_parser_make_function_sort (smtlib2_parser_interface * p,
  * @param tps      parameters used, their ids
  */
 static smtlib2_sort
-smtlib2_noll_parser_make_parametric_sort (smtlib2_parser_interface * p,
-					  const char *sortname,
-					  smtlib2_vector * tps)
+smtlib2_sl_parser_make_parametric_sort (smtlib2_parser_interface * p,
+					const char *sortname,
+					smtlib2_vector * tps)
 {
   smtlib2_abstract_parser *ap = (smtlib2_abstract_parser *) p;
 
@@ -616,7 +592,7 @@ smtlib2_noll_parser_make_parametric_sort (smtlib2_parser_interface * p,
     {
       intptr_t k;
       /* check that the sort is already declared */
-      if (!smtlib2_hashtable_find (noll_sorts (p), (intptr_t) sortname, &k))
+      if (!smtlib2_hashtable_find (sl_sorts (p), (intptr_t) sortname, &k))
 	{
 	  ap->response_ = SMTLIB2_RESPONSE_ERROR;
 	  ap->errmsg_ = smtlib2_sprintf ("sort `%s' not declared", sortname);
@@ -628,15 +604,14 @@ smtlib2_noll_parser_make_parametric_sort (smtlib2_parser_interface * p,
 	  if (!strcmp (sortname, "Field") && tps && smtlib2_vector_size (tps)
 	      == 2)
 	    {
-	      noll_type_t *src = (noll_type_t *) smtlib2_vector_at (tps, 0);
-	      noll_type_t *dst = (noll_type_t *) smtlib2_vector_at (tps, 1);
+	      sl_type_t *src = (sl_type_t *) smtlib2_vector_at (tps, 0);
+	      sl_type_t *dst = (sl_type_t *) smtlib2_vector_at (tps, 1);
 
-	      if (src->kind == NOLL_TYP_RECORD && dst->kind
-		  == NOLL_TYP_RECORD)
+	      if (src->kind == SL_TYP_RECORD && dst->kind == SL_TYP_RECORD)
 		res =
 		  (smtlib2_sort)
-		  noll_mk_type_field (noll_vector_at (src->args, 0),
-				      noll_vector_at (dst->args, 0));
+		  sl_mk_type_field (sl_vector_at (src->args, 0),
+				    sl_vector_at (dst->args, 0));
 	      else
 		{
 		  ap->response_ = SMTLIB2_RESPONSE_ERROR;
@@ -653,8 +628,8 @@ smtlib2_noll_parser_make_parametric_sort (smtlib2_parser_interface * p,
 	}
     }
   else
-    noll_error (0, "smtlib2parser_make_parametric_sort",
-		"previous syntax error");
+    sl_error (0, "smtlib2parser_make_parametric_sort",
+	      "previous syntax error");
   return res;
 }
 
@@ -664,16 +639,16 @@ smtlib2_noll_parser_make_parametric_sort (smtlib2_parser_interface * p,
 
 /** Used in define-fun for parameters and quantified terms.
  *  Adds a level of nesting for quantifiers.
- *  For NOLL, only two levels are allowed in predicate definition.
+ *  For SL, only two levels are allowed in predicate definition.
  */
 static smtlib2_term
-smtlib2_noll_parser_push_quantifier_scope (smtlib2_parser_interface * p)
+smtlib2_sl_parser_push_quantifier_scope (smtlib2_parser_interface * p)
 {
   smtlib2_abstract_parser *ap = (smtlib2_abstract_parser *) p;
 
   if (ap->response_ != SMTLIB2_RESPONSE_ERROR)
     {
-      if (!noll_push_quant (noll_ctx (p)))
+      if (!sl_push_quant (sl_ctx (p)))
 	{
 	  ap->response_ = SMTLIB2_RESPONSE_ERROR;
 	  ap->errmsg_ = smtlib2_strdup ("error in quantifiers");
@@ -683,14 +658,14 @@ smtlib2_noll_parser_push_quantifier_scope (smtlib2_parser_interface * p)
 }
 
 static smtlib2_term
-smtlib2_noll_parser_pop_quantifier_scope (smtlib2_parser_interface * p)
+smtlib2_sl_parser_pop_quantifier_scope (smtlib2_parser_interface * p)
 {
   smtlib2_abstract_parser *ap = (smtlib2_abstract_parser *) p;
 
   if (ap->response_ != SMTLIB2_RESPONSE_ERROR)
     {
       // pop all the local context, but do not free it, since used in predicates
-      if (!noll_pop_quant (noll_ctx (p)))
+      if (!sl_pop_quant (sl_ctx (p)))
 	{
 	  ap->response_ = SMTLIB2_RESPONSE_ERROR;
 	  ap->errmsg_ = smtlib2_strdup ("error in quantifiers");
@@ -700,8 +675,8 @@ smtlib2_noll_parser_pop_quantifier_scope (smtlib2_parser_interface * p)
 }
 
 static smtlib2_term
-smtlib2_noll_parser_make_forall_term (smtlib2_parser_interface * p,
-				      smtlib2_term term)
+smtlib2_sl_parser_make_forall_term (smtlib2_parser_interface * p,
+				    smtlib2_term term)
 {
   if (&term != &term)
     {
@@ -717,22 +692,22 @@ smtlib2_noll_parser_make_forall_term (smtlib2_parser_interface * p,
       ap->errmsg_ = smtlib2_sprintf ("forall operator not supported");
     }
   else
-    noll_error (0, "smtlib2parser_forall_term", "previous syntax error");
+    sl_error (0, "smtlib2parser_forall_term", "previous syntax error");
   return ret;
 }
 
 /** Used only in predicate definition.
  */
 static smtlib2_term
-smtlib2_noll_parser_make_exists_term (smtlib2_parser_interface * p,
-				      smtlib2_term term)
+smtlib2_sl_parser_make_exists_term (smtlib2_parser_interface * p,
+				    smtlib2_term term)
 {
   smtlib2_abstract_parser *ap = (smtlib2_abstract_parser *) p;
-  noll_exp_t *res = NULL;
+  sl_exp_t *res = NULL;
 
   if (ap->response_ != SMTLIB2_RESPONSE_ERROR)
     {
-      res = noll_mk_exists (noll_ctx (p), (noll_exp_t *) term);
+      res = sl_mk_exists (sl_ctx (p), (sl_exp_t *) term);
       if (!res)
 	{
 	  ap->response_ = SMTLIB2_RESPONSE_ERROR;
@@ -740,7 +715,7 @@ smtlib2_noll_parser_make_exists_term (smtlib2_parser_interface * p,
 	}
     }
   else
-    noll_error (0, "smtlib2parser_exists_term", "previous syntax error");
+    sl_error (0, "smtlib2parser_exists_term", "previous syntax error");
   return (smtlib2_term) res;
 }
 
@@ -754,249 +729,160 @@ smtlib2_noll_parser_make_exists_term (smtlib2_parser_interface * p,
  * @return term built with these arguments
  */
 static smtlib2_term
-smtlib2_noll_parser_mk_function (smtlib2_context ctx,
-				 const char *symbol, smtlib2_sort sort,
-				 smtlib2_vector * index,
-				 smtlib2_vector * args)
+smtlib2_sl_parser_mk_function (smtlib2_context ctx,
+			       const char *symbol, smtlib2_sort sort,
+			       smtlib2_vector * index, smtlib2_vector * args)
 {
   if (&sort != &sort)
     {
       assert (false);
     }
 
-  noll_context_t *sctx = noll_ctx (ctx);
-  noll_exp_t *res = NULL;
+  sl_context_t *sctx = sl_ctx (ctx);
+  sl_exp_t *res = NULL;
   if (index)
     // indexed terms or as terms not supported
     return (smtlib2_term) NULL;
   if (args)
     // n-ary functions
-    res = noll_mk_app (sctx, symbol,
-		       (noll_exp_t **) (smtlib2_vector_array (args)),
-		       smtlib2_vector_size (args));
+    res = sl_mk_app (sctx, symbol,
+		     (sl_exp_t **) (smtlib2_vector_array (args)),
+		     smtlib2_vector_size (args));
   else
     // constant, variable or quantified variable
-    res = noll_mk_app (sctx, symbol, NULL, 0);
+    res = sl_mk_app (sctx, symbol, NULL, 0);
   // no way to return a message using the context
   return (smtlib2_term) res;
 }
 
-SMTLIB2_NOLL_DECLHANDLER (and)
+SMTLIB2_SL_DECLHANDLER (and)
 {
   if (symbol != symbol && sort != sort && idx != idx)
     {
       assert (0);		// to remove warnings in unsed parameters
     }
-  return noll_mk_and (noll_ctx (ctx),
-		      (noll_exp_t **) (smtlib2_vector_array (args)),
-		      smtlib2_vector_size (args));
+  return sl_mk_and (sl_ctx (ctx),
+		    (sl_exp_t **) (smtlib2_vector_array (args)),
+		    smtlib2_vector_size (args));
 }
 
-SMTLIB2_NOLL_DECLHANDLER (or)
+SMTLIB2_SL_DECLHANDLER (or)
 {
   if (symbol != symbol && sort != sort && idx != idx)
     {
       assert (0);		// to remove warnings in unsed parameters
     }
-  return noll_mk_or (noll_ctx (ctx),
-		     (noll_exp_t **) (smtlib2_vector_array (args)),
-		     smtlib2_vector_size (args));
+  return sl_mk_or (sl_ctx (ctx),
+		   (sl_exp_t **) (smtlib2_vector_array (args)),
+		   smtlib2_vector_size (args));
 }
 
-SMTLIB2_NOLL_DECLHANDLER (not)
+SMTLIB2_SL_DECLHANDLER (not)
 {
   if (symbol != symbol && sort != sort && idx != idx)
     {
       assert (0);		// to remove warnings in unsed parameters
     }
-  return noll_mk_not (noll_ctx (ctx),
-		      (noll_exp_t **) (smtlib2_vector_array (args)),
-		      smtlib2_vector_size (args));
+  return sl_mk_not (sl_ctx (ctx),
+		    (sl_exp_t **) (smtlib2_vector_array (args)),
+		    smtlib2_vector_size (args));
 }
 
-SMTLIB2_NOLL_DECLHANDLER (eq)
+SMTLIB2_SL_DECLHANDLER (eq)
 {
   if (symbol != symbol && sort != sort && idx != idx)
     {
       assert (0);		// to remove warnings in unsed parameters
     }
-  return noll_mk_eq (noll_ctx (ctx),
-		     (noll_exp_t **) (smtlib2_vector_array (args)),
-		     smtlib2_vector_size (args));
+  return sl_mk_eq (sl_ctx (ctx),
+		   (sl_exp_t **) (smtlib2_vector_array (args)),
+		   smtlib2_vector_size (args));
 }
 
-SMTLIB2_NOLL_DECLHANDLER (distinct)
+SMTLIB2_SL_DECLHANDLER (distinct)
 {
   if (symbol != symbol && sort != sort && idx != idx)
     {
       assert (0);		// to remove warnings in unsed parameters
     }
-  return noll_mk_distinct (noll_ctx (ctx),
-			   (noll_exp_t **) (smtlib2_vector_array (args)),
-			   smtlib2_vector_size (args));
-}
-
-SMTLIB2_NOLL_DECLHANDLER (wsep)
-{
-  if (symbol != symbol && sort != sort && idx != idx)
-    {
-      assert (0);		// to remove warnings in unsed parameters
-    }
-  return noll_mk_wsep (noll_ctx (ctx),
-		       (noll_exp_t **) (smtlib2_vector_array (args)),
-		       smtlib2_vector_size (args));
-}
-
-SMTLIB2_NOLL_DECLHANDLER (ssep)
-{
-  if (symbol != symbol && sort != sort && idx != idx)
-    {
-      assert (0);		// to remove warnings in unsed parameters
-    }
-  return noll_mk_ssep (noll_ctx (ctx),
-		       (noll_exp_t **) (smtlib2_vector_array (args)),
-		       smtlib2_vector_size (args));
-}
-
-SMTLIB2_NOLL_DECLHANDLER (pto)
-{
-  if (symbol != symbol && sort != sort && idx != idx)
-    {
-      assert (0);		// to remove warnings in unsed parameters
-    }
-  return noll_mk_pto (noll_ctx (ctx),
-		      (noll_exp_t **) (smtlib2_vector_array (args)),
-		      smtlib2_vector_size (args));
-}
-
-SMTLIB2_NOLL_DECLHANDLER (ref)
-{
-  if (symbol != symbol && sort != sort && idx != idx)
-    {
-      assert (0);		// to remove warnings in unsed parameters
-    }
-  return noll_mk_ref (noll_ctx (ctx),
-		      (noll_exp_t **) (smtlib2_vector_array (args)),
-		      smtlib2_vector_size (args));
-}
-
-SMTLIB2_NOLL_DECLHANDLER (sref)
-{
-  if (symbol != symbol && sort != sort && idx != idx)
-    {
-      assert (0);		// to remove warnings in unsed parameters
-    }
-  return noll_mk_sref (noll_ctx (ctx),
-		       (noll_exp_t **) (smtlib2_vector_array (args)),
-		       smtlib2_vector_size (args));
-}
-
-SMTLIB2_NOLL_DECLHANDLER (index)
-{
-  if (symbol != symbol && sort != sort && idx != idx)
-    {
-      assert (0);		// to remove warnings in unsed parameters
-    }
-  return noll_mk_index (noll_ctx (ctx),
-			(noll_exp_t **) (smtlib2_vector_array (args)),
-			smtlib2_vector_size (args));
-}
-
-SMTLIB2_NOLL_DECLHANDLER (sloc)
-{
-  if (symbol != symbol && sort != sort && idx != idx)
-    {
-      assert (0);		// to remove warnings in unsed parameters
-    }
-  return noll_mk_sloc (noll_ctx (ctx),
-		       (noll_exp_t **) (smtlib2_vector_array (args)),
-		       smtlib2_vector_size (args));
-}
-
-SMTLIB2_NOLL_DECLHANDLER (unloc)
-{
-  if (symbol != symbol && sort != sort && idx != idx)
-    {
-      assert (0);		// to remove warnings in unsed parameters
-    }
-  return noll_mk_unloc (noll_ctx (ctx),
-			(noll_exp_t **) (smtlib2_vector_array (args)),
-			smtlib2_vector_size (args));
-}
-
-SMTLIB2_NOLL_DECLHANDLER (inloc)
-{
-  if (symbol != symbol && sort != sort && idx != idx)
-    {
-      assert (0);		// to remove warnings in unsed parameters
-    }
-  return noll_mk_inloc (noll_ctx (ctx),
-			(noll_exp_t **) (smtlib2_vector_array (args)),
-			smtlib2_vector_size (args));
-}
-
-SMTLIB2_NOLL_DECLHANDLER (eqloc)
-{
-  if (symbol != symbol && sort != sort && idx != idx)
-    {
-      assert (0);		// to remove warnings in unsed parameters
-    }
-  return noll_mk_eqloc (noll_ctx (ctx),
-			(noll_exp_t **) (smtlib2_vector_array (args)),
-			smtlib2_vector_size (args));
-}
-
-SMTLIB2_NOLL_DECLHANDLER (leloc)
-{
-  if (symbol != symbol && sort != sort && idx != idx)
-    {
-      assert (0);		// to remove warnings in unsed parameters
-    }
-  return noll_mk_leloc (noll_ctx (ctx),
-			(noll_exp_t **) (smtlib2_vector_array (args)),
-			smtlib2_vector_size (args));
-}
-
-SMTLIB2_NOLL_DECLHANDLER (seloc)
-{
-  if (symbol != symbol && sort != sort && idx != idx)
-    {
-      assert (0);		// to remove warnings in unsed parameters
-    }
-  return noll_mk_seloc (noll_ctx (ctx),
-			(noll_exp_t **) (smtlib2_vector_array (args)),
-			smtlib2_vector_size (args));
-}
-
-SMTLIB2_NOLL_DECLHANDLER (tobool)
-{
-  if (symbol != symbol && sort != sort && idx != idx)
-    {
-      assert (0);		// to remove warnings in unsed parameters
-    }
-  return noll_mk_tobool (noll_ctx (ctx),
-			 (noll_exp_t **) (smtlib2_vector_array (args)),
+  return sl_mk_distinct (sl_ctx (ctx),
+			 (sl_exp_t **) (smtlib2_vector_array (args)),
 			 smtlib2_vector_size (args));
 }
 
-SMTLIB2_NOLL_DECLHANDLER (tospace)
+SMTLIB2_SL_DECLHANDLER (ssep)
 {
   if (symbol != symbol && sort != sort && idx != idx)
     {
       assert (0);		// to remove warnings in unsed parameters
     }
-  return noll_mk_tospace (noll_ctx (ctx),
-			  (noll_exp_t **) (smtlib2_vector_array (args)),
-			  smtlib2_vector_size (args));
+  return sl_mk_ssep (sl_ctx (ctx),
+		     (sl_exp_t **) (smtlib2_vector_array (args)),
+		     smtlib2_vector_size (args));
 }
 
-SMTLIB2_NOLL_DECLHANDLER (loop)
+SMTLIB2_SL_DECLHANDLER (pto)
 {
   if (symbol != symbol && sort != sort && idx != idx)
     {
       assert (0);		// to remove warnings in unsed parameters
     }
-  return noll_mk_loop (noll_ctx (ctx),
-		       (noll_exp_t **) (smtlib2_vector_array (args)),
+  return sl_mk_pto (sl_ctx (ctx),
+		    (sl_exp_t **) (smtlib2_vector_array (args)),
+		    smtlib2_vector_size (args));
+}
+
+SMTLIB2_SL_DECLHANDLER (ref)
+{
+  if (symbol != symbol && sort != sort && idx != idx)
+    {
+      assert (0);		// to remove warnings in unsed parameters
+    }
+  return sl_mk_ref (sl_ctx (ctx),
+		    (sl_exp_t **) (smtlib2_vector_array (args)),
+		    smtlib2_vector_size (args));
+}
+
+SMTLIB2_SL_DECLHANDLER (sref)
+{
+  if (symbol != symbol && sort != sort && idx != idx)
+    {
+      assert (0);		// to remove warnings in unsed parameters
+    }
+  return sl_mk_sref (sl_ctx (ctx),
+		     (sl_exp_t **) (smtlib2_vector_array (args)),
+		     smtlib2_vector_size (args));
+}
+
+SMTLIB2_SL_DECLHANDLER (tobool)
+{
+  if (symbol != symbol && sort != sort && idx != idx)
+    {
+      assert (0);		// to remove warnings in unsed parameters
+    }
+  return sl_mk_tobool (sl_ctx (ctx),
+		       (sl_exp_t **) (smtlib2_vector_array (args)),
 		       smtlib2_vector_size (args));
+}
+
+SMTLIB2_SL_DECLHANDLER (tospace)
+{
+  if (symbol != symbol && sort != sort && idx != idx)
+    {
+      assert (0);		// to remove warnings in unsed parameters
+    }
+  return sl_mk_tospace (sl_ctx (ctx),
+			(sl_exp_t **) (smtlib2_vector_array (args)),
+			smtlib2_vector_size (args));
+}
+
+SMTLIB2_SL_DECLHANDLER (loop)
+{
+  if (symbol != symbol && sort != sort && idx != idx)
+    {
+      assert (0);		// to remove warnings in unsed parameters
+    }
+  return sl_mk_loop (sl_ctx (ctx),
+		     (sl_exp_t **) (smtlib2_vector_array (args)),
+		     smtlib2_vector_size (args));
 }

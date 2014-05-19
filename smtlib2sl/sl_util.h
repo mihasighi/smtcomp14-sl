@@ -16,26 +16,43 @@
 /*                                                                        */
 /**************************************************************************/
 
-#ifndef _SMTLIB2SL_H
-#define _SMTLIB2SL_H
-
-#include "smtlib2abstractparser.h"
-#include "smtlib2abstractparser_private.h"
-#include "sl.h"
-
-/** Internal data for the parser.
+/** Utilities for SL compilation
  */
-typedef struct smtlib2_sl_parser
+
+#ifndef _SL_UTIL_H_
+#define _SL_UTIL_H_
+
+#ifdef __cplusplus
+extern "C"
 {
-  smtlib2_abstract_parser parent_;
-  sl_context_t *ctx_;		// used for local variables and quantifiers 
-  smtlib2_hashtable *sorts_;	// all the declared sort symbols
-  smtlib2_hashtable *funs_;	// all the declared function symbols 
-} smtlib2_sl_parser;
+#endif
 
-/** Constructor/destructor.
- */
-smtlib2_sl_parser *smtlib2_sl_parser_new (void);
-void smtlib2_sl_parser_delete (smtlib2_sl_parser * p);
+#include "sl_vector.h"
 
-#endif /* _SMTLIB2SL_H */
+  void sl_message (const char *msg);
+  void sl_warning (const char *fun, const char *msg);
+  void sl_error (int level, const char *fun, const char *msg);
+  void sl_error_id (int level, const char *fun, const char *msg);
+  void sl_error_args (int level, const char *fun, uint_t size,
+		      const char *msg);
+  int time_difference (struct timeval *result, struct timeval *t2,
+		       struct timeval *t1);
+
+#ifndef NDEBUG
+
+#define SL_DEBUG(...) \
+        do { \
+                        fprintf (stderr, __VA_ARGS__); \
+        } while (0)
+
+#else				/* #ifndef NDEBUG */
+
+#define SL_DEBUG(...)		/* empty */
+
+#endif				/* #ifndef NDEBUG */
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif				/* _SL_UTIL_H */
