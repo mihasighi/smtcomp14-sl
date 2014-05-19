@@ -1,3 +1,15 @@
 Benchmarks and tools for the SeLoger solver.
 
 https://www.cs.ox.ac.uk/people/joel.ouaknine/publications/SeLoger13.pdf
+
+Tools
+=====
+
+A) Translation from SMTLIB v2 format for SL into SLP format
+
+See smtlib2sl/sl_prob2slp.? and run in smtlib2/
+
+./compile -slp <file>.smt2
+
+Output in <file>.smt2.slp
+

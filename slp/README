@@ -1,3 +1,14 @@
 Benchmarks and tools for the SLP solver.
 
-http://navarroj.com/research/papers/#pldi11
+Tools
+=====
+
+A) Translation from SMTLIB v2 format for SL into SLP format
+
+See smtlib2sl/sl_prob2slp.? and run in smtlib2/
+
+./compile -slp <file>.smt2
+
+Output in <file>.smt2.slp
+
+

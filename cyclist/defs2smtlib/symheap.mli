@@ -1,4 +1,5 @@
 val split_heaps : bool ref
+val defs_root : string ref
 
 module Term :
 sig

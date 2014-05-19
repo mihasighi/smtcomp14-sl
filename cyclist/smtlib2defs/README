@@ -1,1 +1,10 @@
 Translation from the SMTLIB2 format proposed for SL to the 'defs' format used in Cyclist.
+
+See smtlib2sl/sl_prob2cyclist.?
+
+To translate, run
+
+./compile -cyclist <file>.smt2
+
+Output in <file>.smt2.defs
+

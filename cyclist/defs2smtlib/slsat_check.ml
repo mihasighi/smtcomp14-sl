@@ -15,6 +15,7 @@ let defs_of_channel c =
 	try
 		let defs = Parser.ind_def_set Lexer.token lexbuf in
 		begin
+			(** WARNING: Added to obtain translation to SMTLIB v2 *)
 			Symheap.Defs.to_smtlib defs;
 			defs
 		end
@@ -22,11 +23,16 @@ let defs_of_channel c =
 	| Lexer.Error msg -> print_endline msg ; assert false
 	| Parser.Error -> Printf.fprintf stderr "At offset %d: syntax error.\n%!" (Lexing.lexeme_start lexbuf) ; assert false
 
-let () = F.usage := !F.usage ^ " [-D <file>]" (*" [-D <file>] [-C <string>]"*)
+let () = F.usage := !F.usage ^ " [-D <file>] -r <def>" (*" [-D <file>] [-C <string>]"*)
 
 let () = F.speclist := !F.speclist @ [
        ("-D", Arg.Set_string defs_path,
-           ": read inductive definitions from <file>, default is " ^ !defs_path);
+           ": read inductive definitions from <file>, default is " ^ !defs_path
+       );
+	(** WARNING: Added to obtain translation to SMTLIB v2 *)
+       ("-r", Arg.Set_string Symheap.defs_root,
+	   ": set root inductive definition, default is " ^ !defs_root
+       );
 	(* ("-C", Arg.Set_string cl_predicate,*)
 	(*  ": prove consistency of the SL predicate provided in <string>"); *)
 	]

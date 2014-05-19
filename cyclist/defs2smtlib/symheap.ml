@@ -3,6 +3,9 @@ open Util
 open Symbols
 
 let split_heaps = ref true
+(** WARNING: Added to obtain translation to SMTLIB v2 *)
+let defs_root = ref "Q"
+
 
 module Term =
   struct
@@ -528,7 +531,7 @@ module Heap =
       let locdeqs = Deqs.get_locals f.deqs loceqs params in
       let locpto = Ptos.get_locals f.ptos locdeqs params in
       let locprd = Inds.get_locals f.inds locpto params in 
-      let locals = (List.map (fun t -> "(?" ^ (Term.to_string t) ^ " GenTyp)") 
+      let locals = (List.map (fun t -> "(?" ^ (Term.to_string t) ^ " GTyp)") 
 			locprd) in
       let peq = UF.to_smtlib f.eqs in
       let pdeq = Deqs.to_smtlib f.deqs in
@@ -867,7 +870,7 @@ module Defs =
 
     let to_melt d = ltx_text (to_string d)
 
-    let strsmt_of_clause info_c (f, (ident, params)) =
+    let strsmt_of_clause ctxbool info_c (f, (ident, params)) =
       let locals,pure,sep = Heap.to_smtlib info_c f params  in
       let ex = 
       (match locals with
@@ -879,7 +882,7 @@ module Defs =
       (match sep with
        | [] -> "emp"
        | s::[] -> s
-       | _ ->  "\n\t(sep " ^ (String.concat "\n\t\t" sep) ^ "\n\t)\n"
+       | _ ->  "\n\t(ssep " ^ (String.concat "\n\t\t" sep) ^ "\n\t)\n"
 	) in
       let eqs = 
       (match pure with
@@ -888,42 +891,65 @@ module Defs =
        | _ ->  (String.concat "\n\t\t" pure) 
 	) in
       (match locals,pure,sep with 
-       | [],[], _ -> space
+       | [],[], _ -> 
+		(if ctxbool then "(tobool " else "") ^ 
+		space ^
+	        (if ctxbool then ")" else "")
        | [],p::[],[] -> 
-		"\n\t" ^ p ^ "\n"
+		"\n\t" ^ (if ctxbool then "" else "(tospace ") ^ 
+		p ^ 
+		(if ctxbool then "" else ")") ^ "\n"
        | [],p::[],_ -> 
-		"\n\t(and " ^ p ^ 
-		"\n\t\t (tobool " ^ space ^ "\n\t\t)\n\t)\n"
+		"\n\t" ^ (if ctxbool then "" else "(tospace ") ^
+		"(and " ^ p ^ 
+		"\n\t\t (tobool " ^ space ^ "\n\t\t)" ^
+		"\n\t)" ^ (if ctxbool then "" else ")") ^ "\n"
        | [],_,[] -> 
-		"\n\t(and " ^ eqs ^ "\n\t)\n"
+		"\n\t" ^ (if ctxbool then "" else "(tospace ") ^
+		"(and " ^ eqs ^ 
+		"\n\t)" ^ (if ctxbool then "" else ")") ^ "\n"
        | [],_,_ -> 
-		"\n\t(and " ^ eqs ^ 
-		"\n\t\t (tobool " ^ space ^ "\n\t\t)\n\t)\n"
+		"\n\t" ^ (if ctxbool then "" else "(tospace ") ^
+		"(and " ^ eqs ^ 
+		"\n\t\t (tobool " ^ space ^ "\n\t\t)" ^
+		"\n\t)" ^ (if ctxbool then "" else ")") ^ "\n"
        | _ ,[], _ -> 
-		"\n\t(exists (" ^ ex ^ ")\n\t\t" ^ 
-		"\n\t\t (tobool " ^ space ^ "\n\t\t)\n\t)\n"
+		"\n\t" ^ (if ctxbool then "" else "(tospace ") ^
+		"(exists (" ^ ex ^ ")\n\t\t" ^ 
+		"\n\t\t (tobool " ^ space ^ "\n\t\t)" ^
+		"\n\t)" ^ (if ctxbool then "" else ")") ^ "\n"
        | _,p::[],[] ->
-		"\n\t(exists (" ^ ex ^ ")\n\t\t" ^ 
-		"\n\t\t " ^ p ^ "\n\t\t)\n"
+		"\n\t" ^ (if ctxbool then "" else "(tospace ") ^
+		"(exists (" ^ ex ^ ")\n\t\t" ^ 
+		"\n\t\t " ^ p ^ 
+		"\n\t)" ^ (if ctxbool then "" else ")") ^ "\n"
        | _,_,[] ->
-		"\n\t(exists (" ^ ex ^ ")\n\t\t" ^ 
-		"\n\t\t (and " ^ eqs ^ "\n\t\t))\n"
+		"\n\t" ^ (if ctxbool then "" else "(tospace ") ^
+		"(exists (" ^ ex ^ ")\n\t\t" ^ 
+		"\n\t\t (and " ^ eqs ^ "\n\t\t)" ^
+		"\n\t)" ^ (if ctxbool then "" else ")") ^ "\n"
        | _,_,_ ->
-		"\n\t(exists (" ^ ex ^ ")\n\t\t" ^ 
+		"\n\t" ^ (if ctxbool then "" else "(tospace ") ^
+		"(exists (" ^ ex ^ ")\n\t\t" ^ 
 		"\n\t\t (and " ^ eqs ^ "\n\t\t\t" ^
-		"(tobool " ^ space ^ "\n\t\t)))\n"
+		"(tobool " ^ space ^ "\n\t\t))" ^
+		"\n\t)" ^ (if ctxbool then "" else ")") ^ "\n"
 	)
 
     let strsmt_of_case info_c (cls, ident) =
       let parstr = (match cls with 
 	| (_,(id,params))::_ -> 
 		begin
+		(if (Strng.compare id !defs_root) = 0 then
+                   begin
 		(* generate infos *)
-		(List.iteri (fun i p -> (Printf.fprintf info_c ";;(define-fun x%d () GenTyp)\n" i)) (Blist.to_list params));
+		(List.iteri (fun i p -> (Printf.fprintf info_c "(declare-fun x%d () GTyp)\n" i)) (Blist.to_list params));
 		(Printf.fprintf info_c 
-			";;(assert (tobool (index alpha1 (%s " ident);
+			"\n(assert (tobool (%s " ident);
 		(List.iteri (fun i p -> (Printf.fprintf info_c " x%d" i)) (Blist.to_list params));
-		(Printf.fprintf info_c "))))\n");
+		(Printf.fprintf info_c ")))\n");
+		(Printf.fprintf info_c "\n(check-sat)\n")
+		    end);
 		(* generate string *)
 		(Blist.to_string " " 
 			(fun t -> "(?" ^ (Term.to_string t) ^ " GTyp)") params)
@@ -934,11 +960,13 @@ module Defs =
 	       end
       ) in
       "(define-fun " ^ ident ^ " (" ^ parstr ^ ")" ^ " Space " ^ "\n" ^
-      (match cls with [] | _::[] -> " " | _ -> "(tospace (or ") ^ "\n" ^
-      (Blist.to_string "\n" (strsmt_of_clause info_c) cls)
-      ^ "\n" ^ 
-      (match cls with [] | _::[] -> " " | _ -> ") )\n ") ^
-      ")\n"
+      (match cls with 
+       | [] -> "emp" 
+       | c::[] -> (strsmt_of_clause false info_c c)
+       | _ -> ("(tospace (or " ^ "\n" ^
+      		(Blist.to_string "\n" (strsmt_of_clause true info_c) cls) ^ 
+		"))\n")
+      ) ^ ")\n"
     
     let to_smtlib (d:t) : unit = 
       (* outputs defs in a fixed file called tmp.smt2, but without
@@ -967,10 +995,6 @@ module Defs =
         (Printf.fprintf asrt_c "\n%s\n"
         (Blist.to_string "\n\n" (strsmt_of_case info_c) d));
 	
-	(* output index of the predicate *)
-        Printf.fprintf asrt_c "\n;index vars \n";
-        Printf.fprintf asrt_c "(define-fun alpha1 () SetLoc)\n";
-
 	(* output variables of the first def *)
 	(* Warning: generate a generic list of vars *)
         Printf.fprintf asrt_c "\n;vars \n";
@@ -981,9 +1005,7 @@ module Defs =
 	(* output assert *)
 	(* Warning: generate a generic call to ls *)
         Printf.fprintf asrt_c "\n;problem \n";
-        (* Printf.fprintf asrt_c "(assert (tobool (index alpha1 (clause))))\n"; *)
 	(* post-process for the root predicate *)
-	(* Printf.fprintf asrt_c "\n(check-sat)\n"; *)
 
 	(* close the file *)
 	flush asrt_c;
