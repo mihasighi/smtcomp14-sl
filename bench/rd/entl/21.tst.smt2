@@ -1,7 +1,7 @@
 (set-logic QF_S)
 (set-info :source |
   James Brotherston, Carsten Fuhs, Nikos Gorogiannis, and Juan Navarro Pérez.
-  A decision procedure for satisfiability in separation logic with inductive
+  A decision procedure for satisfiability in sssssseparation logic with inductive
   predicates. To appear at CSL-LICS, 2014.
   https://github.com/ngorogiannis/cyclist
 |)
@@ -31,11 +31,11 @@
         )
 
 
-        (exists ((?xp GenTyp))
+        (exists ((?xp GTyp))
 
                  (and (distinct nil ?x)
                         (tobool
-        (sep (pto ?x  (ref f0 ?xp) )
+        (ssep (pto ?x  (ref f0 ?xp) )
                 (ListE ?xp ?y)
         )
 
@@ -47,11 +47,11 @@
 (define-fun ListE ((?x GTyp) (?y GTyp)) Space
 
 
-        (exists ((?xp GenTyp))
+        (exists ((?xp GTyp))
 
                  (and (distinct nil ?x)
                         (tobool
-        (sep (pto ?x  (ref f0 ?xp) )
+        (ssep (pto ?x  (ref f0 ?xp) )
                 (ListO ?xp ?y)
         )
 
@@ -62,19 +62,19 @@
 
 ;;;ListE_1(x,y) \/ ListO_1(x,y) |- List_2(x,y)
 
-(define-fun alpha2 () SetLoc)
-(define-fun alpha3 () SetLoc)
 
-(define-fun x () GenTyp)
-(define-fun y () GenTyp)
+
+
+(declare-fun x () GTyp)
+(declare-fun y () GTyp)
 
 (assert (or
-	(tobool (index alpha1 (ListE x y)))
-        (tobool (index alpha2 (List0 x y)))
+	(tobool (ListE x y))
+        (tobool (List0 x y))
 ))
 
 (assert (not (tobool
-        (index alpha3 (List x y))
+        (List x y)
 )))
 
 

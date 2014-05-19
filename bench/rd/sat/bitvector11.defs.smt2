@@ -22,33 +22,27 @@
 ;predicates 
 
 (define-fun zero ((?x GTyp)) Space 
- 
 
-	(= nil ?x)
-
- )
+	(tospace (= nil ?x))
+)
 
 
 (define-fun one ((?x GTyp)) Space 
- 
 
-	(distinct nil ?x)
-
- )
+	(tospace (distinct nil ?x))
+)
 
 
 (define-fun bool ((?x GTyp)) Space 
 (tospace (or 
-(zero ?x)
-(one ?x)
-) )
- )
+(tobool (zero ?x))
+(tobool (one ?x))))
+)
 
 
 (define-fun bitvector ((?x1 GTyp) (?x2 GTyp) (?x3 GTyp) (?x4 GTyp) (?x5 GTyp) (?x6 GTyp) (?x7 GTyp) (?x8 GTyp) (?x9 GTyp) (?x10 GTyp) (?x11 GTyp)) Space 
- 
 
-	(sep (bool ?x1)
+	(ssep (bool ?x1)
 		(bool ?x2)
 		(bool ?x3)
 		(bool ?x4)
@@ -60,36 +54,24 @@
 		(bool ?x10)
 		(bool ?x11)
 	)
+)
 
- )
-
-
-;index vars 
-(define-fun alpha1 () SetLoc)
 
 ;vars 
 
 ;problem 
-;;(define-fun x0 () GenTyp)
-;;(assert (tobool (index alpha1 (zero  x0))))
-;;(define-fun x0 () GenTyp)
-;;(assert (tobool (index alpha1 (one  x0))))
-;;(define-fun x0 () GenTyp)
-;;(assert (tobool (index alpha1 (bool  x0))))
-(define-fun x0 () GenTyp)
-(define-fun x1 () GenTyp)
-(define-fun x2 () GenTyp)
-(define-fun x3 () GenTyp)
-(define-fun x4 () GenTyp)
-(define-fun x5 () GenTyp)
-(define-fun x6 () GenTyp)
-(define-fun x7 () GenTyp)
-(define-fun x8 () GenTyp)
-(define-fun x9 () GenTyp)
-(define-fun x10 () GenTyp)
-(assert (tobool (index alpha1 (bitvector  x0 x1 x2 x3 x4 x5 x6 x7 x8 x9 x10))))
+(declare-fun x0 () GTyp)
+(declare-fun x1 () GTyp)
+(declare-fun x2 () GTyp)
+(declare-fun x3 () GTyp)
+(declare-fun x4 () GTyp)
+(declare-fun x5 () GTyp)
+(declare-fun x6 () GTyp)
+(declare-fun x7 () GTyp)
+(declare-fun x8 () GTyp)
+(declare-fun x9 () GTyp)
+(declare-fun x10 () GTyp)
 
-
+(assert (tobool (bitvector  x0 x1 x2 x3 x4 x5 x6 x7 x8 x9 x10)))
 
 (check-sat)
-

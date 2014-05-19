@@ -1,7 +1,7 @@
 (set-logic QF_S)
 (set-info :source |
   James Brotherston, Carsten Fuhs, Nikos Gorogiannis, and Juan Navarro Pérez.
-  A decision procedure for satisfiability in separation logic with inductive
+  A decision procedure for satisfiability in sseparation logic with inductive
   predicates. To appear at CSL-LICS, 2014.
   https://github.com/ngorogiannis/cyclist
 |)
@@ -28,22 +28,22 @@
         (= ?x ?y)
 
 
-        (exists ((?xp GenTyp) (?yp GenTyp))
+        (exists ((?xp GTyp) (?yp GTyp))
 
                  (and (distinct nil ?x)
                         (tobool
-        (sep (pto ?x (sref  (ref f0 ?xp)  (ref f1 ?yp) ))
+        (ssep (pto ?x (sref  (ref f0 ?xp)  (ref f1 ?yp) ))
                 (BinPath ?xp ?y)
         )
 
                 )))
 
 
-        (exists ((?xp GenTyp) (?yp GenTyp))
+        (exists ((?xp GTyp) (?yp GTyp))
 
                  (and (distinct nil ?x)
                         (tobool
-        (sep (pto ?x (sref  (ref f0 ?xp)  (ref f1 ?yp) ))
+        (ssep (pto ?x (sref  (ref f0 ?xp)  (ref f1 ?yp) ))
                 (BinPath ?yp ?y)
         )
 
@@ -54,20 +54,20 @@
 
 ;;;BinPath(x,z) * BinPath(z,y) |- BinPath(x,y)          
 
-(define-fun alpha2 () SetLoc)
-(define-fun alpha3 () SetLoc)
 
-(define-fun x () GenTyp)
-(define-fun y () GenTyp)
-(define-fun z () GenTyp)
 
-(assert (tobool (sep
-        (index alpha1 (BinPath x z))
-        (index alpha2 (BinPath z y))
+
+(declare-fun x () GTyp)
+(declare-fun y () GTyp)
+(declare-fun z () GTyp)
+
+(assert (tobool (ssep
+        (BinPath x z)
+        (BinPath z y)
 )))
 
 (assert (not (tobool
-        (index alpha3 (BinPath x y))
+        (BinPath x y)
 )))
 
 

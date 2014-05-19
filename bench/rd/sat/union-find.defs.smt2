@@ -30,33 +30,29 @@
 	)
 
 
-	(exists ((?y GenTyp))
+	(exists ((?y GTyp))
 		
 		 (and (distinct nil ?x)
 			(tobool 
-	(sep (pto ?x  (ref f0 ?y) )
+	(ssep (pto ?x  (ref f0 ?y) )
 		(UF ?y)
 	)
 
-		)))
+		))
+	)
+))
+)
 
-) )
- )
-
-
-;index vars 
-(define-fun alpha1 () SetLoc)
 
 ;vars 
 
 ;problem 
-(define-fun x0 () GenTyp)
-(assert (tobool (index alpha1 (UF  x0))))
+(declare-fun x0 () GTyp)
 
-;;pto 1
-
-;;pto 1
-
+(assert (tobool (UF  x0)))
 
 (check-sat)
 
+;;pto 1
+
+;;pto 1

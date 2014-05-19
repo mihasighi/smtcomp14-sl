@@ -22,50 +22,33 @@
 ;predicates 
 
 (define-fun zero ((?x GTyp)) Space 
- 
 
-	(= nil ?x)
-
- )
+	(tospace (= nil ?x))
+)
 
 
 (define-fun one ((?x GTyp)) Space 
- 
 
-	(distinct nil ?x)
-
- )
+	(tospace (distinct nil ?x))
+)
 
 
 (define-fun bool ((?x GTyp)) Space 
 (tospace (or 
-(zero ?x)
-(one ?x)
-) )
- )
+(tobool (zero ?x))
+(tobool (one ?x))))
+)
 
 
 (define-fun bitvector ((?x1 GTyp)) Space 
- 
-(bool ?x1)
- )
+(bool ?x1))
 
-
-;index vars 
-(define-fun alpha1 () SetLoc)
 
 ;vars 
 
 ;problem 
-;;(define-fun x0 () GenTyp)
-;;(assert (tobool (index alpha1 (zero  x0))))
-;;(define-fun x0 () GenTyp)
-;;(assert (tobool (index alpha1 (one  x0))))
-;;(define-fun x0 () GenTyp)
-;;(assert (tobool (index alpha1 (bool  x0))))
-(define-fun x0 () GenTyp)
-(assert (tobool (index alpha1 (bitvector  x0))))
+(declare-fun x0 () GTyp)
 
+(assert (tobool (bitvector  x0)))
 
 (check-sat)
-

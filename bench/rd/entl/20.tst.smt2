@@ -1,7 +1,7 @@
 (set-logic QF_S)
 (set-info :source |
   James Brotherston, Carsten Fuhs, Nikos Gorogiannis, and Juan Navarro Pérez.
-  A decision procedure for satisfiability in separation logic with inductive
+  A decision procedure for satisfiability in sssssseparation logic with inductive
   predicates. To appear at CSL-LICS, 2014.
   https://github.com/ngorogiannis/cyclist
 |)
@@ -28,12 +28,12 @@
         (= ?x ?y)
 
 
-        (exists ((?xp GenTyp))
+        (exists ((?xp GTyp))
 
                  (and (distinct nil ?x)
                 (distinct ?x ?y)
                         (tobool
-        (sep (pto ?x  (ref f0 ?xp) )
+        (ssep (pto ?x  (ref f0 ?xp) )
                 (ls ?xp ?y)
         )
 
@@ -44,19 +44,19 @@
 
 ;;;ls(x,y) * ls(y,nil) |- ls(x,nil) 
 
-(define-fun alpha2 () SetLoc)
-(define-fun alpha3 () SetLoc)
 
-(define-fun x () GenTyp)
-(define-fun y () GenTyp)
 
-(assert (tobool (sep
-        (index alpha1 (ls x y))
-        (index alpha2 (ls y nil))
+
+(declare-fun x () GTyp)
+(declare-fun y () GTyp)
+
+(assert (tobool (ssep
+        (ls x y)
+        (ls y nil)
 )))
 
 (assert (not (tobool
-        (index alpha3 (ls x nil))
+        (ls x nil)
 )))
 
 

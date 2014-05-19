@@ -1,7 +1,7 @@
 (set-logic QF_S)
 (set-info :source |
   James Brotherston, Carsten Fuhs, Nikos Gorogiannis, and Juan Navarro Pérez.
-  A decision procedure for satisfiability in separation logic with inductive
+  A decision procedure for satisfiability in sseparation logic with inductive
   predicates. To appear at CSL-LICS, 2014.
   https://github.com/ngorogiannis/cyclist
 |)
@@ -27,11 +27,11 @@
 (tospace (or
 emp
 
-        (exists ((?yp GenTyp) (?xp GenTyp))
+        (exists ((?yp GTyp) (?xp GTyp))
 
                  (and (distinct nil ?x)
                         (tobool
-        (sep (pto ?x (sref  (ref f0 ?yp)  (ref f1 ?xp) ))
+        (ssep (pto ?x (sref  (ref f0 ?yp)  (ref f1 ?xp) ))
                 (BinListFirst ?yp)
         )
 
@@ -46,11 +46,11 @@ emp
 (tospace (or
 emp
 
-        (exists ((?yp GenTyp) (?xp GenTyp))
+        (exists ((?yp GTyp) (?xp GTyp))
 
                  (and (distinct nil ?x)
                         (tobool
-        (sep (pto ?x (sref  (ref f0 ?yp)  (ref f1 ?xp) ))
+        (ssep (pto ?x (sref  (ref f0 ?yp)  (ref f1 ?xp) ))
                 (BinTree ?yp)
                 (BinTree ?xp)
         )
@@ -62,16 +62,16 @@ emp
 
 ;;;BinListFirst(x) |- BinTree(x)              
 
-(define-fun alpha2 () SetLoc)
 
-(define-fun x () GenTyp)
+
+(declare-fun x () GTyp)
 
 (assert (tobool 
-        (index alpha1 (BinListFirst x))
+        (BinListFirst x)
 ))
 
 (assert (not (tobool
-        (index alpha2 (BinTree x))
+        (BinTree x)
 )))
 
 

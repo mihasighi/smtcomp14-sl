@@ -22,64 +22,52 @@
 ;predicates 
 
 (define-fun p ((?y GTyp)) Space 
- 
 
-	(exists ((?x GenTyp))
+	(tospace (exists ((?x GTyp))
 		
 		 (and (= ?x ?y)
 		(distinct nil ?x)
 			(tobool (pto ?x  (ref f0 nil) )
-		)))
-
- )
+		))
+	))
+)
 
 
 (define-fun q ((?y GTyp)) Space 
- 
 
-	(and (distinct nil ?y)
+	(tospace (and (distinct nil ?y)
 		 (tobool (pto ?y  (ref f0 nil) )
 		)
-	)
-
- )
+	))
+)
 
 
 (define-fun r ((?y GTyp)) Space 
- 
 
-	(exists ((?z GenTyp))
+	(tospace (exists ((?z GTyp))
 		
 		 (and (distinct nil ?y)
 			(tobool 
-	(sep (pto ?y  (ref f0 ?z) )
+	(ssep (pto ?y  (ref f0 ?z) )
 		(p ?y)
 	)
 
-		)))
+		))
+	))
+)
 
- )
-
-
-;index vars 
-(define-fun alpha1 () SetLoc)
 
 ;vars 
 
 ;problem 
-;;(define-fun x0 () GenTyp)
-;;(assert (tobool (index alpha1 (p  x0))))
-
-;;pto 1
-;;(define-fun x0 () GenTyp)
-;;(assert (tobool (index alpha1 (q  x0))))
-
-;;pto 1
-(define-fun x0 () GenTyp)
-(assert (tobool (index alpha1 (r  x0))))
 
 ;;pto 1
 
+;;pto 1
+(declare-fun x0 () GTyp)
+
+(assert (tobool (r  x0)))
 
 (check-sat)
 
+;;pto 1

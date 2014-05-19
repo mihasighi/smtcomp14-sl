@@ -22,33 +22,27 @@
 ;predicates 
 
 (define-fun zero ((?x GTyp)) Space 
- 
 
-	(= nil ?x)
-
- )
+	(tospace (= nil ?x))
+)
 
 
 (define-fun one ((?x GTyp)) Space 
- 
 
-	(distinct nil ?x)
-
- )
+	(tospace (distinct nil ?x))
+)
 
 
 (define-fun bool ((?x GTyp)) Space 
 (tospace (or 
-(zero ?x)
-(one ?x)
-) )
- )
+(tobool (zero ?x))
+(tobool (one ?x))))
+)
 
 
 (define-fun bitvector ((?x1 GTyp) (?x2 GTyp) (?x3 GTyp) (?x4 GTyp) (?x5 GTyp) (?x6 GTyp) (?x7 GTyp) (?x8 GTyp) (?x9 GTyp) (?x10 GTyp) (?x11 GTyp) (?x12 GTyp) (?x13 GTyp) (?x14 GTyp) (?x15 GTyp) (?x16 GTyp) (?x17 GTyp) (?x18 GTyp) (?x19 GTyp) (?x20 GTyp) (?x21 GTyp) (?x22 GTyp) (?x23 GTyp) (?x24 GTyp) (?x25 GTyp) (?x26 GTyp)) Space 
- 
 
-	(sep (bool ?x1)
+	(ssep (bool ?x1)
 		(bool ?x2)
 		(bool ?x3)
 		(bool ?x4)
@@ -75,51 +69,39 @@
 		(bool ?x25)
 		(bool ?x26)
 	)
+)
 
- )
-
-
-;index vars 
-(define-fun alpha1 () SetLoc)
 
 ;vars 
 
 ;problem 
-;;(define-fun x0 () GenTyp)
-;;(assert (tobool (index alpha1 (zero  x0))))
-;;(define-fun x0 () GenTyp)
-;;(assert (tobool (index alpha1 (one  x0))))
-;;(define-fun x0 () GenTyp)
-;;(assert (tobool (index alpha1 (bool  x0))))
-(define-fun x0 () GenTyp)
-(define-fun x1 () GenTyp)
-(define-fun x2 () GenTyp)
-(define-fun x3 () GenTyp)
-(define-fun x4 () GenTyp)
-(define-fun x5 () GenTyp)
-(define-fun x6 () GenTyp)
-(define-fun x7 () GenTyp)
-(define-fun x8 () GenTyp)
-(define-fun x9 () GenTyp)
-(define-fun x10 () GenTyp)
-(define-fun x11 () GenTyp)
-(define-fun x12 () GenTyp)
-(define-fun x13 () GenTyp)
-(define-fun x14 () GenTyp)
-(define-fun x15 () GenTyp)
-(define-fun x16 () GenTyp)
-(define-fun x17 () GenTyp)
-(define-fun x18 () GenTyp)
-(define-fun x19 () GenTyp)
-(define-fun x20 () GenTyp)
-(define-fun x21 () GenTyp)
-(define-fun x22 () GenTyp)
-(define-fun x23 () GenTyp)
-(define-fun x24 () GenTyp)
-(define-fun x25 () GenTyp)
-(assert (tobool (index alpha1 (bitvector  x0 x1 x2 x3 x4 x5 x6 x7 x8 x9 x10 x11 x12 x13 x14 x15 x16 x17 x18 x19 x20 x21 x22 x23 x24 x25))))
+(declare-fun x0 () GTyp)
+(declare-fun x1 () GTyp)
+(declare-fun x2 () GTyp)
+(declare-fun x3 () GTyp)
+(declare-fun x4 () GTyp)
+(declare-fun x5 () GTyp)
+(declare-fun x6 () GTyp)
+(declare-fun x7 () GTyp)
+(declare-fun x8 () GTyp)
+(declare-fun x9 () GTyp)
+(declare-fun x10 () GTyp)
+(declare-fun x11 () GTyp)
+(declare-fun x12 () GTyp)
+(declare-fun x13 () GTyp)
+(declare-fun x14 () GTyp)
+(declare-fun x15 () GTyp)
+(declare-fun x16 () GTyp)
+(declare-fun x17 () GTyp)
+(declare-fun x18 () GTyp)
+(declare-fun x19 () GTyp)
+(declare-fun x20 () GTyp)
+(declare-fun x21 () GTyp)
+(declare-fun x22 () GTyp)
+(declare-fun x23 () GTyp)
+(declare-fun x24 () GTyp)
+(declare-fun x25 () GTyp)
 
-
+(assert (tobool (bitvector  x0 x1 x2 x3 x4 x5 x6 x7 x8 x9 x10 x11 x12 x13 x14 x15 x16 x17 x18 x19 x20 x21 x22 x23 x24 x25)))
 
 (check-sat)
-

@@ -22,77 +22,55 @@
 ;predicates 
 
 (define-fun zero ((?x GTyp)) Space 
- 
 
-	(= nil ?x)
-
- )
+	(tospace (= nil ?x))
+)
 
 
 (define-fun one ((?x GTyp)) Space 
- 
 
-	(distinct nil ?x)
-
- )
+	(tospace (distinct nil ?x))
+)
 
 
 (define-fun succ1rec ((?x1 GTyp) (?y1 GTyp)) Space 
- 
 
-	(sep (zero ?x1)
+	(ssep (zero ?x1)
 		(one ?y1)
 	)
-
- )
+)
 
 
 (define-fun P ((?x1 GTyp)) Space 
- 
 
-	(sep (one ?x1)
+	(ssep (one ?x1)
 		(Q ?x1)
 	)
-
- )
+)
 
 
 (define-fun Q ((?y1 GTyp)) Space 
 (tospace (or 
-(zero ?y1)
+(tobool (zero ?y1))
 
-	(exists ((?x1 GenTyp))
+	(exists ((?x1 GTyp))
 		
 		 (tobool 
-	(sep (succ1rec ?x1 ?y1)
+	(ssep (succ1rec ?x1 ?y1)
 		(Q ?x1)
 	)
 
 		)
 	)
+))
+)
 
-) )
- )
-
-
-;index vars 
-(define-fun alpha1 () SetLoc)
 
 ;vars 
 
 ;problem 
-;;(define-fun x0 () GenTyp)
-;;(assert (tobool (index alpha1 (zero  x0))))
-;;(define-fun x0 () GenTyp)
-;;(assert (tobool (index alpha1 (one  x0))))
-;;(define-fun x0 () GenTyp)
-;;(define-fun x1 () GenTyp)
-;;(assert (tobool (index alpha1 (succ1rec  x0 x1))))
-;;(define-fun x0 () GenTyp)
-;;(assert (tobool (index alpha1 (P  x0))))
-(define-fun x0 () GenTyp)
-(assert (tobool (index alpha1 (Q  x0))))
+(declare-fun x0 () GTyp)
 
+(assert (tobool (P  x0)))
 
 (check-sat)
-

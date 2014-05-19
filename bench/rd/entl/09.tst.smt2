@@ -1,7 +1,7 @@
 (set-logic QF_S)
 (set-info :source |
   James Brotherston, Carsten Fuhs, Nikos Gorogiannis, and Juan Navarro Pérez.
-  A decision procedure for satisfiability in separation logic with inductive
+  A decision procedure for satisfiability in sseparation logic with inductive
   predicates. To appear at CSL-LICS, 2014.
   https://github.com/ngorogiannis/cyclist
 |)
@@ -30,11 +30,11 @@
         )
 
 
-        (exists ((?zp GenTyp))
+        (exists ((?zp GTyp))
 
                  (and (distinct nil ?x)
                         (tobool
-        (sep (pto ?x (sref  (ref f0 ?zp)  (ref f1 ?w) ))
+        (ssep (pto ?x (sref  (ref f0 ?zp)  (ref f1 ?w) ))
                 (DLL ?zp ?y ?z ?x)
         )
 
@@ -45,23 +45,23 @@
 
 ;;;DLL(x,y,z,w) * DLL(a,x,w,b) |- DLL(a,y,z,b)    
 
-(define-fun alpha2 () SetLoc)
-(define-fun alpha3 () SetLoc)
 
-(define-fun a () GenTyp)
-(define-fun b () GenTyp)
-(define-fun x () GenTyp)
-(define-fun y () GenTyp)
-(define-fun z () GenTyp)
-(define-fun w () GenTyp)
 
-(assert (tobool (sep
-        (index alpha1 (DLL x y z w))
-        (index alpha2 (DLL a x w b))
+
+(declare-fun a () GTyp)
+(declare-fun b () GTyp)
+(declare-fun x () GTyp)
+(declare-fun y () GTyp)
+(declare-fun z () GTyp)
+(declare-fun w () GTyp)
+
+(assert (tobool (ssep
+        (DLL x y z w)
+        (DLL a x w b)
 )))
 
 (assert (not (tobool
-        (index alpha3 (DLL a y z b))
+        (DLL a y z b)
 )))
 
 

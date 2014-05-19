@@ -1,7 +1,7 @@
 (set-logic QF_S)
 (set-info :source |
   James Brotherston, Carsten Fuhs, Nikos Gorogiannis, and Juan Navarro Pérez.
-  A decision procedure for satisfiability in separation logic with inductive
+  A decision procedure for satisfiability in sseparation logic with inductive
   predicates. To appear at CSL-LICS, 2014.
   https://github.com/ngorogiannis/cyclist
 |)
@@ -26,11 +26,11 @@
 (tospace (or
 emp
 
-        (exists ((?yp GenTyp) (?xp GenTyp))
+        (exists ((?yp GTyp) (?xp GTyp))
 
                  (and (distinct nil ?x)
                         (tobool
-        (sep (pto ?x (sref  (ref f0 ?yp)  (ref f1 ?xp) ))
+        (ssep (pto ?x (sref  (ref f0 ?yp)  (ref f1 ?xp) ))
                 (BinTree ?yp)
                 (BinTree ?xp)
         )
@@ -49,11 +49,11 @@ emp
         (= ?x ?y)
 
 
-        (exists ((?xp GenTyp) (?yp GenTyp))
+        (exists ((?xp GTyp) (?yp GTyp))
 
                  (and (distinct nil ?x)
                         (tobool
-        (sep (pto ?x (sref  (ref f0 ?xp)  (ref f1 ?yp) ))
+        (ssep (pto ?x (sref  (ref f0 ?xp)  (ref f1 ?yp) ))
                 (BinTreeSeg ?xp ?y)
                 (BinTree ?yp)
         )
@@ -61,11 +61,11 @@ emp
                 )))
 
 
-        (exists ((?xp GenTyp) (?yp GenTyp))
+        (exists ((?xp GTyp) (?yp GTyp))
 
                  (and (distinct nil ?x)
                         (tobool
-        (sep (pto ?x (sref  (ref f0 ?xp)  (ref f1 ?yp) ))
+        (ssep (pto ?x (sref  (ref f0 ?xp)  (ref f1 ?yp) ))
                 (BinTree ?xp)
                 (BinTreeSeg ?yp ?y)
         )
@@ -78,20 +78,20 @@ emp
  
 ;;;BinTreeSeg(x,y) * BinTree(y) |- BinTree(x) 
 
-(define-fun alpha2 () SetLoc)
-(define-fun alpha3 () SetLoc)
 
-(define-fun x () GenTyp)
-(define-fun y () GenTyp)
-(define-fun z () GenTyp)
 
-(assert (tobool (sep
-        (index alpha1 (BinTreeSeg x y))
-        (index alpha2 (BinTree y))
+
+(declare-fun x () GTyp)
+(declare-fun y () GTyp)
+(declare-fun z () GTyp)
+
+(assert (tobool (ssep
+        (BinTreeSeg x y)
+        (BinTree y)
 )))
 
 (assert (not (tobool
-        (index alpha3 (BinTree x))
+        (BinTree x)
 )))
 
 

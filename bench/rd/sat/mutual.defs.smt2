@@ -31,56 +31,50 @@
 		 (tobool (Q ?x ?x)
 		)
 	)
-
-) )
- )
+))
+)
 
 
 (define-fun Q ((?x GTyp) (?y GTyp)) Space 
 (tospace (or 
 
-	(exists ((?d GenTyp) (?c GenTyp))
+	(exists ((?d GTyp) (?c GTyp))
 		
 		 (and (= nil ?y)
 		(distinct nil ?x)
 			(tobool 
-	(sep (pto ?x (sref  (ref f0 ?d)  (ref f1 ?c) ))
+	(ssep (pto ?x (sref  (ref f0 ?d)  (ref f1 ?c) ))
 		(P ?d)
 	)
 
-		)))
+		))
+	)
 
 
-	(exists ((?d GenTyp) (?c GenTyp))
+	(exists ((?d GTyp) (?c GTyp))
 		
 		 (and (distinct nil ?y)
 			(tobool 
-	(sep (pto ?y (sref  (ref f0 ?d)  (ref f1 ?c) ))
+	(ssep (pto ?y (sref  (ref f0 ?d)  (ref f1 ?c) ))
 		(Q ?x ?c)
 	)
 
-		)))
+		))
+	)
+))
+)
 
-) )
- )
-
-
-;index vars 
-(define-fun alpha1 () SetLoc)
 
 ;vars 
 
 ;problem 
-;;(define-fun x0 () GenTyp)
-;;(assert (tobool (index alpha1 (P  x0))))
-(define-fun x0 () GenTyp)
-(define-fun x1 () GenTyp)
-(assert (tobool (index alpha1 (Q  x0 x1))))
+(declare-fun x0 () GTyp)
+(declare-fun x1 () GTyp)
 
-;;pto 2
-
-;;pto 2
-
+(assert (tobool (Q  x0 x1)))
 
 (check-sat)
 
+;;pto 2
+
+;;pto 2
