@@ -437,7 +437,7 @@ main (int argc, char *argv[])
 
   fprintf (fdecl, "(ssep (pto ?in (ref f ?u)) (ls ?u ?out)\n");
 
-  fprintf (fdecl, "))))))\n\n");
+  fprintf (fdecl, ")))))))\n\n");
 
   fprintf (fdecl, "(declare-fun nil () Sll_t)\n\n");
 

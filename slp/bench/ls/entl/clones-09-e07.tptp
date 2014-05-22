@@ -1,0 +1,63 @@
+%====Include axioms for Lists in Separation Logic
+include('Axioms/SepLogicLists.ax').
+
+cnf(premise_1,hypothesis,
+    ( ~ nil = x1 )).
+
+cnf(premise_2,hypothesis,
+    ( ~ nil = x2 )).
+
+cnf(premise_3,hypothesis,
+    ( ~ nil = x4 )).
+
+cnf(premise_4,hypothesis,
+    ( ~ nil = x5 )).
+
+cnf(premise_5,hypothesis,
+    ( ~ nil = x7 )).
+
+cnf(premise_6,hypothesis,
+    ( ~ nil = x8 )).
+
+cnf(premise_7,hypothesis,
+    ( ~ nil = x10 )).
+
+cnf(premise_8,hypothesis,
+    ( ~ nil = x11 )).
+
+cnf(premise_9,hypothesis,
+    ( ~ nil = x13 )).
+
+cnf(premise_10,hypothesis,
+    ( ~ nil = x14 )).
+
+cnf(premise_11,hypothesis,
+    ( ~ nil = x16 )).
+
+cnf(premise_12,hypothesis,
+    ( ~ nil = x17 )).
+
+cnf(premise_13,hypothesis,
+    ( ~ nil = x19 )).
+
+cnf(premise_14,hypothesis,
+    ( ~ nil = x20 )).
+
+cnf(premise_15,hypothesis,
+    ( ~ nil = x22 )).
+
+cnf(premise_16,hypothesis,
+    ( ~ nil = x23 )).
+
+cnf(premise_17,hypothesis,
+    ( ~ nil = x25 )).
+
+cnf(premise_18,hypothesis,
+    ( ~ nil = x26 )).
+
+cnf(premise_19,hypothesis,
+    ( heap(sep(ls(x25, x26), sep(next(x26, x25), sep(ls(x22, x23), sep(next(x23, x22), sep(ls(x19, x20), sep(next(x20, x19), sep(ls(x16, x17), sep(next(x17, x16), sep(ls(x13, x14), sep(next(x14, x13), sep(ls(x10, x11), sep(next(x11, x10), sep(ls(x7, x8), sep(next(x8, x7), sep(ls(x4, x5), sep(next(x5, x4), sep(ls(x1, x2), sep(next(x2, x1), emp))))))))))))))))))) )).
+
+cnf(conclusion_1,negated_conjecture,
+    ( ~ heap(sep(ls(x27, x26), sep(next(x26, x27), sep(ls(x24, x23), sep(next(x23, x24), sep(ls(x21, x20), sep(next(x20, x21), sep(ls(x18, x17), sep(next(x17, x18), sep(ls(x15, x14), sep(next(x14, x15), sep(ls(x12, x11), sep(next(x11, x12), sep(ls(x9, x8), sep(next(x8, x9), sep(ls(x6, x5), sep(next(x5, x6), sep(ls(x3, x2), sep(next(x2, x3), emp))))))))))))))))))) )).
+

@@ -1,0 +1,104 @@
+%------------------------------------------------------------------------------
+% File     : 
+% Domain   : Separation Logic
+% Problem  : Randomly generated entailment of the form F -> \bot (n = 19)
+% Version  : 
+% English  : A randomly generated entailment with n program variables.
+%            Negated equalities and list segments are added at random, with
+%            specific paramenters so that about half of the generated
+%            entailments are valid (or, equivalently, F is unsatisfiable).
+%            Normalization and well-formedness axioms should be enough to
+%            decide these entailments.
+
+% Refs     : [NV11] Navarro (2011), Separation Logic + Superposition Calculus
+% Source   : [NV11]
+% Names    :
+
+% Status   : 
+% Syntax   : 
+% SPC      : 
+
+% Comments :
+%------------------------------------------------------------------------------
+%====Include axioms for Lists in Separation Logic
+include('Axioms/SepLogicLists.ax').
+
+cnf(premise_1,hypothesis,
+    ( ~ x6 = x10 )).
+
+cnf(premise_2,hypothesis,
+    ( ~ x6 = x15 )).
+
+cnf(premise_3,hypothesis,
+    ( ~ x11 = x17 )).
+
+cnf(premise_4,hypothesis,
+    ( ~ x3 = x11 )).
+
+cnf(premise_5,hypothesis,
+    ( ~ x3 = x4 )).
+
+cnf(premise_6,hypothesis,
+    ( ~ x3 = x18 )).
+
+cnf(premise_7,hypothesis,
+    ( ~ x7 = x16 )).
+
+cnf(premise_8,hypothesis,
+    ( ~ x12 = x19 )).
+
+cnf(premise_9,hypothesis,
+    ( ~ x17 = x18 )).
+
+cnf(premise_10,hypothesis,
+    ( ~ x2 = x6 )).
+
+cnf(premise_11,hypothesis,
+    ( ~ x2 = x4 )).
+
+cnf(premise_12,hypothesis,
+    ( ~ x2 = x10 )).
+
+cnf(premise_13,hypothesis,
+    ( ~ x2 = x17 )).
+
+cnf(premise_14,hypothesis,
+    ( ~ x15 = x19 )).
+
+cnf(premise_15,hypothesis,
+    ( ~ x8 = x11 )).
+
+cnf(premise_16,hypothesis,
+    ( ~ x8 = x9 )).
+
+cnf(premise_17,hypothesis,
+    ( ~ x8 = x12 )).
+
+cnf(premise_18,hypothesis,
+    ( ~ x8 = x14 )).
+
+cnf(premise_19,hypothesis,
+    ( ~ x1 = x8 )).
+
+cnf(premise_20,hypothesis,
+    ( ~ x1 = x13 )).
+
+cnf(premise_21,hypothesis,
+    ( ~ x13 = x17 )).
+
+cnf(premise_22,hypothesis,
+    ( ~ x16 = x19 )).
+
+cnf(premise_23,hypothesis,
+    ( ~ x5 = x11 )).
+
+cnf(premise_24,hypothesis,
+    ( ~ x5 = x14 )).
+
+cnf(premise_25,hypothesis,
+    ( heap(sep(ls(x5, x2), sep(ls(x5, x8), sep(ls(x19, x14), sep(ls(x19, x9), sep(ls(x10, x9), sep(ls(x10, x18), sep(ls(x18, x10), sep(ls(x18, x7), sep(ls(x15, x17), sep(ls(x15, x9), sep(ls(x15, x1), sep(ls(x12, x1), sep(ls(x12, x6), sep(ls(x17, x6), sep(ls(x2, x3), sep(ls(x9, x16), sep(ls(x3, x15), emp)))))))))))))))))) )).
+
+cnf(conclusion_1,negated_conjecture,
+    ( x1 = x1
+    | ~ heap(emp) )).
+

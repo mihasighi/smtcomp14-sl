@@ -7,8 +7,10 @@ http://navarroj.com/research/papers.html#pldi11
 |)
 (set-info :smt-lib-version 2.0)
 (set-info :category "random") 
-(set-info :status unsat)
+(set-info :status unknown)
+(set-info :version 2014-05-22)
 
+(set-logic QF_NOLL)
 
 (declare-sort Sll_t 0)
 
@@ -17,9 +19,9 @@ http://navarroj.com/research/papers.html#pldi11
 (define-fun ls ((?in Sll_t) (?out Sll_t)) Space
 (tospace (or (= ?in ?out)
 (exists ((?u Sll_t))
-(tobool
+(and (distinct ?in ?out) (tobool
 (ssep (pto ?in (ref f ?u)) (ls ?u ?out)
-))))))
+)))))))
 
 (declare-fun nil () Sll_t)
 
@@ -38,11 +40,6 @@ http://navarroj.com/research/papers.html#pldi11
 (declare-fun x8 () Sll_t)
 (declare-fun x9 () Sll_t)
 (declare-fun x10 () Sll_t)
-(declare-fun alpha0 () SetLoc)
-(declare-fun alpha1 () SetLoc)
-(declare-fun alpha2 () SetLoc)
-(declare-fun alpha3 () SetLoc)
-(declare-fun alpha4 () SetLoc)
 (assert
   (and 
     (= nil nil)

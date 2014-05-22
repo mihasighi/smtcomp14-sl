@@ -7,8 +7,10 @@ http://navarroj.com/research/papers.html#pldi11
 |)
 (set-info :smt-lib-version 2.0)
 (set-info :category "random") 
-(set-info :status sat)
+(set-info :status unknown)
+(set-info :version 2014-05-22)
 
+(set-logic QF_NOLL)
 
 (declare-sort Sll_t 0)
 
@@ -17,9 +19,9 @@ http://navarroj.com/research/papers.html#pldi11
 (define-fun ls ((?in Sll_t) (?out Sll_t)) Space
 (tospace (or (= ?in ?out)
 (exists ((?u Sll_t))
-(tobool
+(and (distinct ?in ?out) (tobool
 (ssep (pto ?in (ref f ?u)) (ls ?u ?out)
-))))))
+)))))))
 
 (declare-fun nil () Sll_t)
 
@@ -68,29 +70,6 @@ http://navarroj.com/research/papers.html#pldi11
 (declare-fun x38 () Sll_t)
 (declare-fun x39 () Sll_t)
 (declare-fun x40 () Sll_t)
-(declare-fun alpha0 () SetLoc)
-(declare-fun alpha1 () SetLoc)
-(declare-fun alpha2 () SetLoc)
-(declare-fun alpha3 () SetLoc)
-(declare-fun alpha4 () SetLoc)
-(declare-fun alpha5 () SetLoc)
-(declare-fun alpha6 () SetLoc)
-(declare-fun alpha7 () SetLoc)
-(declare-fun alpha8 () SetLoc)
-(declare-fun alpha9 () SetLoc)
-(declare-fun alpha10 () SetLoc)
-(declare-fun alpha11 () SetLoc)
-(declare-fun alpha12 () SetLoc)
-(declare-fun alpha13 () SetLoc)
-(declare-fun alpha14 () SetLoc)
-(declare-fun alpha15 () SetLoc)
-(declare-fun alpha16 () SetLoc)
-(declare-fun alpha17 () SetLoc)
-(declare-fun alpha18 () SetLoc)
-(declare-fun alpha19 () SetLoc)
-(declare-fun alpha20 () SetLoc)
-(declare-fun alpha21 () SetLoc)
-(declare-fun alpha22 () SetLoc)
 (assert
   (and 
     (= nil nil)
@@ -139,12 +118,12 @@ http://navarroj.com/research/papers.html#pldi11
 (distinct nil x35 )
 (distinct x33 x35 )
 (distinct x34 x35 )
-    (tobool  (ssep  (index alpha0 (ls x34 x33 )) (ssep  (pto x35  (ref f x34 ) ) (ssep  (pto x33  (ref f x35 ) ) (ssep  (index alpha1 (ls x30 x29 )) (ssep  (pto x31  (ref f x30 ) ) (ssep  (pto x29  (ref f x31 ) ) (ssep  (index alpha2 (ls x26 x25 )) (ssep  (pto x27  (ref f x26 ) ) (ssep  (pto x25  (ref f x27 ) ) (ssep  (index alpha3 (ls x22 x21 )) (ssep  (pto x23  (ref f x22 ) ) (ssep  (pto x21  (ref f x23 ) ) (ssep  (index alpha4 (ls x18 x17 )) (ssep  (pto x19  (ref f x18 ) ) (ssep  (pto x17  (ref f x19 ) ) (ssep  (index alpha5 (ls x14 x13 )) (ssep  (pto x15  (ref f x14 ) ) (ssep  (pto x13  (ref f x15 ) ) (ssep  (index alpha6 (ls x10 x9 )) (ssep  (pto x11  (ref f x10 ) ) (ssep  (pto x9  (ref f x11 ) ) (ssep  (index alpha7 (ls x6 x5 )) (ssep  (pto x7  (ref f x6 ) ) (ssep  (pto x5  (ref f x7 ) ) (ssep  (index alpha8 (ls x2 x1 )) (ssep  (pto x3  (ref f x2 ) ) (ssep  (pto x1  (ref f x3 ) )(ssep (pto x_emp (ref f y_emp)) (pto z_emp (ref f t_emp)))))))))))))))))))))))))))))))
+    (tobool  (ssep  (ls x34 x33 ) (ssep  (pto x35  (ref f x34 ) ) (ssep  (pto x33  (ref f x35 ) ) (ssep  (ls x30 x29 ) (ssep  (pto x31  (ref f x30 ) ) (ssep  (pto x29  (ref f x31 ) ) (ssep  (ls x26 x25 ) (ssep  (pto x27  (ref f x26 ) ) (ssep  (pto x25  (ref f x27 ) ) (ssep  (ls x22 x21 ) (ssep  (pto x23  (ref f x22 ) ) (ssep  (pto x21  (ref f x23 ) ) (ssep  (ls x18 x17 ) (ssep  (pto x19  (ref f x18 ) ) (ssep  (pto x17  (ref f x19 ) ) (ssep  (ls x14 x13 ) (ssep  (pto x15  (ref f x14 ) ) (ssep  (pto x13  (ref f x15 ) ) (ssep  (ls x10 x9 ) (ssep  (pto x11  (ref f x10 ) ) (ssep  (pto x9  (ref f x11 ) ) (ssep  (ls x6 x5 ) (ssep  (pto x7  (ref f x6 ) ) (ssep  (pto x5  (ref f x7 ) ) (ssep  (ls x2 x1 ) (ssep  (pto x3  (ref f x2 ) ) (ssep  (pto x1  (ref f x3 ) )(ssep (pto x_emp (ref f y_emp)) (pto z_emp (ref f t_emp)))))))))))))))))))))))))))))))
   )
 )
 (assert
   (not
-        (tobool  (ssep  (pto x36  (ref f x35 ) ) (ssep  (index alpha9 (ls x34 x36 )) (ssep  (pto x35  (ref f x34 ) ) (ssep  (pto x32  (ref f x31 ) ) (ssep  (index alpha10 (ls x30 x32 )) (ssep  (pto x31  (ref f x30 ) ) (ssep  (pto x28  (ref f x27 ) ) (ssep  (index alpha11 (ls x26 x28 )) (ssep  (pto x27  (ref f x26 ) ) (ssep  (pto x24  (ref f x23 ) ) (ssep  (index alpha12 (ls x22 x24 )) (ssep  (pto x23  (ref f x22 ) ) (ssep  (pto x20  (ref f x19 ) ) (ssep  (index alpha13 (ls x18 x20 )) (ssep  (pto x19  (ref f x18 ) ) (ssep  (pto x16  (ref f x15 ) ) (ssep  (index alpha14 (ls x14 x16 )) (ssep  (pto x15  (ref f x14 ) ) (ssep  (pto x12  (ref f x11 ) ) (ssep  (index alpha15 (ls x10 x12 )) (ssep  (pto x11  (ref f x10 ) ) (ssep  (pto x8  (ref f x7 ) ) (ssep  (index alpha16 (ls x6 x8 )) (ssep  (pto x7  (ref f x6 ) ) (ssep  (pto x4  (ref f x3 ) ) (ssep  (index alpha17 (ls x2 x4 )) (ssep  (pto x3  (ref f x2 ) )(ssep (pto x_emp (ref f y_emp)) (pto z_emp (ref f t_emp)))))))))))))))))))))))))))))))
+        (tobool  (ssep  (pto x36  (ref f x35 ) ) (ssep  (ls x34 x36 ) (ssep  (pto x35  (ref f x34 ) ) (ssep  (pto x32  (ref f x31 ) ) (ssep  (ls x30 x32 ) (ssep  (pto x31  (ref f x30 ) ) (ssep  (pto x28  (ref f x27 ) ) (ssep  (ls x26 x28 ) (ssep  (pto x27  (ref f x26 ) ) (ssep  (pto x24  (ref f x23 ) ) (ssep  (ls x22 x24 ) (ssep  (pto x23  (ref f x22 ) ) (ssep  (pto x20  (ref f x19 ) ) (ssep  (ls x18 x20 ) (ssep  (pto x19  (ref f x18 ) ) (ssep  (pto x16  (ref f x15 ) ) (ssep  (ls x14 x16 ) (ssep  (pto x15  (ref f x14 ) ) (ssep  (pto x12  (ref f x11 ) ) (ssep  (ls x10 x12 ) (ssep  (pto x11  (ref f x10 ) ) (ssep  (pto x8  (ref f x7 ) ) (ssep  (ls x6 x8 ) (ssep  (pto x7  (ref f x6 ) ) (ssep  (pto x4  (ref f x3 ) ) (ssep  (ls x2 x4 ) (ssep  (pto x3  (ref f x2 ) )(ssep (pto x_emp (ref f y_emp)) (pto z_emp (ref f t_emp)))))))))))))))))))))))))))))))
   ))
 
 (check-sat)

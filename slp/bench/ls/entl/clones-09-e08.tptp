@@ -1,0 +1,144 @@
+%====Include axioms for Lists in Separation Logic
+include('Axioms/SepLogicLists.ax').
+
+cnf(premise_1,hypothesis,
+    ( ~ nil = x1 )).
+
+cnf(premise_2,hypothesis,
+    ( ~ nil = x2 )).
+
+cnf(premise_3,hypothesis,
+    ( ~ nil = x3 )).
+
+cnf(premise_4,hypothesis,
+    ( ~ x1 = x3 )).
+
+cnf(premise_5,hypothesis,
+    ( ~ x2 = x3 )).
+
+cnf(premise_6,hypothesis,
+    ( ~ nil = x5 )).
+
+cnf(premise_7,hypothesis,
+    ( ~ nil = x6 )).
+
+cnf(premise_8,hypothesis,
+    ( ~ nil = x7 )).
+
+cnf(premise_9,hypothesis,
+    ( ~ x5 = x7 )).
+
+cnf(premise_10,hypothesis,
+    ( ~ x6 = x7 )).
+
+cnf(premise_11,hypothesis,
+    ( ~ nil = x9 )).
+
+cnf(premise_12,hypothesis,
+    ( ~ nil = x10 )).
+
+cnf(premise_13,hypothesis,
+    ( ~ nil = x11 )).
+
+cnf(premise_14,hypothesis,
+    ( ~ x9 = x11 )).
+
+cnf(premise_15,hypothesis,
+    ( ~ x10 = x11 )).
+
+cnf(premise_16,hypothesis,
+    ( ~ nil = x13 )).
+
+cnf(premise_17,hypothesis,
+    ( ~ nil = x14 )).
+
+cnf(premise_18,hypothesis,
+    ( ~ nil = x15 )).
+
+cnf(premise_19,hypothesis,
+    ( ~ x13 = x15 )).
+
+cnf(premise_20,hypothesis,
+    ( ~ x14 = x15 )).
+
+cnf(premise_21,hypothesis,
+    ( ~ nil = x17 )).
+
+cnf(premise_22,hypothesis,
+    ( ~ nil = x18 )).
+
+cnf(premise_23,hypothesis,
+    ( ~ nil = x19 )).
+
+cnf(premise_24,hypothesis,
+    ( ~ x17 = x19 )).
+
+cnf(premise_25,hypothesis,
+    ( ~ x18 = x19 )).
+
+cnf(premise_26,hypothesis,
+    ( ~ nil = x21 )).
+
+cnf(premise_27,hypothesis,
+    ( ~ nil = x22 )).
+
+cnf(premise_28,hypothesis,
+    ( ~ nil = x23 )).
+
+cnf(premise_29,hypothesis,
+    ( ~ x21 = x23 )).
+
+cnf(premise_30,hypothesis,
+    ( ~ x22 = x23 )).
+
+cnf(premise_31,hypothesis,
+    ( ~ nil = x25 )).
+
+cnf(premise_32,hypothesis,
+    ( ~ nil = x26 )).
+
+cnf(premise_33,hypothesis,
+    ( ~ nil = x27 )).
+
+cnf(premise_34,hypothesis,
+    ( ~ x25 = x27 )).
+
+cnf(premise_35,hypothesis,
+    ( ~ x26 = x27 )).
+
+cnf(premise_36,hypothesis,
+    ( ~ nil = x29 )).
+
+cnf(premise_37,hypothesis,
+    ( ~ nil = x30 )).
+
+cnf(premise_38,hypothesis,
+    ( ~ nil = x31 )).
+
+cnf(premise_39,hypothesis,
+    ( ~ x29 = x31 )).
+
+cnf(premise_40,hypothesis,
+    ( ~ x30 = x31 )).
+
+cnf(premise_41,hypothesis,
+    ( ~ nil = x33 )).
+
+cnf(premise_42,hypothesis,
+    ( ~ nil = x34 )).
+
+cnf(premise_43,hypothesis,
+    ( ~ nil = x35 )).
+
+cnf(premise_44,hypothesis,
+    ( ~ x33 = x35 )).
+
+cnf(premise_45,hypothesis,
+    ( ~ x34 = x35 )).
+
+cnf(premise_46,hypothesis,
+    ( heap(sep(ls(x34, x33), sep(next(x35, x34), sep(next(x33, x35), sep(ls(x30, x29), sep(next(x31, x30), sep(next(x29, x31), sep(ls(x26, x25), sep(next(x27, x26), sep(next(x25, x27), sep(ls(x22, x21), sep(next(x23, x22), sep(next(x21, x23), sep(ls(x18, x17), sep(next(x19, x18), sep(next(x17, x19), sep(ls(x14, x13), sep(next(x15, x14), sep(next(x13, x15), sep(ls(x10, x9), sep(next(x11, x10), sep(next(x9, x11), sep(ls(x6, x5), sep(next(x7, x6), sep(next(x5, x7), sep(ls(x2, x1), sep(next(x3, x2), sep(next(x1, x3), emp)))))))))))))))))))))))))))) )).
+
+cnf(conclusion_1,negated_conjecture,
+    ( ~ heap(sep(next(x36, x35), sep(ls(x34, x36), sep(next(x35, x34), sep(next(x32, x31), sep(ls(x30, x32), sep(next(x31, x30), sep(next(x28, x27), sep(ls(x26, x28), sep(next(x27, x26), sep(next(x24, x23), sep(ls(x22, x24), sep(next(x23, x22), sep(next(x20, x19), sep(ls(x18, x20), sep(next(x19, x18), sep(next(x16, x15), sep(ls(x14, x16), sep(next(x15, x14), sep(next(x12, x11), sep(ls(x10, x12), sep(next(x11, x10), sep(next(x8, x7), sep(ls(x6, x8), sep(next(x7, x6), sep(next(x4, x3), sep(ls(x2, x4), sep(next(x3, x2), emp)))))))))))))))))))))))))))) )).
+

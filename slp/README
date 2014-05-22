@@ -11,4 +11,23 @@ See smtlib2sl/sl_prob2slp.? and run in smtlib2/
 
 Output in <file>.smt2.slp
 
+B) Translation from the TPTP format to SMTLIB v2 format for SL
+   Follow the steps:
+
+B.1) Set the TPTP_HOME environement variable to this directory (slp), e.g.:
+
+	$ export TPTP_HOME=`pwd`
+
+B.2) Execute 'make TPTP_to_SMTLIB' in the JJParser directory.
+     (needs lex, yacc, and gcc)
+
+B.3) Execute the script tptp2smt.sh a s follows
+
+     ./tptp2smt.sh <source-dir> <prefix-filename> <dest-dir>
+
+    The output file (.smt2) has as header the information in the
+    set-info.smt2 file.
+
+
+
 

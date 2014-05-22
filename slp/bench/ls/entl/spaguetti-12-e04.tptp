@@ -1,0 +1,50 @@
+%------------------------------------------------------------------------------
+% File     : 
+% Domain   : Separation Logic
+% Problem  : Randomly generated entailment of the form F -> \bot (n = 12)
+% Version  : 
+% English  : A randomly generated entailment with n program variables.
+%            Negated equalities and list segments are added at random, with
+%            specific paramenters so that about half of the generated
+%            entailments are valid (or, equivalently, F is unsatisfiable).
+%            Normalization and well-formedness axioms should be enough to
+%            decide these entailments.
+
+% Refs     : [NV11] Navarro (2011), Separation Logic + Superposition Calculus
+% Source   : [NV11]
+% Names    :
+
+% Status   : 
+% Syntax   : 
+% SPC      : 
+
+% Comments :
+%------------------------------------------------------------------------------
+%====Include axioms for Lists in Separation Logic
+include('Axioms/SepLogicLists.ax').
+
+cnf(premise_1,hypothesis,
+    ( ~ x8 = x12 )).
+
+cnf(premise_2,hypothesis,
+    ( ~ x4 = x11 )).
+
+cnf(premise_3,hypothesis,
+    ( ~ x4 = x12 )).
+
+cnf(premise_4,hypothesis,
+    ( ~ x7 = x9 )).
+
+cnf(premise_5,hypothesis,
+    ( ~ x2 = x4 )).
+
+cnf(premise_6,hypothesis,
+    ( ~ x2 = x7 )).
+
+cnf(premise_7,hypothesis,
+    ( heap(sep(ls(x5, x1), sep(ls(x2, x11), sep(ls(x10, x9), sep(ls(x10, x7), sep(ls(x9, x7), sep(ls(x9, x3), sep(ls(x9, x6), sep(ls(x3, x4), sep(ls(x11, x5), sep(ls(x11, x4), sep(ls(x4, x11), sep(ls(x6, x9), sep(ls(x6, x7), emp)))))))))))))) )).
+
+cnf(conclusion_1,negated_conjecture,
+    ( x1 = x1
+    | ~ heap(emp) )).
+

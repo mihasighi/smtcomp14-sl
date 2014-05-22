@@ -1,0 +1,54 @@
+%====Include axioms for Lists in Separation Logic
+include('Axioms/SepLogicLists.ax').
+
+cnf(premise_1,hypothesis,
+    ( ~ nil = x1 )).
+
+cnf(premise_2,hypothesis,
+    ( ~ nil = x2 )).
+
+cnf(premise_3,hypothesis,
+    ( ~ nil = x3 )).
+
+cnf(premise_4,hypothesis,
+    ( ~ x1 = x3 )).
+
+cnf(premise_5,hypothesis,
+    ( ~ x2 = x3 )).
+
+cnf(premise_6,hypothesis,
+    ( ~ nil = x5 )).
+
+cnf(premise_7,hypothesis,
+    ( ~ nil = x6 )).
+
+cnf(premise_8,hypothesis,
+    ( ~ nil = x7 )).
+
+cnf(premise_9,hypothesis,
+    ( ~ x5 = x7 )).
+
+cnf(premise_10,hypothesis,
+    ( ~ x6 = x7 )).
+
+cnf(premise_11,hypothesis,
+    ( ~ nil = x9 )).
+
+cnf(premise_12,hypothesis,
+    ( ~ nil = x10 )).
+
+cnf(premise_13,hypothesis,
+    ( ~ nil = x11 )).
+
+cnf(premise_14,hypothesis,
+    ( ~ x9 = x11 )).
+
+cnf(premise_15,hypothesis,
+    ( ~ x10 = x11 )).
+
+cnf(premise_16,hypothesis,
+    ( heap(sep(ls(x10, x9), sep(next(x11, x10), sep(next(x9, x11), sep(ls(x6, x5), sep(next(x7, x6), sep(next(x5, x7), sep(ls(x2, x1), sep(next(x3, x2), sep(next(x1, x3), emp)))))))))) )).
+
+cnf(conclusion_1,negated_conjecture,
+    ( ~ heap(sep(next(x12, x11), sep(ls(x10, x12), sep(next(x11, x10), sep(next(x8, x7), sep(ls(x6, x8), sep(next(x7, x6), sep(next(x4, x3), sep(ls(x2, x4), sep(next(x3, x2), emp)))))))))) )).
+

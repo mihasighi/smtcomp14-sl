@@ -1,0 +1,12 @@
+%====Include axioms for Lists in Separation Logic
+include('Axioms/SepLogicLists.ax').
+
+cnf(premise_1,hypothesis,
+    ( ~ nil = x1 )).
+
+cnf(premise_2,hypothesis,
+    ( heap(sep(next(x1, x2), emp)) )).
+
+cnf(conclusion_1,negated_conjecture,
+    ( ~ heap(sep(next(x1, x2), emp)) )).
+

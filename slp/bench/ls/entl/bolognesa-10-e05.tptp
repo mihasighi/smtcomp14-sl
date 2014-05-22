@@ -1,0 +1,32 @@
+%------------------------------------------------------------------------------
+% File     : 
+% Domain   : Separation Logic
+% Problem  : Randomly generated entailment of the form F -> G (n = 10)
+% Version  : 
+% English  : A randomly generated entailment with n program variables.
+%            A random graph with pointers and list segments is generated,
+%            and then some of the segments are folded. The task is to
+%            prove whether the unfolded version entails the folded one.
+%            Parameters are chosen so that about half of the generated
+%            entailments are valid.
+%            These entailments stress the role of unfolding axioms.
+
+% Refs     : [NV11] Navarro (2011), Separation Logic + Superposition Calculus
+% Source   : [NV11]
+% Names    :
+
+% Status   : 
+% Syntax   : 
+% SPC      : 
+
+% Comments :
+%------------------------------------------------------------------------------
+%====Include axioms for Lists in Separation Logic
+include('Axioms/SepLogicLists.ax').
+
+cnf(premise_1,hypothesis,
+    ( heap(sep(ls(x3, x6), sep(next(x9, x1), sep(next(x7, x9), sep(next(x6, x7), sep(ls(x8, x9), sep(ls(x1, x9), sep(next(x2, x3), sep(next(x5, x1), sep(next(x4, x9), sep(ls(x10, x5), emp))))))))))) )).
+
+cnf(conclusion_1,negated_conjecture,
+    ( ~ heap(sep(ls(x10, x5), sep(ls(x5, x1), sep(ls(x2, x9), sep(ls(x4, x9), sep(ls(x8, x1), sep(ls(x1, x9), emp))))))) )).
+

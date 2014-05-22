@@ -1,0 +1,77 @@
+%------------------------------------------------------------------------------
+% File     : 
+% Domain   : Separation Logic
+% Problem  : Randomly generated entailment of the form F -> \bot (n = 16)
+% Version  : 
+% English  : A randomly generated entailment with n program variables.
+%            Negated equalities and list segments are added at random, with
+%            specific paramenters so that about half of the generated
+%            entailments are valid (or, equivalently, F is unsatisfiable).
+%            Normalization and well-formedness axioms should be enough to
+%            decide these entailments.
+
+% Refs     : [NV11] Navarro (2011), Separation Logic + Superposition Calculus
+% Source   : [NV11]
+% Names    :
+
+% Status   : 
+% Syntax   : 
+% SPC      : 
+
+% Comments :
+%------------------------------------------------------------------------------
+%====Include axioms for Lists in Separation Logic
+include('Axioms/SepLogicLists.ax').
+
+cnf(premise_1,hypothesis,
+    ( ~ x6 = x11 )).
+
+cnf(premise_2,hypothesis,
+    ( ~ x6 = x7 )).
+
+cnf(premise_3,hypothesis,
+    ( ~ x3 = x10 )).
+
+cnf(premise_4,hypothesis,
+    ( ~ x3 = x14 )).
+
+cnf(premise_5,hypothesis,
+    ( ~ x7 = x15 )).
+
+cnf(premise_6,hypothesis,
+    ( ~ x9 = x15 )).
+
+cnf(premise_7,hypothesis,
+    ( ~ x9 = x14 )).
+
+cnf(premise_8,hypothesis,
+    ( ~ x2 = x16 )).
+
+cnf(premise_9,hypothesis,
+    ( ~ x2 = x5 )).
+
+cnf(premise_10,hypothesis,
+    ( ~ x14 = x16 )).
+
+cnf(premise_11,hypothesis,
+    ( ~ x10 = x11 )).
+
+cnf(premise_12,hypothesis,
+    ( ~ x13 = x15 )).
+
+cnf(premise_13,hypothesis,
+    ( ~ x5 = x9 )).
+
+cnf(premise_14,hypothesis,
+    ( ~ x5 = x16 )).
+
+cnf(premise_15,hypothesis,
+    ( ~ x5 = x15 )).
+
+cnf(premise_16,hypothesis,
+    ( heap(sep(ls(x14, x12), sep(ls(x2, x13), sep(ls(x13, x6), sep(ls(x13, x8), sep(ls(x10, x2), sep(ls(x10, x3), sep(ls(x7, x2), sep(ls(x7, x16), sep(ls(x3, x14), sep(ls(x11, x4), sep(ls(x6, x14), sep(ls(x6, x16), emp))))))))))))) )).
+
+cnf(conclusion_1,negated_conjecture,
+    ( x1 = x1
+    | ~ heap(emp) )).
+

@@ -1,0 +1,90 @@
+%====Include axioms for Lists in Separation Logic
+include('Axioms/SepLogicLists.ax').
+
+cnf(premise_1,hypothesis,
+    ( ~ nil = x1 )).
+
+cnf(premise_2,hypothesis,
+    ( ~ nil = x2 )).
+
+cnf(premise_3,hypothesis,
+    ( ~ x1 = x2 )).
+
+cnf(premise_4,hypothesis,
+    ( ~ nil = x3 )).
+
+cnf(premise_5,hypothesis,
+    ( ~ nil = x4 )).
+
+cnf(premise_6,hypothesis,
+    ( ~ x3 = x4 )).
+
+cnf(premise_7,hypothesis,
+    ( ~ nil = x5 )).
+
+cnf(premise_8,hypothesis,
+    ( ~ nil = x6 )).
+
+cnf(premise_9,hypothesis,
+    ( ~ x5 = x6 )).
+
+cnf(premise_10,hypothesis,
+    ( ~ nil = x7 )).
+
+cnf(premise_11,hypothesis,
+    ( ~ nil = x8 )).
+
+cnf(premise_12,hypothesis,
+    ( ~ x7 = x8 )).
+
+cnf(premise_13,hypothesis,
+    ( ~ nil = x9 )).
+
+cnf(premise_14,hypothesis,
+    ( ~ nil = x10 )).
+
+cnf(premise_15,hypothesis,
+    ( ~ x9 = x10 )).
+
+cnf(premise_16,hypothesis,
+    ( ~ nil = x11 )).
+
+cnf(premise_17,hypothesis,
+    ( ~ nil = x12 )).
+
+cnf(premise_18,hypothesis,
+    ( ~ x11 = x12 )).
+
+cnf(premise_19,hypothesis,
+    ( ~ nil = x13 )).
+
+cnf(premise_20,hypothesis,
+    ( ~ nil = x14 )).
+
+cnf(premise_21,hypothesis,
+    ( ~ x13 = x14 )).
+
+cnf(premise_22,hypothesis,
+    ( ~ nil = x15 )).
+
+cnf(premise_23,hypothesis,
+    ( ~ nil = x16 )).
+
+cnf(premise_24,hypothesis,
+    ( ~ x15 = x16 )).
+
+cnf(premise_25,hypothesis,
+    ( ~ nil = x17 )).
+
+cnf(premise_26,hypothesis,
+    ( ~ nil = x18 )).
+
+cnf(premise_27,hypothesis,
+    ( ~ x17 = x18 )).
+
+cnf(premise_28,hypothesis,
+    ( heap(emp) )).
+
+cnf(conclusion_1,negated_conjecture,
+    ( ~ heap(emp) )).
+
