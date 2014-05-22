@@ -42,7 +42,7 @@ compile: $(subst .c,$(DEBUG).o,$(CCSRC))
 	$(CXX) -o $@ $^ $(LDFLAGS) $(SHARED_LIBS)
 
 clean:
-	rm -f *.o *~ *.defs *.slp *.sle
+	rm -f *.o *~ *.defs *.slp *.sle *.sld
 	
 distclean: clean
 	rm smtlib2sl_compile

@@ -163,28 +163,41 @@ sl_pto_2slide (FILE * fout, sl_var_array * args, sl_var_array * lvars,
 
 }
 
+
+void
+sl_form2name_2slide (FILE * fout, sl_form_t * form, char *name)
+{
+  // print name
+  fprintf (fout, "%s(", name);
+  // print args
+  for (size_t i = 1; i < sl_vector_size (form->lvars); i++)
+    {
+      if (i > 1)
+	fprintf (fout, ",");
+      fprintf (fout, "%s", sl_var_2slide (NULL, form->lvars, i));
+    }
+  fprintf (fout, ")");
+}
+
+
 /**
  * Only separated calls to predicats allowed.
  * @return 0 if not supported formula, 1 otherwise
  */
 int
-sl_form_2slide (FILE * fout, sl_form_t * form)
+sl_form2pred_2slide (FILE * fout, sl_form_t * form, char *name)
 {
   assert (NULL != fout);
   assert (NULL != form);
 
+  // print name
+  sl_form2name_2slide (fout, form, name);
+  fprintf (fout, " ::= ");
+
+  // print the only case
   size_t nbc = 0;
 
-  // existential vars are optional
-  /*
-     if (!sl_vector_empty(form->lvars)) {
-     fprintf (fout, "\\E ");
-     sl_var_array_2slide(fout, form->lvars, 1);
-     fprintf (fout, " . ");
-     }
-   */
-
-  // if pure formula, stop
+  // if any pure formula, stop
   if (!sl_vector_empty (form->pure))
     return 0;
 
@@ -330,23 +343,30 @@ sl_prob_2slide (const char *fname)
       return;
     }
 
-  fprintf (fout, "RootCall ");
+  // Print the query
+  fprintf (fout, "Entail ");
+  sl_form2name_2slide (fout, sl_prob->pform, "LHS");
+  fprintf (fout, " |- ");
+  if (sl_vector_empty (sl_prob->nform))
+    fprintf (fout, "false");
+  else
+    sl_form2name_2slide (fout, sl_vector_at (sl_prob->nform, 0), "RHS");
+  fprintf (fout, "\n\n");
 
-  // translate positive formula
-  if (!sl_form_2slide (fout, sl_prob->pform))
+  // Generate the predicate for the positive formula
+  if (!sl_form2pred_2slide (fout, sl_prob->pform, "LHS"))
     {
-      sl_error (1, "sl_prob_2slide", "input formula in incorect form");
+      sl_error (1, "sl_prob_2slide", "incorrect LHS formula");
+      goto endslide;
+    }
+  // Generate the predicate for the negative formula
+  if ((!sl_vector_empty (sl_prob->nform)) &&
+      (!sl_form2pred_2slide (fout, sl_prob->pform, "LHS")))
+    {
+      sl_error (1, "sl_prob_2slide", "incorrect RHS formula");
       goto endslide;
     }
 
-  // Translate the problem only for sat
-  if (!sl_vector_empty (sl_prob->nform))
-    {
-      //fprintf (fout, " |- ");
-      // translate negative formula
-      // sl_form_2slide (fout, sl_vector_at (sl_prob->nform, 0));
-      sl_warning ("sl_prob_2slide", "entailment problem NYI");
-    }
   // Translate predicates
   size_t last = sl_vector_size (preds_array) - 1;
   for (size_t i = 0; i <= last; i++)
