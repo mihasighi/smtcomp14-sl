@@ -54,9 +54,9 @@
 
 (assert (tobool (ssep
         (ls x y)
-	(pto y (ref f0 z)
+	(pto y (ref f0 z))
         (ls z nil)
-)))
+))))
 
 (assert (not (tobool (ssep
         (ls x z)

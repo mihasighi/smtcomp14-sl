@@ -71,11 +71,11 @@
 
 (assert (tobool (ssep
         (ListE x y)
-        (List0 y z)
+        (ListO y z)
 )))
 
 (assert (not (tobool
-        (List0 x z)
+        (ListO x z)
 )))
 
 

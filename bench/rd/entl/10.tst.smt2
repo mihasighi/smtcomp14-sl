@@ -70,8 +70,8 @@
 (declare-fun z () GTyp)
 
 (assert (tobool (ssep
-        (List0 x y)
-        (List0 y z)
+        (ListO x y)
+        (ListO y z)
 )))
 
 (assert (not (tobool

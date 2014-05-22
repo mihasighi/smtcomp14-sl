@@ -141,24 +141,47 @@ sl_ls_2slide (FILE * fout, sl_var_array * args, sl_var_array * lvars,
  */
 int
 sl_pto_2slide (FILE * fout, sl_var_array * args, sl_var_array * lvars,
-	       sl_space_t * form, bool withsep)
+	       sl_space_t * form, bool goinside, bool withsep)
 {
   assert (NULL != form);
 
-  // Only pto are allowed
-  if (form->kind != SL_SPACE_PTO)
+  switch (form->kind)
     {
-      return 0;
+    case SL_SPACE_PTO:
+      {
+	if (withsep)
+	  fprintf (fout, " * ");
+
+	// print source
+	fprintf (fout, "%s->", sl_var_2slide (args, lvars, form->m.pto.sid));
+	// print destinations
+	sl_vid_array_2slide (fout, args, lvars, form->m.pto.dest);
+      }
+    case SL_SPACE_LS:
+      {
+	return 0;
+      }
+    case SL_SPACE_SSEP:
+      {
+	if (!goinside)
+	  return 0;
+
+	int nbc = 0;
+	for (size_t i = 0; i < sl_vector_size (form->m.sep); i++)
+	  {
+	    int nls = sl_pto_2slide (fout, NULL, lvars,
+				     sl_vector_at (form->m.sep, i), goinside,
+				     (nbc > 0) ? true : withsep);
+	    fflush (fout);
+	    nbc += nls;
+	  }
+	break;
+      }
+    default:
+      {
+	return 0;
+      }
     }
-
-  if (withsep)
-    fprintf (fout, " * ");
-
-  // print source
-  fprintf (fout, "%s->", sl_var_2slide (args, lvars, form->m.pto.sid));
-  // print destinations
-  sl_vid_array_2slide (fout, args, lvars, form->m.pto.dest);
-
   return 1;
 
 }
@@ -191,26 +214,59 @@ sl_form2pred_2slide (FILE * fout, sl_form_t * form, char *name)
   assert (NULL != form);
 
   // print name
+  fprintf (fout, "\n");
   sl_form2name_2slide (fout, form, name);
   fprintf (fout, " ::= ");
 
   // print the only case
   size_t nbc = 0;
 
-  // if any pure formula, stop
-  if (!sl_vector_empty (form->pure))
-    return 0;
-
-  if (form->space == NULL)
+  // print existentials
+  if (form->lvars != NULL && !sl_vector_empty (form->lvars))
     {
-      fprintf (fout, " emp\n");
-      return 1;
+      fprintf (fout, "\\E ");
+      for (size_t i = 1; i < sl_vector_size (form->lvars); i++)
+	{
+	  if (i > 1)
+	    fprintf (fout, ",");
+	  fprintf (fout, "%s", sl_var_2slide (NULL, form->lvars, i));
+	}
+      fprintf (fout, " . ");
     }
 
-  // continue with spatial formulas
-  // only LS formulas
-  if (!sl_ls_2slide (fout, NULL, form->lvars, form->space, false, false))
-    return 0;
+  // start with pto formula (only one!)
+  nbc += sl_pto_2slide (fout, NULL, form->lvars, form->space, true,
+			(nbc > 0) ? true : false);
+  fflush (fout);
+
+  if (nbc > 1)
+    {
+      sl_warning ("sl_pred_case_2slide",
+		  "more than one pto in predicate definition");
+      //return 0;
+    }
+
+  // continue with pure formula
+  for (size_t i = 0; i < sl_vector_size (form->pure); i++)
+    {
+      if (nbc > 0)
+	fprintf (fout, " & ");
+      nbc +=
+	sl_pure_2slide (fout, NULL, form->lvars,
+			sl_vector_at (form->pure, i));
+      fflush (fout);
+    }
+
+  // continue with ls formulas
+  nbc += sl_ls_2slide (fout, NULL, form->lvars, form->space, false,
+		       (nbc > 0) ? true : false);
+  fflush (fout);
+
+
+  SL_DEBUG ("\t nbc=%zu\n", nbc);
+  assert (nbc > 0);
+
+  fprintf (fout, "\n");
 
   return 1;
 }
@@ -245,8 +301,9 @@ sl_pred_case_2slide (FILE * fout, sl_var_array * args, sl_pred_case_t * c)
   // start with pto formula (only one!)
   for (size_t i = 0; i < sl_vector_size (c->space); i++)
     {
-      nbc += sl_pto_2slide (fout, args, c->lvars, sl_vector_at (c->space, i),
-			    (nbc > 0) ? true : false);
+      nbc +=
+	sl_pto_2slide (fout, args, c->lvars, sl_vector_at (c->space, i),
+		       false, (nbc > 0) ? true : false);
       fflush (fout);
     }
 
@@ -361,7 +418,7 @@ sl_prob_2slide (const char *fname)
     }
   // Generate the predicate for the negative formula
   if ((!sl_vector_empty (sl_prob->nform)) &&
-      (!sl_form2pred_2slide (fout, sl_prob->pform, "LHS")))
+      (!sl_form2pred_2slide (fout, sl_vector_at (sl_prob->nform, 0), "RHS")))
     {
       sl_error (1, "sl_prob_2slide", "incorrect RHS formula");
       goto endslide;

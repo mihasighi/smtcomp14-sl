@@ -70,7 +70,7 @@
 
 (assert (or
 	(tobool (ListE x y))
-        (tobool (List0 x y))
+        (tobool (ListO x y))
 ))
 
 (assert (not (tobool
