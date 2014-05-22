@@ -1,8 +1,8 @@
 Benchmarks and tools for the Cyclist solver.
 
-[1] http://www.cs.mdx.ac.uk/staffpages/nikosgkorogiannis/publications/2014-csl-lics.pdf
+[1] https://github.com/ngorogiannis/cyclist
 
-[2] https://github.com/ngorogiannis/cyclist
+[2] https://github.com/ngorogiannis/cyclist/blob/master/papers/cyclist.pdf
 
-[3] https://github.com/ngorogiannis/cyclist/releases/tag/CSL-LICS14
+[3] https://github.com/ngorogiannis/cyclist/blob/master/papers/slsat.pdf
 
