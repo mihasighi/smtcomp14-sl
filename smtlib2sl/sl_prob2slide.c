@@ -151,11 +151,11 @@ sl_pto_2slide (FILE * fout, sl_var_array * args, sl_var_array * lvars,
       {
 	if (withsep)
 	  fprintf (fout, " * ");
-
 	// print source
 	fprintf (fout, "%s->", sl_var_2slide (args, lvars, form->m.pto.sid));
 	// print destinations
 	sl_vid_array_2slide (fout, args, lvars, form->m.pto.dest);
+	return 1;
       }
     case SL_SPACE_LS:
       {
@@ -175,7 +175,7 @@ sl_pto_2slide (FILE * fout, sl_var_array * args, sl_var_array * lvars,
 	    fflush (fout);
 	    nbc += nls;
 	  }
-	break;
+	return nbc;
       }
     default:
       {
@@ -183,7 +183,6 @@ sl_pto_2slide (FILE * fout, sl_var_array * args, sl_var_array * lvars,
       }
     }
   return 1;
-
 }
 
 
@@ -221,18 +220,20 @@ sl_form2pred_2slide (FILE * fout, sl_form_t * form, char *name)
   // print the only case
   size_t nbc = 0;
 
-  // print existentials
-  if (form->lvars != NULL && !sl_vector_empty (form->lvars))
-    {
-      fprintf (fout, "\\E ");
-      for (size_t i = 1; i < sl_vector_size (form->lvars); i++)
-	{
-	  if (i > 1)
-	    fprintf (fout, ",");
-	  fprintf (fout, "%s", sl_var_2slide (NULL, form->lvars, i));
-	}
-      fprintf (fout, " . ");
-    }
+  // existentials = arguments
+  /*
+     if (form->lvars != NULL && !sl_vector_empty (form->lvars))
+     {
+     fprintf (fout, "\\E ");
+     for (size_t i = 1; i < sl_vector_size (form->lvars); i++)
+     {
+     if (i > 1)
+     fprintf (fout, ",");
+     fprintf (fout, "%s", sl_var_2slide (NULL, form->lvars, i));
+     }
+     fprintf (fout, " . ");
+     }
+   */
 
   // start with pto formula (only one!)
   nbc += sl_pto_2slide (fout, NULL, form->lvars, form->space, true,
