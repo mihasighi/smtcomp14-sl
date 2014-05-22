@@ -15,7 +15,7 @@
          (tospace Bool Space)
          (par (A B) (ref (Field A B) B (SetRef A)))
          (par (A) (sref (SetRef A) (SetRef A) (SetRef A) :left-assoc))
-         (loop Space)
+         (loop Space Space)
         )
 
  :notes "The generic -- program independent -- signature for the SLRD logic."
