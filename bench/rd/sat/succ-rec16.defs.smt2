@@ -1,13 +1,13 @@
 (set-logic QF_S)
 (set-info :source |
-  James Brotherston, Carsten Fuhs, Nikos Gorogiannis, and Juan Navarro Pérez.
-  A decision procedure for satisfiability in separation logic with inductive
-  predicates. To appear at CSL-LICS, 2014.
+  James Brotherston, Nikos Gorogiannis, and Rasmus Petersen
+  A Generic Cyclic Theorem Prover. APLAS, 2012.
   https://github.com/ngorogiannis/cyclist
 |)
 (set-info :smt-lib-version 2.0)
 (set-info :category "crafted")
 (set-info :status unknown)
+(set-info :version 2014-05-22)
 
 
 
@@ -21,15 +21,61 @@
 
 ;predicates 
 
-(define-fun zero ((?x GTyp)) Space 
+(define-fun P ((?x1 GTyp) (?x2 GTyp) (?x3 GTyp) (?x4 GTyp) (?x5 GTyp) (?x6 GTyp) (?x7 GTyp) (?x8 GTyp) (?x9 GTyp) (?x10 GTyp) (?x11 GTyp) (?x12 GTyp) (?x13 GTyp) (?x14 GTyp) (?x15 GTyp) (?x16 GTyp)) Space 
 
-	(tospace (= nil ?x))
+	(ssep (one ?x1)
+		(one ?x2)
+		(one ?x3)
+		(one ?x4)
+		(one ?x5)
+		(one ?x6)
+		(one ?x7)
+		(one ?x8)
+		(one ?x9)
+		(one ?x10)
+		(one ?x11)
+		(one ?x12)
+		(one ?x13)
+		(one ?x14)
+		(one ?x15)
+		(one ?x16)
+		(Q ?x1 ?x2 ?x3 ?x4 ?x5 ?x6 ?x7 ?x8 ?x9 ?x10 ?x11 ?x12 ?x13 ?x14 ?x15 ?x16)
+	)
 )
 
 
-(define-fun one ((?x GTyp)) Space 
+(define-fun Q ((?y1 GTyp) (?y2 GTyp) (?y3 GTyp) (?y4 GTyp) (?y5 GTyp) (?y6 GTyp) (?y7 GTyp) (?y8 GTyp) (?y9 GTyp) (?y10 GTyp) (?y11 GTyp) (?y12 GTyp) (?y13 GTyp) (?y14 GTyp) (?y15 GTyp) (?y16 GTyp)) Space 
+(tospace (or 
+(tobool 
+	(ssep (zero ?y1)
+		(zero ?y2)
+		(zero ?y3)
+		(zero ?y4)
+		(zero ?y5)
+		(zero ?y6)
+		(zero ?y7)
+		(zero ?y8)
+		(zero ?y9)
+		(zero ?y10)
+		(zero ?y11)
+		(zero ?y12)
+		(zero ?y13)
+		(zero ?y14)
+		(zero ?y15)
+		(zero ?y16)
+	)
+)
 
-	(tospace (distinct nil ?x))
+	(exists ((?x1 GTyp) (?x2 GTyp) (?x3 GTyp) (?x4 GTyp) (?x5 GTyp) (?x6 GTyp) (?x7 GTyp) (?x8 GTyp) (?x9 GTyp) (?x10 GTyp) (?x11 GTyp) (?x12 GTyp) (?x13 GTyp) (?x14 GTyp) (?x15 GTyp) (?x16 GTyp))
+		
+		 (tobool 
+	(ssep (succ16rec ?x1 ?x2 ?x3 ?x4 ?x5 ?x6 ?x7 ?x8 ?x9 ?x10 ?x11 ?x12 ?x13 ?x14 ?x15 ?x16 ?y1 ?y2 ?y3 ?y4 ?y5 ?y6 ?y7 ?y8 ?y9 ?y10 ?y11 ?y12 ?y13 ?y14 ?y15 ?y16)
+		(Q ?x1 ?x2 ?x3 ?x4 ?x5 ?x6 ?x7 ?x8 ?x9 ?x10 ?x11 ?x12 ?x13 ?x14 ?x15 ?x16)
+	)
+
+		)
+	)
+))
 )
 
 
@@ -461,61 +507,15 @@
 )
 
 
-(define-fun P ((?x1 GTyp) (?x2 GTyp) (?x3 GTyp) (?x4 GTyp) (?x5 GTyp) (?x6 GTyp) (?x7 GTyp) (?x8 GTyp) (?x9 GTyp) (?x10 GTyp) (?x11 GTyp) (?x12 GTyp) (?x13 GTyp) (?x14 GTyp) (?x15 GTyp) (?x16 GTyp)) Space 
+(define-fun zero ((?x GTyp)) Space 
 
-	(ssep (one ?x1)
-		(one ?x2)
-		(one ?x3)
-		(one ?x4)
-		(one ?x5)
-		(one ?x6)
-		(one ?x7)
-		(one ?x8)
-		(one ?x9)
-		(one ?x10)
-		(one ?x11)
-		(one ?x12)
-		(one ?x13)
-		(one ?x14)
-		(one ?x15)
-		(one ?x16)
-		(Q ?x1 ?x2 ?x3 ?x4 ?x5 ?x6 ?x7 ?x8 ?x9 ?x10 ?x11 ?x12 ?x13 ?x14 ?x15 ?x16)
-	)
+	(tospace (= nil ?x))
 )
 
 
-(define-fun Q ((?y1 GTyp) (?y2 GTyp) (?y3 GTyp) (?y4 GTyp) (?y5 GTyp) (?y6 GTyp) (?y7 GTyp) (?y8 GTyp) (?y9 GTyp) (?y10 GTyp) (?y11 GTyp) (?y12 GTyp) (?y13 GTyp) (?y14 GTyp) (?y15 GTyp) (?y16 GTyp)) Space 
-(tospace (or 
-(tobool 
-	(ssep (zero ?y1)
-		(zero ?y2)
-		(zero ?y3)
-		(zero ?y4)
-		(zero ?y5)
-		(zero ?y6)
-		(zero ?y7)
-		(zero ?y8)
-		(zero ?y9)
-		(zero ?y10)
-		(zero ?y11)
-		(zero ?y12)
-		(zero ?y13)
-		(zero ?y14)
-		(zero ?y15)
-		(zero ?y16)
-	)
-)
+(define-fun one ((?x GTyp)) Space 
 
-	(exists ((?x1 GTyp) (?x2 GTyp) (?x3 GTyp) (?x4 GTyp) (?x5 GTyp) (?x6 GTyp) (?x7 GTyp) (?x8 GTyp) (?x9 GTyp) (?x10 GTyp) (?x11 GTyp) (?x12 GTyp) (?x13 GTyp) (?x14 GTyp) (?x15 GTyp) (?x16 GTyp))
-		
-		 (tobool 
-	(ssep (succ16rec ?x1 ?x2 ?x3 ?x4 ?x5 ?x6 ?x7 ?x8 ?x9 ?x10 ?x11 ?x12 ?x13 ?x14 ?x15 ?x16 ?y1 ?y2 ?y3 ?y4 ?y5 ?y6 ?y7 ?y8 ?y9 ?y10 ?y11 ?y12 ?y13 ?y14 ?y15 ?y16)
-		(Q ?x1 ?x2 ?x3 ?x4 ?x5 ?x6 ?x7 ?x8 ?x9 ?x10 ?x11 ?x12 ?x13 ?x14 ?x15 ?x16)
-	)
-
-		)
-	)
-))
+	(tospace (distinct nil ?x))
 )
 
 

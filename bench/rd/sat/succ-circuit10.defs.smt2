@@ -1,13 +1,13 @@
 (set-logic QF_S)
 (set-info :source |
-  James Brotherston, Carsten Fuhs, Nikos Gorogiannis, and Juan Navarro Pérez.
-  A decision procedure for satisfiability in separation logic with inductive
-  predicates. To appear at CSL-LICS, 2014.
+  James Brotherston, Nikos Gorogiannis, and Rasmus Petersen
+  A Generic Cyclic Theorem Prover. APLAS, 2012.
   https://github.com/ngorogiannis/cyclist
 |)
 (set-info :smt-lib-version 2.0)
 (set-info :category "crafted")
 (set-info :status unknown)
+(set-info :version 2014-05-22)
 
 
 
@@ -20,113 +20,6 @@
 (declare-fun f1 () (Field GTyp GTyp))
 
 ;predicates 
-
-(define-fun zero ((?x GTyp)) Space 
-
-	(tospace (= nil ?x))
-)
-
-
-(define-fun one ((?x GTyp)) Space 
-
-	(tospace (distinct nil ?x))
-)
-
-
-(define-fun andg ((?x GTyp) (?y GTyp) (?z GTyp)) Space 
-(tospace (or 
-(tobool 
-	(ssep (zero ?x)
-		(zero ?z)
-	)
-)
-(tobool 
-	(ssep (zero ?y)
-		(zero ?z)
-	)
-)
-(tobool 
-	(ssep (one ?x)
-		(one ?y)
-		(one ?z)
-	)
-)))
-)
-
-
-(define-fun xorg ((?x GTyp) (?y GTyp) (?z GTyp)) Space 
-(tospace (or 
-(tobool 
-	(ssep (zero ?x)
-		(zero ?y)
-		(zero ?z)
-	)
-)
-(tobool 
-	(ssep (zero ?x)
-		(one ?y)
-		(one ?z)
-	)
-)
-(tobool 
-	(ssep (one ?x)
-		(zero ?y)
-		(one ?z)
-	)
-)
-(tobool 
-	(ssep (one ?x)
-		(one ?y)
-		(zero ?z)
-	)
-)))
-)
-
-
-(define-fun notg ((?x GTyp) (?y GTyp)) Space 
-(tospace (or 
-(tobool 
-	(ssep (zero ?x)
-		(one ?y)
-	)
-)
-(tobool 
-	(ssep (one ?x)
-		(zero ?y)
-	)
-)))
-)
-
-
-(define-fun succ10circuit ((?x1 GTyp) (?x2 GTyp) (?x3 GTyp) (?x4 GTyp) (?x5 GTyp) (?x6 GTyp) (?x7 GTyp) (?x8 GTyp) (?x9 GTyp) (?x10 GTyp) (?y1 GTyp) (?y2 GTyp) (?y3 GTyp) (?y4 GTyp) (?y5 GTyp) (?y6 GTyp) (?y7 GTyp) (?y8 GTyp) (?y9 GTyp) (?y10 GTyp)) Space 
-
-	(tospace (exists ((?z3 GTyp) (?z4 GTyp) (?z5 GTyp) (?z6 GTyp) (?z7 GTyp) (?z8 GTyp) (?z9 GTyp) (?z10 GTyp))
-		
-		 (tobool 
-	(ssep (notg ?x1 ?y1)
-		(xorg ?x1 ?x2 ?y2)
-		(andg ?x1 ?x2 ?z3)
-		(xorg ?z3 ?x3 ?y3)
-		(andg ?z3 ?x3 ?z4)
-		(xorg ?x4 ?y4 ?z4)
-		(andg ?z4 ?x4 ?z5)
-		(xorg ?x5 ?y5 ?z5)
-		(andg ?z5 ?x5 ?z6)
-		(xorg ?x6 ?y6 ?z6)
-		(andg ?z6 ?x6 ?z7)
-		(xorg ?x7 ?y7 ?z7)
-		(andg ?z7 ?x7 ?z8)
-		(xorg ?x8 ?y8 ?z8)
-		(andg ?z8 ?x8 ?z9)
-		(xorg ?x9 ?y9 ?z9)
-		(andg ?z9 ?x9 ?z10)
-		(xorg ?x10 ?y10 ?z10)
-	)
-
-		)
-	))
-)
-
 
 (define-fun P ((?x1 GTyp) (?x2 GTyp) (?x3 GTyp) (?x4 GTyp) (?x5 GTyp) (?x6 GTyp) (?x7 GTyp) (?x8 GTyp) (?x9 GTyp) (?x10 GTyp)) Space 
 
@@ -171,6 +64,113 @@
 		)
 	)
 ))
+)
+
+
+(define-fun succ10circuit ((?x1 GTyp) (?x2 GTyp) (?x3 GTyp) (?x4 GTyp) (?x5 GTyp) (?x6 GTyp) (?x7 GTyp) (?x8 GTyp) (?x9 GTyp) (?x10 GTyp) (?y1 GTyp) (?y2 GTyp) (?y3 GTyp) (?y4 GTyp) (?y5 GTyp) (?y6 GTyp) (?y7 GTyp) (?y8 GTyp) (?y9 GTyp) (?y10 GTyp)) Space 
+
+	(tospace (exists ((?z3 GTyp) (?z4 GTyp) (?z5 GTyp) (?z6 GTyp) (?z7 GTyp) (?z8 GTyp) (?z9 GTyp) (?z10 GTyp))
+		
+		 (tobool 
+	(ssep (notg ?x1 ?y1)
+		(xorg ?x1 ?x2 ?y2)
+		(andg ?x1 ?x2 ?z3)
+		(xorg ?z3 ?x3 ?y3)
+		(andg ?z3 ?x3 ?z4)
+		(xorg ?x4 ?y4 ?z4)
+		(andg ?z4 ?x4 ?z5)
+		(xorg ?x5 ?y5 ?z5)
+		(andg ?z5 ?x5 ?z6)
+		(xorg ?x6 ?y6 ?z6)
+		(andg ?z6 ?x6 ?z7)
+		(xorg ?x7 ?y7 ?z7)
+		(andg ?z7 ?x7 ?z8)
+		(xorg ?x8 ?y8 ?z8)
+		(andg ?z8 ?x8 ?z9)
+		(xorg ?x9 ?y9 ?z9)
+		(andg ?z9 ?x9 ?z10)
+		(xorg ?x10 ?y10 ?z10)
+	)
+
+		)
+	))
+)
+
+
+(define-fun notg ((?x GTyp) (?y GTyp)) Space 
+(tospace (or 
+(tobool 
+	(ssep (zero ?x)
+		(one ?y)
+	)
+)
+(tobool 
+	(ssep (one ?x)
+		(zero ?y)
+	)
+)))
+)
+
+
+(define-fun xorg ((?x GTyp) (?y GTyp) (?z GTyp)) Space 
+(tospace (or 
+(tobool 
+	(ssep (zero ?x)
+		(zero ?y)
+		(zero ?z)
+	)
+)
+(tobool 
+	(ssep (zero ?x)
+		(one ?y)
+		(one ?z)
+	)
+)
+(tobool 
+	(ssep (one ?x)
+		(zero ?y)
+		(one ?z)
+	)
+)
+(tobool 
+	(ssep (one ?x)
+		(one ?y)
+		(zero ?z)
+	)
+)))
+)
+
+
+(define-fun andg ((?x GTyp) (?y GTyp) (?z GTyp)) Space 
+(tospace (or 
+(tobool 
+	(ssep (zero ?x)
+		(zero ?z)
+	)
+)
+(tobool 
+	(ssep (zero ?y)
+		(zero ?z)
+	)
+)
+(tobool 
+	(ssep (one ?x)
+		(one ?y)
+		(one ?z)
+	)
+)))
+)
+
+
+(define-fun one ((?x GTyp)) Space 
+
+	(tospace (distinct nil ?x))
+)
+
+
+(define-fun zero ((?x GTyp)) Space 
+
+	(tospace (= nil ?x))
 )
 
 

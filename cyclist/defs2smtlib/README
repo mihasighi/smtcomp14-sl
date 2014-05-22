@@ -6,3 +6,11 @@ by modifications done on the following files:
 src/slsat/slsat_check.ml
 src/seplog/symheap.ml[i]
 
+For the bench/sat files, call
+
+./do-bench-sat.sh ../bench/sat <prefix> <root> .
+
+For the bench/entl files, call
+
+./do-bench-entl.sh ../bench/sat <prefix> .
+
