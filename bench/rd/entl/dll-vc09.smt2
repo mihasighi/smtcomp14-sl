@@ -7,6 +7,8 @@ http://www.liafa.univ-paris-diderot.fr/spen
 (set-info :smt-lib-version 2.0)
 (set-info :category "crafted")
 (set-info :status unsat)
+(set-info :version 2014-05-22)
+
 
 (declare-sort Dll_t 0)
 
@@ -14,11 +16,11 @@ http://www.liafa.univ-paris-diderot.fr/spen
 (declare-fun prev () (Field Dll_t Dll_t))
 
 ; doubly-linked list
-(define-fun dll ((?in Dll_t) (?ex Dll_t) (?pr Dll_t) (?hd Dll_t))
-  Space (tospace (or (and (= ?in ?pr) (= ?hd ?ex)) 
+(define-fun dll ((?fr Dll_t) (?bk Dll_t) (?pr Dll_t) (?nx Dll_t))
+  Space (tospace (or (and (= ?fr ?nx) (= ?bk ?pr)) 
     (exists ((?u Dll_t)) (tobool (ssep
       (pto ?in (sref (ref next ?u) (ref prev ?pr)))
-      (dll ?u ?ex ?in ?hd))
+      (dll ?u ?bk ?fr ?nx))
 )))))
 
 (declare-fun x () Dll_t)
@@ -28,7 +30,6 @@ http://www.liafa.univ-paris-diderot.fr/spen
 (declare-fun x2 () Dll_t)
 (declare-fun x3 () Dll_t)
 (declare-fun x4 () Dll_t)
-(declare-fun alpha1 () SetLoc)
 
 ;
 ; four unfoldings of dll(x,y,nil,z)
@@ -46,7 +47,7 @@ http://www.liafa.univ-paris-diderot.fr/spen
 )
 (assert
   (not
-    (tobool (index alpha1 (dll x y nil z)))
+    (tobool (dll x y nil z))
 ))
 
 (check-sat)
