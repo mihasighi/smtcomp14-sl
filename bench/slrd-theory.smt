@@ -8,6 +8,7 @@
  :sorts ((Field 2) (SetRef 1) (Space 0))
 
  :funs  ((emp Space)
+	 (junk Space)
          (ssep Space Space :left-assoc)
          (par (A) (pto A (SetRef A) Space :left-assoc))
          (tobool Space Bool)
