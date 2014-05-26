@@ -265,12 +265,23 @@ sl_pred_case_2sleek (FILE * fout, sl_var_array * args, sl_pred_case_t * c)
     {
       if (nbc > 0)
 	fprintf (fout, " & ");
-      else
+      else {
 	fprintf (fout, " emp & ");
+	nbc++;
+      }
       sl_pure_2sleek (fout, args, c->lvars, sl_vector_at (c->pure, i), true);	// in predicate
       fflush (fout);
       nbc++;
     }
+    
+  if (nbc == 0) {
+    // maybe emp or junk
+    if (c->is_precise)
+       fprintf (fout, "emp");
+    else
+       fprintf (fout, "true");
+    nbc++;
+  }
 
   fprintf (fout, ")");
 

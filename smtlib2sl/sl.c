@@ -535,7 +535,7 @@ sl_check (sl_context_t * ctx)
   assert (NULL != ctx);
   if (sl_error_parsing > 0)
     {
-      assert (sl_prob->smt_fname != NULL);
+      //assert (sl_prob->smt_fname != NULL);
       sl_error (0, "sl_check", "stop check because of parsing error");
       return 0;
     }

@@ -332,6 +332,15 @@ sl_pred_case_2slide (FILE * fout, sl_var_array * args, sl_pred_case_t * c)
 		      (nbc > 0) ? true : false);
       fflush (fout);
     }
+    
+  if (nbc == 0) {
+    // maybe emp or junk
+    if (c->is_precise)
+       fprintf (fout, "emp");
+    else
+       fprintf (fout, "true");
+    nbc++;
+  }
 
   SL_DEBUG ("\t nbc=%zu\n", nbc);
   assert (nbc > 0);

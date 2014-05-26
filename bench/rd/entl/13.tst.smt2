@@ -25,7 +25,7 @@
 
 (define-fun BinListFirst ((?x GTyp)) Space
 (tospace (or
-emp
+	(tobool emp)
 
         (exists ((?yp GTyp) (?xp GTyp))
 
@@ -44,7 +44,7 @@ emp
 
 (define-fun BinTree ((?x GTyp)) Space
 (tospace (or
-emp
+	(tobool emp)
 
         (exists ((?yp GTyp) (?xp GTyp))
 
