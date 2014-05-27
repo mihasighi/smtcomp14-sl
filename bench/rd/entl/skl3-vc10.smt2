@@ -55,15 +55,12 @@ http://www.liafa.univ-paris-diderot.fr/spen
 (declare-fun x2_2_1 () SL3_t)
 (declare-fun x3 () SL3_t)
 
-(declare-fun alpha1 () SetLoc)
-(declare-fun alpha2 () SetLoc)
-
 ;
 ; two 1-field unfolding of skl3(x1,nil) for last node
 ; exp: unsat
 ;
 (assert (tobool (ssep
-  (index alpha2 (skl3 x1 x2))
+  (skl3 x1 x2)
   (pto x2 (sref (ref n3 nil) (ref n2 x2_2) (ref n1 x2_1)))
   (pto x2_2 (sref (ref n3 nil) (ref n2 nil) (ref n1 x2_2_1)))
   (pto x2_1 (sref (ref n3 nil) (ref n2 nil) (ref n1 x2_1_1)))
@@ -72,7 +69,7 @@ http://www.liafa.univ-paris-diderot.fr/spen
 )))
 
 (assert (not
-  (tobool (index alpha1 (skl3 x1 nil)))
+  (tobool (skl3 x1 nil))
 ))
 
 ; check whether the negation of the entailment is satisfiable

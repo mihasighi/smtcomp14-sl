@@ -3,12 +3,13 @@
  :smt-lib-version 2.0
  :written_by "Mihaela Sighireanu"
  :date "2012-07-10"
- :last_modified "2014-05-22"
+ :last_modified "2014-05-27"
 
- :sorts ((Field 2) (SetRef 1) (Space 0))
+ :sorts ((Field 2) (SetRef 1) (Space 0) (Void 0))
 
  :funs  ((emp Space)
 	 (junk Space)
+	 (nil Void)
          (ssep Space Space :left-assoc)
          (par (A) (pto A (SetRef A) Space :left-assoc))
          (tobool Space Bool)
@@ -25,18 +26,22 @@
   in which:
   - the sort Field denotes the set of reference fields defined in the program;
     a reference field is typed by two sorts, thus its arity is 2;
-  - the sort SetRef denotes the set of typed location variables;
+  - the sort SetRef denotes the set of pairs (field, location variable);
   - the sort Space denotes the set of spatial formulas;
 
-  - for all sp in Space, v a location variable, sr in SetRef, 
-             f in Field:
+  - for all sp in Space, v a location variable, sr in SetRef, f in Field:
+
       - emp denotes the empty heap space constraint;
 
       - junk denotes the universal heap space constraint;
 
-      - (ssep sp sp) denotes the strong separating space constraint;
+      - nil denotes the special location variable (constant) 
+	where nothing can be allocated;
+
+      - (ssep sp sp) denotes the strong separating conjunction;
 
       - (pto v sr) denotes the points-to space constraint from location v;
+        v can not be 'nil';
 
       - (toBool sp) transforms a space constraint into a boolean constraint;
 

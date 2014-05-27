@@ -45,11 +45,6 @@ http://www.liafa.univ-paris-diderot.fr/spen
 (declare-fun x2 () NLL_lvl2_t)
 (declare-fun x2_1 () NLL_lvl1_t)
 (declare-fun x2_2 () NLL_lvl1_t)
-(declare-fun nil_lvl1 () NLL_lvl1_t)
-(declare-fun nil_lvl2 () NLL_lvl2_t)
-
-(declare-fun alpha1 () SetLoc)
-(declare-fun alpha2 () SetLoc)
 
 ;
 ; two unfoldings of nll(x1,nil,nil) with inner list segments
@@ -60,18 +55,18 @@ http://www.liafa.univ-paris-diderot.fr/spen
     (ref next2 x2)
     (ref down x1_1)))
   (pto x1_1 (ref next1 x1_2))
-  (index alpha2 (lso x1_2 x1_3))
-  (pto x1_3 (ref next1 nil_lvl1))
+  (lso x1_2 x1_3)
+  (pto x1_3 (ref next1 nil))
   (pto x2 (sref
-    (ref next2 nil_lvl2)
+    (ref next2 nil)
     (ref down x2_1)))
   (pto x2_1 (ref next1 x2_2))
-  (pto x2_2 (ref next1 nil_lvl1))
+  (pto x2_2 (ref next1 nil))
 )))
 
-(assert (not (tobool (index alpha1
-  (nll x1 nil_lvl2 nil_lvl1)
-))))
+(assert (not (tobool 
+  (nll x1 nil nil)
+)))
 
 (check-sat)
 

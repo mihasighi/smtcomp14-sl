@@ -20,7 +20,7 @@ http://www.liafa.univ-paris-diderot.fr/spen
 (define-fun dll ((?fr Dll_t) (?bk Dll_t) (?pr Dll_t) (?nx Dll_t))
   Space (tospace (or (and (= ?fr ?nx) (= ?bk ?pr)) 
     (exists ((?u Dll_t)) (tobool (ssep
-      (pto ?in (sref (ref next ?u) (ref prev ?pr)))
+      (pto ?fr (sref (ref next ?u) (ref prev ?pr)))
       (dll ?u ?bk ?fr ?nx))
 )))))
 

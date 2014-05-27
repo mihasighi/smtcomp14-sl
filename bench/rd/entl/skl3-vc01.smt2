@@ -50,8 +50,6 @@ http://www.liafa.univ-paris-diderot.fr/spen
 (declare-fun x1 () SL3_t)
 (declare-fun x2 () SL3_t)
 
-(declare-fun alpha1 () SetLoc)
-
 ;
 ; two 1-field unfolding of skl3(x1,nil)
 ; exp: unsat
@@ -62,7 +60,7 @@ http://www.liafa.univ-paris-diderot.fr/spen
 )))
 
 (assert (not
-  (tobool (index alpha1 (skl3 x1 nil)))
+  (tobool (skl3 x1 nil))
 ))
 
 ; check whether the negation of the entailment is satisfiable

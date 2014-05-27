@@ -233,6 +233,8 @@ sl_pred_2cyclist (FILE * fout, sl_pred_t * p)
 
   SL_DEBUG ("Defs %s ...\n", p->pname);
 
+  assert (NULL != p->def);
+
   // Print all cases
   for (size_t i = 0; i < sl_vector_size (p->def->cases); i++)
     {

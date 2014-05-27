@@ -45,11 +45,6 @@ http://www.liafa.univ-paris-diderot.fr/spen
 (declare-fun x2 () NLL_lvl2_t)
 (declare-fun x2_1 () NLL_lvl1_t)
 (declare-fun x2_2 () NLL_lvl1_t)
-(declare-fun nil_lvl1 () NLL_lvl1_t)
-(declare-fun nil_lvl2 () NLL_lvl2_t)
-
-(declare-fun alpha1 () SetLoc)
-(declare-fun alpha2 () SetLoc)
 
 ;
 ; one unfolding at start of nll(x1,nil,nil)
@@ -61,13 +56,13 @@ http://www.liafa.univ-paris-diderot.fr/spen
     (ref down x1_1)))
   (pto x1_1 (ref next1 x1_2))
   (pto x1_2 (ref next1 x1_3))
-  (pto x1_3 (ref next1 nil_lvl1))
-  (index alpha2 (nll x2 nil_lvl2 nil_lvl1))
+  (pto x1_3 (ref next1 nil))
+  (nll x2 nil nil)
 )))
 
-(assert (not (tobool (index alpha1
-  (nll x1 nil_lvl2 nil_lvl1)
-))))
+(assert (not (tobool 
+  (nll x1 nil nil)
+)))
 
 (check-sat)
 

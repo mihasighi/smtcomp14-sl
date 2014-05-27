@@ -439,7 +439,7 @@ main (int argc, char *argv[])
 
   fprintf (fdecl, ")))))))\n\n");
 
-  fprintf (fdecl, "(declare-fun nil () Sll_t)\n\n");
+  //fprintf (fdecl, "(declare-fun nil () Sll_t)\n\n");
 
   fprintf (fdecl, "(declare-fun x_emp () Sll_t)\n");
 

@@ -38,7 +38,6 @@ http://www.liafa.univ-paris-diderot.fr/spen
 (declare-fun x1 () SL2_t)
 (declare-fun x2 () SL2_t)
 
-(declare-fun alpha1 () SetLoc)
 
 (assert (tobool (ssep
   (pto x1 (sref (ref n2 x2) (ref n1 x2)))
@@ -46,7 +45,7 @@ http://www.liafa.univ-paris-diderot.fr/spen
 )))
 
 (assert (not
-  (tobool (index alpha1 (skl2 x1 nil)))
+  (tobool (skl2 x1 nil))
 ))
 
 ; check whether the negation of the entailment is satisfiable

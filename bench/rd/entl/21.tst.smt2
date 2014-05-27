@@ -59,6 +59,27 @@
 
  )
 
+(define-fun List ((?x GTyp) (?y GTyp)) Space
+(tospace (or
+
+        (and (distinct nil ?x)
+                 (tobool (pto ?x  (ref f0 ?y) )
+                )
+        )
+
+
+        (exists ((?xp GenTyp))
+
+                 (and (distinct nil ?x)
+                        (tobool
+        (sep (pto ?x  (ref f0 ?xp) )
+                (List ?xp ?y)
+        )
+
+                )))
+
+) )
+ )
 
 ;;;ListE_1(x,y) \/ ListO_1(x,y) |- List_2(x,y)
 

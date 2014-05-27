@@ -209,8 +209,12 @@ sl_pred_type ()
       p->typ = (sl_pred_typing_t *) malloc (sizeof (struct sl_pred_typing_t));
 
       /* predicate type = type of the first parameter */
-      p->typ->ptype0 = sl_var_record (p->def->args, 1);
-
+      if (p->def != NULL && p->def->args != NULL) {
+	p->typ->ptype0 = sl_var_record (p->def->args, 1);
+      } else {
+	assert (0);
+      }
+      
       /* types covered */
       p->typ->ptypes = sl_uint_array_new ();
       /* resize the array to cover all the records, filled with 0 */
@@ -253,7 +257,7 @@ sl_pred_array_fprint (FILE * f, sl_pred_array * a, const char *msg)
     {
       sl_pred_t *pi = sl_vector_at (a, i);
       fprintf (f, "pred-%d: %s(%d argc)\n", pi->pid, pi->pname,
-	       pi->def->argc);
+	       (pi->def == NULL) ? 0 : pi->def->argc);
     }
   fprintf (f, " - ]");
   fflush (f);

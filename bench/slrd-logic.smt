@@ -10,6 +10,6 @@
  :language 
  "Quantifier free closed formulas built over arbitrary expansions 
   of the SLRD signature with free sort and function symbols and definitions,
-  and allowing inductive predicate definitions.
+  and with inductive predicate definitions.
  "
 )

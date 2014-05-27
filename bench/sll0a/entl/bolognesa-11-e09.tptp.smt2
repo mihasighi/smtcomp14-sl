@@ -23,8 +23,6 @@ http://navarroj.com/research/papers.html#pldi11
 (ssep (pto ?in (ref f ?u)) (ls ?u ?out)
 )))))))
 
-(declare-fun nil () Sll_t)
-
 (declare-fun x_emp () Sll_t)
 (declare-fun y_emp () Sll_t)
 (declare-fun z_emp () Sll_t)

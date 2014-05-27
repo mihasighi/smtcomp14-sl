@@ -59,35 +59,26 @@ http://www.liafa.univ-paris-diderot.fr/spen
 (declare-fun x2_3 () SL3_t)
 (declare-fun x3 () SL3_t)
 
-(declare-fun alpha1 () SetLoc)
-(declare-fun alpha2 () SetLoc)
-(declare-fun alpha3 () SetLoc)
-(declare-fun alpha4 () SetLoc)
-(declare-fun alpha5 () SetLoc)
-(declare-fun alpha6 () SetLoc)
-(declare-fun alpha7 () SetLoc)
-(declare-fun alpha8 () SetLoc)
-
 ;
 ; level 1 insertion in the middle in skl3(x1,nil)
 ; expected: holds
 ;
 (assert (tobool (ssep
-  (index alpha1 (skl3 x1 x2))
+  (skl3 x1 x2)
   (pto x2 (sref (ref n3 x3) (ref n2 x2_1) (ref n1 x2_0_1)))
-      (index alpha4 (skl1 x2_0_1 x2_1))
-    (index alpha3 (skl2 x2_1 x2_2))
+      (skl1 x2_0_1 x2_1)
+    (skl2 x2_1 x2_2)
     (pto x2_2 (sref (ref n3 nil) (ref n2 x2_3) (ref n1 x2_2_1)))
-      (index alpha6 (skl1 x2_2_1 x2_2_2))
+      (skl1 x2_2_1 x2_2_2)
       (pto x2_2_2 (sref (ref n3 nil) (ref n2 nil) (ref n1 x2_2_3)))
       (pto x2_2_3 (sref (ref n3 nil) (ref n2 nil) (ref n1 x2_2_4)))
-      (index alpha7 (skl1 x2_2_4 x2_3))
-    (index alpha8 (skl2 x2_3 x3))
-  (index alpha2 (skl3 x3 nil))
+      (skl1 x2_2_4 x2_3)
+    (skl2 x2_3 x3)
+  (skl3 x3 nil)
 )))
 
 (assert (not
-  (tobool (index alpha5 (skl3 x1 nil)))
+  (tobool (skl3 x1 nil))
 ))
 
 ; check whether the negation of the entailment is satisfiable

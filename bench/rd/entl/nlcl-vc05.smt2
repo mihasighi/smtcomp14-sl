@@ -46,29 +46,24 @@ http://www.liafa.univ-paris-diderot.fr/spen
 (declare-fun x2_3 () NLL_lvl1_t)
 (declare-fun x3 () NLL_lvl2_t)
 
-(declare-fun alpha1 () SetLoc)
-(declare-fun alpha2 () SetLoc)
-(declare-fun alpha3 () SetLoc)
-(declare-fun alpha4 () SetLoc)
-
 ;
 ; (bad) unfolding in the middle of nlcl(x1,nil)
 ; exp: sat
 ;
 (assert (tobool (ssep
-  (index alpha1 (nlcl x1 x2))
+  (nlcl x1 x2)
   (pto x2 (sref
     (ref next2 x3)
     (ref down x2_1)))
   (pto x2_1 (ref next1 x2_2))
-  (index alpha2 (lso x2_2 x2_3))
+  (lso x2_2 x2_3)
   (pto x2_3 (ref next1 x2_1))
-  (index alpha3 (nlcl x3 nil))
+  (nlcl x3 nil)
 )))
 
-(assert (not (tobool (index alpha4
+(assert (not (tobool 
   (nlcl x1 nil)
-))))
+)))
 
 (check-sat)
 

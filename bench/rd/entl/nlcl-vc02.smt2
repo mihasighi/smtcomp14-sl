@@ -46,10 +46,6 @@ http://www.liafa.univ-paris-diderot.fr/spen
 (declare-fun x2 () NLL_lvl2_t)
 (declare-fun x2_1 () NLL_lvl1_t)
 (declare-fun x2_2 () NLL_lvl1_t)
-(declare-fun nil_lvl2 () NLL_lvl2_t)
-
-(declare-fun alpha1 () SetLoc)
-(declare-fun alpha2 () SetLoc)
 
 ;
 ; two unfoldings of nlcl(x1,nil)
@@ -65,12 +61,12 @@ http://www.liafa.univ-paris-diderot.fr/spen
     (ref next2 nil)
     (ref down x2_1)))
   (pto x2_1 (ref next1 x2_2))
-  (index alpha2 (lso x2_2 x2_1))
+  (lso x2_2 x2_1)
 )))
 
-(assert (not (tobool (index alpha1
+(assert (not (tobool 
   (nlcl x1 nil)
-))))
+)))
 
 (check-sat)
 

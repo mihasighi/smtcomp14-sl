@@ -45,23 +45,20 @@ http://www.liafa.univ-paris-diderot.fr/spen
 (declare-fun x3_1 () SL2_t)
 (declare-fun x3_2 () SL2_t)
 
-(declare-fun alpha1 () SetLoc)
-(declare-fun alpha2 () SetLoc)
-
 (assert (tobool (ssep
   (pto x1 (sref (ref n2 x2) (ref n1 x1_1)))
     (pto x1_1 (sref (ref n2 nil) (ref n1 x1_2)))
     (pto x1_2 (sref (ref n2 nil) (ref n1 x1_3)))
     (pto x1_3 (sref (ref n2 nil) (ref n1 x1_4)))
     (pto x1_4 (sref (ref n2 nil) (ref n1 x2)))
-  (index alpha2 (skl2 x2 x3))
+  (skl2 x2 x3)
   (pto x3 (sref (ref n2 nil) (ref n1 x3_1)))
     (pto x3_1 (sref (ref n2 nil) (ref n1 x3_2)))
     (pto x3_2 (sref (ref n2 nil) (ref n1 nil)))
 )))
 
 (assert (not
-  (tobool (index alpha1 (skl2 x1 nil)))
+  (tobool (skl2 x1 nil))
 ))
 
 ; check whether the negation of the entailment is satisfiable

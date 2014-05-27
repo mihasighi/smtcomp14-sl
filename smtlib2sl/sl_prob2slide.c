@@ -358,6 +358,9 @@ sl_pred_2slide (FILE * fout, sl_pred_t * p)
   SL_DEBUG ("Defs %s ...\n", p->pname);
 
   fprintf (fout, "\n%s(", p->pname);
+  
+  assert (NULL != p->def);
+  
   for (size_t i = 1; i < sl_vector_size (p->def->args); i++)
     {
       if (i > 1)

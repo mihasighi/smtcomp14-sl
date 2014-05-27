@@ -1,11 +1,8 @@
 #----Set TPTP_HOME if not already imported from environment
-#TPTP_HOME = $(CELIA) 
-#/Users/cenea/TPTP_to_SMTLIB
+#TPTP_HOME = ...
 
-JJPARSER = $(CELIA)/JJParser
-#/home/cenea/celia-tools/trunk/noll-dp/samples/JJParser
+JJPARSER = $(TPTP_HOME)/JJParser
 
-#$(TPTP_HOME)/JJParser
 
 CC = gcc
 CFLAGS = -Wall -I$(JJPARSER) -D TPTP_HOME=\"$(TPTP_HOME)\"

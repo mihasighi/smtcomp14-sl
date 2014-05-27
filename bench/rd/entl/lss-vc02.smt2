@@ -29,7 +29,7 @@ http://www.liafa.univ-paris-diderot.fr/spen
 (declare-fun u_emp () Sll_t)
 (declare-fun w_emp () Sll_t)
 (declare-fun z_emp () Sll_t)
-(declare-fun alpha1 () SetLoc)
+
 (assert
     (tobool (ssep
       (pto x_emp (sref (ref next1 y_emp) (ref next2 y_emp)))
@@ -40,7 +40,7 @@ http://www.liafa.univ-paris-diderot.fr/spen
 )
 (assert
   (not
-    (tobool (index alpha1 (lsso x_emp z_emp)))
+    (tobool (lsso x_emp z_emp))
 ))
 
 (check-sat)

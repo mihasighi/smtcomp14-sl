@@ -300,6 +300,8 @@ sl_pred_2sleek (FILE * fout, sl_pred_t * p)
 
   SL_DEBUG ("Defs %s ...\n", p->pname);
 
+  assert (NULL != p->def);
+  
   // print predicate instance
   fprintf (fout, "\npred %s<", p->pname);
   for (size_t vi = 2; vi <= p->def->argc; vi++)
