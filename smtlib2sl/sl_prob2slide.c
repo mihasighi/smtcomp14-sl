@@ -36,7 +36,6 @@
 char *
 sl_var_2slide (sl_var_array * args, sl_var_array * lvars, uid_t vid)
 {
-
   char *vname;
   uid_t fstlocal = (args == NULL) ? 0 : sl_vector_size (args);
   if (vid >= fstlocal)
@@ -194,9 +193,18 @@ sl_form2name_2slide (FILE * fout, sl_form_t * form, char *name)
   // print args
   for (size_t i = 1; i < sl_vector_size (form->lvars); i++)
     {
-      if (i > 1)
-	fprintf (fout, ",");
-      fprintf (fout, "%s", sl_var_2slide (NULL, form->lvars, i));
+      char *vname = sl_var_name (form->lvars, i, SL_TYP_RECORD);
+      if (NULL != vname && vname[0] != '?')
+	{
+	  if (i > 1)
+	    fprintf (fout, ",");
+	  fprintf (fout, "%s", vname);
+	}
+      else
+	{
+	  // existential variables are at the end!
+	  break;
+	}
     }
   fprintf (fout, ")");
 }
@@ -217,23 +225,29 @@ sl_form2pred_2slide (FILE * fout, sl_form_t * form, char *name)
   sl_form2name_2slide (fout, form, name);
   fprintf (fout, " ::= ");
 
+  // print the existentials, if any
+  if (form->lvars != NULL && !sl_vector_empty (form->lvars))
+    {
+      int nbE = 0;
+      for (size_t i = 1; i < sl_vector_size (form->lvars); i++)
+	{
+	  char *vname = sl_var_name (form->lvars, i, SL_TYP_RECORD);
+	  if (NULL != vname && vname[0] == '?')
+	    {
+	      if (nbE == 0)
+		fprintf (fout, "\\E ");
+	      else
+		fprintf (fout, ",");
+	      fprintf (fout, "%s", vname + 1);
+	      nbE++;
+	    }
+	}
+      fprintf (fout, " . ");
+    }
+
+
   // print the only case
   size_t nbc = 0;
-
-  // existentials = arguments
-  /*
-     if (form->lvars != NULL && !sl_vector_empty (form->lvars))
-     {
-     fprintf (fout, "\\E ");
-     for (size_t i = 1; i < sl_vector_size (form->lvars); i++)
-     {
-     if (i > 1)
-     fprintf (fout, ",");
-     fprintf (fout, "%s", sl_var_2slide (NULL, form->lvars, i));
-     }
-     fprintf (fout, " . ");
-     }
-   */
 
   // start with pto formula (only one!)
   nbc += sl_pto_2slide (fout, NULL, form->lvars, form->space, true,
@@ -332,15 +346,16 @@ sl_pred_case_2slide (FILE * fout, sl_var_array * args, sl_pred_case_t * c)
 		      (nbc > 0) ? true : false);
       fflush (fout);
     }
-    
-  if (nbc == 0) {
-    // maybe emp or junk
-    if (c->is_precise)
-       fprintf (fout, "emp");
-    else
-       fprintf (fout, "true");
-    nbc++;
-  }
+
+  if (nbc == 0)
+    {
+      // maybe emp or junk
+      if (c->is_precise)
+	fprintf (fout, "emp");
+      else
+	fprintf (fout, "true");
+      nbc++;
+    }
 
   SL_DEBUG ("\t nbc=%zu\n", nbc);
   assert (nbc > 0);
@@ -358,9 +373,9 @@ sl_pred_2slide (FILE * fout, sl_pred_t * p)
   SL_DEBUG ("Defs %s ...\n", p->pname);
 
   fprintf (fout, "\n%s(", p->pname);
-  
+
   assert (NULL != p->def);
-  
+
   for (size_t i = 1; i < sl_vector_size (p->def->args); i++)
     {
       if (i > 1)
