@@ -1,7 +1,7 @@
 (set-logic QF_S)
 (set-info :source |
-  James Brotherston, Carsten Fuhs, Nikos Gorogiannis, and Juan Navarro Pérez.
-  A decision procedure for satisfiability in sssssseparation logic with inductive
+  James Brotherston, Carsten Fuhs, Nikos Gorogiannis, and Juan Navarro Perez.
+  A decision procedure for satisfiability in ssssseparation logic with inductive
   predicates. To appear at CSL-LICS, 2014.
   https://github.com/ngorogiannis/cyclist
 |)

@@ -10,7 +10,7 @@
  :funs  ((emp Space)
 	 (junk Space)
 	 (nil Void)
-         (ssep Space Space :left-assoc)
+         (ssep Space Space Space :left-assoc)
          (par (A) (pto A (SetRef A) Space :left-assoc))
          (tobool Space Bool)
          (tospace Bool Space)
@@ -38,7 +38,7 @@
       - nil denotes the special location variable (constant) 
 	where nothing can be allocated;
 
-      - (ssep sp sp) denotes the strong separating conjunction;
+      - (ssep sp ...) denotes the strong separating conjunction;
 
       - (pto v sr) denotes the points-to space constraint from location v;
         v can not be 'nil';
@@ -51,7 +51,7 @@
       - (ref f v) denotes the tuple used in a points-to constraint, where
         f is a reference field which value is v, type is a set;
 
-      - (sref sr sr) denotes the union of sets of tuples used in the points-to
+      - (sref sr ...) denotes the union of sets of tuples used in the points-to
         constraint;
 
       - (loop sp) denotes the space formula represeting a loop and
