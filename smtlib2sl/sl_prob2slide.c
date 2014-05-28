@@ -242,7 +242,8 @@ sl_form2pred_2slide (FILE * fout, sl_form_t * form, char *name)
 	      nbE++;
 	    }
 	}
-      fprintf (fout, " . ");
+      if (nbE > 0) 
+        fprintf (fout, " . ");
     }
 
 
