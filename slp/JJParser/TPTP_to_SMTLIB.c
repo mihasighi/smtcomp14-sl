@@ -42,18 +42,18 @@ int index_var = 0;
 int presence_const = 0;
 
 void
-PrintTerm (TERM term, FILE * out)
+PrintTerm (TERM term, FILE * out, int seplevel)
 {
   if (term->Type == function)
     {
       // "variables" are constants
       //printf("%d ",(*termeni)->FlexibleArity);
       //printf("%d ",term->TheSymbol.NonVariable->Arity);
-      if (term->TheSymbol.NonVariable->Arity > 0)
-	{
-	  fprintf (out, " (");	//t:begin
-	}
-      else
+      if (term->TheSymbol.NonVariable->Arity == 0)
+	/* {
+	   fprintf (out, " ("); //t:begin
+	   } 
+	   else */
 	{
 	  int length = strlen (term->TheSymbol.NonVariable->NameSymbol);
 	  char *var_int = malloc (20 * sizeof (char));
@@ -72,53 +72,59 @@ PrintTerm (TERM term, FILE * out)
 		}
 	      //printf("%d",index_var);
 	    }
-	  if (strcmp (temp_string, "c") == 0)
+	  else if (strcmp (temp_string, "c") == 0)
 	    {
 	      presence_const = 1;
 	      strncpy (temp_string1, term->TheSymbol.NonVariable->NameSymbol,
 		       6);
 	      if (strcmp (temp_string, "const_") == 0)
 		{
-		  int var =
-		    atoi (strncpy
-			  (var_int,
-			   term->TheSymbol.NonVariable->NameSymbol + 6,
-			   length));
+		  int var = atoi (strncpy (var_int,
+					   term->TheSymbol.NonVariable->
+					   NameSymbol + 6,
+					   length));
 		  if (index_var < var)
 		    {
 		      index_var = var;
 		    }
 		}
 	    }
+	  if (strcmp (term->TheSymbol.NonVariable->NameSymbol, "emp") == 0)
+	    {
+	      fprintf (out,
+		       "(ssep (pto x_emp (ref f y_emp)) (pto z_emp (ref f t_emp)))");
+	      //return;
+	    }
+	  else
+	    {
+	      fprintf (out, "%s", term->TheSymbol.NonVariable->NameSymbol);	//Variable->VariableName->NameSymbol);
+	    }
 	}
-
-      if (strcmp (term->TheSymbol.NonVariable->NameSymbol, "emp") == 0)
+      else			// arity > 0
+      if (strcmp (term->TheSymbol.NonVariable->NameSymbol, "sep") == 0)
 	{
-	  fprintf (out,
-		   "(ssep (pto x_emp (ref f y_emp)) (pto z_emp (ref f t_emp)))");
-	  //return;
-	}
-      else if (strcmp (term->TheSymbol.NonVariable->NameSymbol, "sep") == 0)
-	{
-	  fprintf (out, "ssep ");
+	  if (seplevel == 0)
+	    fprintf (out, "\n\t(ssep");
 	  int i;
 	  TERM *termeni = term->Arguments;
 	  for (i = 0; i < term->TheSymbol.NonVariable->Arity; i++)
 	    {
-	      PrintTerm (*termeni, out);
+	      fprintf (out, "\n\t\t");
+	      PrintTerm (*termeni, out, seplevel + 1);
 	      termeni = term->Arguments + 1;
 	    }
-	  fprintf (out, ")");	//:ssep_end
+	  if (seplevel == 0)
+	    fprintf (out, "\n\t) ");	//:ssep_end
 	}
       else if (strcmp (term->TheSymbol.NonVariable->NameSymbol, "next") == 0)
 	{
-	  fprintf (out, "pto ");
+	  fprintf (out, "(pto ");
 	  TERM *termeni = term->Arguments;
-	  PrintTerm (*termeni, out);
+	  PrintTerm (*termeni, out, seplevel);
 	  fprintf (out, " (ref f ");
 	  termeni = term->Arguments + 1;
-	  PrintTerm (*termeni, out);
-	  fprintf (out, ") )");	//:sref_end
+	  PrintTerm (*termeni, out, seplevel);
+	  fprintf (out, ")) ");	//:sref_end
 	  //if (term->TheSymbol.NonVariable->Arity > 0) {
 	  //fprintf(out," )"); //:pto_end
 	  //}
@@ -134,29 +140,27 @@ PrintTerm (TERM term, FILE * out)
 	     fprintf(out,"index %s (ls ",s);
 	     index_alpha++;
 	   */
-	  fprintf (out, "ls ");
+	  fprintf (out, "(ls ");
 	  int i;
 	  TERM *termeni = term->Arguments;
 	  for (i = 0; i < term->TheSymbol.NonVariable->Arity; i++)
 	    {
-	      PrintTerm (*termeni, out);
+	      fprintf (out, " ");
+	      PrintTerm (*termeni, out, seplevel);
 	      termeni = term->Arguments + 1;
 	    }
 	  // fprintf(out,"))"); //:index_end
-	  fprintf (out, ")");	//:ls_end
+	  fprintf (out, ") ");	//:ls_end
 	}
       else
-	{
-	  fprintf (out, "%s ", term->TheSymbol.NonVariable->NameSymbol);	//Variable->VariableName->NameSymbol);
-	}
-
+	assert (0);
     }
 }
 
-void PrintFormula (FORMULA form, FILE * out);
+void PrintFormula (FORMULA form, FILE * out, int seplevel);
 
 void
-PrintNegFormula (FORMULA form, FILE * out)
+PrintNegFormula (FORMULA form, FILE * out, int seplevel)
 {
 
   //atomic formula: negation of an equality
@@ -174,7 +178,8 @@ PrintNegFormula (FORMULA form, FILE * out)
 	  int i;
 	  for (i = 0; i < atom_form->TheSymbol.NonVariable->Arity; i++)
 	    {
-	      PrintTerm (*termeni, out);
+	      fprintf (out, " ");
+	      PrintTerm (*termeni, out, seplevel);
 	      termeni = atom_form->Arguments + 1;
 	    }
 	  /*while (termeni != NULL) {
@@ -199,7 +204,7 @@ PrintNegFormula (FORMULA form, FILE * out)
 	  //printf("(not ");
 	  FORMULA atom_f = uform.Formula;
 
-	  PrintFormula (atom_f, out);
+	  PrintFormula (atom_f, out, seplevel);
 
 	  //printf(")");
 	}
@@ -213,9 +218,9 @@ PrintNegFormula (FORMULA form, FILE * out)
 	{
 	  fprintf (out, "(and ");
 	  FORMULA atom_left = bform.LHS;
-	  PrintNegFormula (atom_left, out);
+	  PrintNegFormula (atom_left, out, seplevel);
 	  FORMULA atom_right = bform.RHS;
-	  PrintNegFormula (atom_right, out);
+	  PrintNegFormula (atom_right, out, seplevel);
 	  fprintf (out, ")");
 
 	}
@@ -224,7 +229,7 @@ PrintNegFormula (FORMULA form, FILE * out)
 
 
 void
-PrintFormula (FORMULA form, FILE * out)
+PrintFormula (FORMULA form, FILE * out, int seplevel)
 {
 
   //atomic formula
@@ -250,7 +255,7 @@ PrintFormula (FORMULA form, FILE * out)
 	  int i;
 	  for (i = 0; i < atom_form->TheSymbol.NonVariable->Arity; i++)
 	    {
-	      PrintTerm (*termeni, out);
+	      PrintTerm (*termeni, out, seplevel);
 	      termeni = atom_form->Arguments + 1;
 	    }
 	  /*while (termeni != NULL) {
@@ -293,7 +298,8 @@ PrintFormula (FORMULA form, FILE * out)
 		  for (i = 0; i < atom_form->TheSymbol.NonVariable->Arity;
 		       i++)
 		    {
-		      PrintTerm (*termeni, out);
+		      fprintf (out, " ");
+		      PrintTerm (*termeni, out, seplevel);
 		      termeni = atom_form->Arguments + 1;
 		    }
 		  /*while (termeni != NULL) {
@@ -320,9 +326,9 @@ PrintFormula (FORMULA form, FILE * out)
 	{
 	  fprintf (out, "    (and ");
 	  FORMULA atom_left = bform.LHS;
-	  PrintFormula (atom_left, out);
+	  PrintFormula (atom_left, out, seplevel);
 	  FORMULA atom_right = bform.RHS;
-	  PrintFormula (atom_right, out);
+	  PrintFormula (atom_right, out, seplevel);
 	  fprintf (out, "    )\n");
 
 	}
@@ -330,7 +336,8 @@ PrintFormula (FORMULA form, FILE * out)
 }
 
 void
-PrintAllFormulas (ROOTLIST r, FILE * out, TreeStatisticsRecordType Statistics)
+PrintAllFormulas (ROOTLIST r, FILE * out,
+		  TreeStatisticsRecordType Statistics, int seplevel)
 {
 /*	if (Statistics.NumberOfCNF > 2)
 		fprintf(out,"(assert\n  (and \n");
@@ -357,12 +364,12 @@ PrintAllFormulas (ROOTLIST r, FILE * out, TreeStatisticsRecordType Statistics)
 		  fprintf (out, "  )\n)\n(assert\n  (not\n    ");
 		  //else
 		  //fprintf(out,")\n(assert\n  (not\n    ");
-		  PrintNegFormula (form->Formula, out);
+		  PrintNegFormula (form->Formula, out, seplevel);
 		}
 	      //printf("this is good: %s ",aft.Name);
 	      else
 		{
-		  PrintFormula (form->Formula, out);
+		  PrintFormula (form->Formula, out, seplevel);
 		}
 
 	      //fprintf(out,") \n");
@@ -413,7 +420,7 @@ main (int argc, char *argv[])
 
   ROOTLIST r = RootListHead;
 
-  PrintAllFormulas (r, fout, Statistics);
+  PrintAllFormulas (r, fout, Statistics, 0);	// sep level
 
   fprintf (fout, "\n(check-sat)\n");
 

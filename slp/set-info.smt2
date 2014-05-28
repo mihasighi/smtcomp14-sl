@@ -8,5 +8,5 @@ http://navarroj.com/research/papers.html#pldi11
 (set-info :smt-lib-version 2.0)
 (set-info :category "random") 
 (set-info :status unknown)
-(set-info :version "2014-05-22")
+(set-info :version "2014-05-28")
 
