@@ -348,13 +348,13 @@ sl_pred_case_2slide (FILE * fout, sl_var_array * args, sl_pred_case_t * c)
       fflush (fout);
     }
 
-  if (nbc == 0)
+  if (nbc == 0 || (c->space == NULL) || (sl_vector_size(c->space) == 0))
     {
       // maybe emp or junk
       if (c->is_precise)
-	fprintf (fout, "emp");
+	fprintf (fout, " %s emp", (nbc == 0) ? "" : "&");
       else
-	fprintf (fout, "true");
+	fprintf (fout, " %s junk", (nbc == 0) ? "" : "&");
       nbc++;
     }
 

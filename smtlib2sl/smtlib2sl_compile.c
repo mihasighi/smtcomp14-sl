@@ -22,6 +22,7 @@
 #include "sl_prob2sleek.h"
 #include "sl_prob2slide.h"
 #include "sl_prob2slp.h"
+#include "sl_prob2spen.h"
 
 /* ====================================================================== */
 /* Globals */
@@ -34,11 +35,12 @@ typedef enum sl_format_t
   SL_FORMAT_SLEEK,
   SL_FORMAT_SLIDE,
   SL_FORMAT_SLP,
+  SL_FORMAT_SPEN,
   SL_FORMAT_OTHER		/* NOT TO BE USED */
 } sl_format_t;
 
 /* set by options */
-bool sl_compile[SL_FORMAT_OTHER] = { true, false, false, false, false };
+bool sl_compile[SL_FORMAT_OTHER] = { true, false, false, false, false, false };
 
 /* ====================================================================== */
 /* MAIN/Main/main */
@@ -58,6 +60,8 @@ sl_set_option (char *option)
     sl_compile[SL_FORMAT_SLIDE] = true;
   else if (0 == strcmp (option, "-slp"))
     sl_compile[SL_FORMAT_SLP] = true;
+  else if (0 == strcmp (option, "-spen"))
+    sl_compile[SL_FORMAT_SPEN] = true;
   else
 
     printf ("Unknown option: %s! ignore.\n", option);
@@ -132,6 +136,9 @@ main (int argc, char **argv)
 	  break;
 	case SL_FORMAT_SLP:
 	  sl_prob_2slp (argv[arg_file]);
+	  break;
+	case SL_FORMAT_SPEN:
+	  sl_prob_2spen (argv[arg_file]);
 	  break;
 	default:
 	  break;
