@@ -10,23 +10,17 @@ http://navarroj.com/research/papers.html#pldi11
 (set-info :status unknown)
 (set-info :version "2014-05-28")
 
-(set-logic QF_NOLL)
-
 (declare-sort Sll_t 0)
 
-(declare-fun f () (Field Sll_t Sll_t))
+(declare-fun next () (Field Sll_t Sll_t))
 
 (define-fun ls ((?in Sll_t) (?out Sll_t)) Space
 (tospace (or (= ?in ?out)
 (exists ((?u Sll_t))
 (and (distinct ?in ?out) (tobool
-(ssep (pto ?in (ref f ?u)) (ls ?u ?out)
+(ssep (pto ?in (ref next ?u)) (ls ?u ?out)
 )))))))
 
-(declare-fun x_emp () Sll_t)
-(declare-fun y_emp () Sll_t)
-(declare-fun z_emp () Sll_t)
-(declare-fun t_emp () Sll_t)
 (declare-fun x0 () Sll_t)
 (declare-fun x1 () Sll_t)
 (declare-fun x2 () Sll_t)
@@ -52,12 +46,70 @@ http://navarroj.com/research/papers.html#pldi11
 (assert
   (and 
     (= nil nil)
-    (tobool  (ssep  (pto x14  (ref f x7 ) ) (ssep  (ls x9 x8 ) (ssep  (pto x7  (ref f x17 ) ) (ssep  (ls x8 x11 ) (ssep  (pto x5  (ref f x14 ) ) (ssep  (ls x12 x5 ) (ssep  (pto x2  (ref f x16 ) ) (ssep  (ls x16 x3 ) (ssep  (ls x15 x10 ) (ssep  (pto x10  (ref f x7 ) ) (ssep  (pto x6  (ref f x17 ) ) (ssep  (pto x13  (ref f x3 ) ) (ssep  (ls x17 x9 ) (ssep  (ls x11 x3 ) (ssep  (ls x4 x16 ) (ssep  (pto x3  (ref f x14 ) ) (ssep  (pto x1  (ref f x3 ) )(ssep (pto x_emp (ref f y_emp)) (pto z_emp (ref f t_emp)))))))))))))))))))))
+    (tobool 
+	(ssep
+		(pto x14 (ref next x7)) 
+		
+		(ls  x9 x8) 
+		
+		(pto x7 (ref next x17)) 
+		
+		(ls  x8 x11) 
+		
+		(pto x5 (ref next x14)) 
+		
+		(ls  x12 x5) 
+		
+		(pto x2 (ref next x16)) 
+		
+		(ls  x16 x3) 
+		
+		(ls  x15 x10) 
+		
+		(pto x10 (ref next x7)) 
+		
+		(pto x6 (ref next x17)) 
+		
+		(pto x13 (ref next x3)) 
+		
+		(ls  x17 x9) 
+		
+		(ls  x11 x3) 
+		
+		(ls  x4 x16) 
+		
+		(pto x3 (ref next x14)) 
+		
+		(pto x1 (ref next x3)) 
+		emp
+	) )
   )
 )
 (assert
   (not
-        (tobool  (ssep  (ls x1 x3 ) (ssep  (ls x2 x16 ) (ssep  (ls x13 x3 ) (ssep  (ls x12 x5 ) (ssep  (ls x4 x16 ) (ssep  (ls x16 x3 ) (ssep  (ls x6 x17 ) (ssep  (ls x15 x7 ) (ssep  (ls x5 x7 ) (ssep  (ls x7 x14 )(ssep (pto x_emp (ref f y_emp)) (pto z_emp (ref f t_emp))))))))))))))
+        (tobool 
+	(ssep
+		(ls  x1 x3) 
+		
+		(ls  x2 x16) 
+		
+		(ls  x13 x3) 
+		
+		(ls  x12 x5) 
+		
+		(ls  x4 x16) 
+		
+		(ls  x16 x3) 
+		
+		(ls  x6 x17) 
+		
+		(ls  x15 x7) 
+		
+		(ls  x5 x7) 
+		
+		(ls  x7 x14) 
+		emp
+	) )
   ))
 
 (check-sat)

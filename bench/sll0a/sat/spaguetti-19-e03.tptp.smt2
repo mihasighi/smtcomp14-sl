@@ -10,23 +10,17 @@ http://navarroj.com/research/papers.html#pldi11
 (set-info :status unknown)
 (set-info :version "2014-05-28")
 
-(set-logic QF_NOLL)
-
 (declare-sort Sll_t 0)
 
-(declare-fun f () (Field Sll_t Sll_t))
+(declare-fun next () (Field Sll_t Sll_t))
 
 (define-fun ls ((?in Sll_t) (?out Sll_t)) Space
 (tospace (or (= ?in ?out)
 (exists ((?u Sll_t))
 (and (distinct ?in ?out) (tobool
-(ssep (pto ?in (ref f ?u)) (ls ?u ?out)
+(ssep (pto ?in (ref next ?u)) (ls ?u ?out)
 )))))))
 
-(declare-fun x_emp () Sll_t)
-(declare-fun y_emp () Sll_t)
-(declare-fun z_emp () Sll_t)
-(declare-fun t_emp () Sll_t)
 (declare-fun x0 () Sll_t)
 (declare-fun x1 () Sll_t)
 (declare-fun x2 () Sll_t)
@@ -54,31 +48,42 @@ http://navarroj.com/research/papers.html#pldi11
 (assert
   (and 
     (= nil nil)
-(distinct x11 x13 )
-(distinct x11 x15 )
-(distinct x3 x6 )
-(distinct x7 x9 )
-(distinct x9 x18 )
-(distinct x9 x19 )
-(distinct x12 x18 )
-(distinct x12 x19 )
-(distinct x2 x16 )
-(distinct x2 x13 )
-(distinct x8 x18 )
-(distinct x8 x10 )
-(distinct x1 x6 )
-(distinct x1 x7 )
-(distinct x1 x10 )
-(distinct x1 x16 )
-(distinct x1 x17 )
-(distinct x5 x16 )
-(distinct x5 x13 )
-    (tobool  (ssep  (ls x8 x1 ) (ssep  (ls x12 x19 ) (ssep  (ls x17 x19 ) (ssep  (ls x7 x17 ) (ssep  (ls x7 x12 ) (ssep  (ls x3 x2 )(ssep (pto x_emp (ref f y_emp)) (pto z_emp (ref f t_emp))))))))))
+(distinct  x11 x13)
+(distinct  x11 x15)
+(distinct  x3 x6)
+(distinct  x7 x9)
+(distinct  x9 x18)
+(distinct  x9 x19)
+(distinct  x12 x18)
+(distinct  x12 x19)
+(distinct  x2 x16)
+(distinct  x2 x13)
+(distinct  x8 x18)
+(distinct  x8 x10)
+(distinct  x1 x6)
+(distinct  x1 x7)
+(distinct  x1 x10)
+(distinct  x1 x16)
+(distinct  x1 x17)
+(distinct  x5 x16)
+(distinct  x5 x13)
+    (tobool 
+	(ssep
+		(ls  x8 x1) 
+		
+		(ls  x12 x19) 
+		
+		(ls  x17 x19) 
+		
+		(ls  x7 x17) 
+		
+		(ls  x7 x12) 
+		
+		(ls  x3 x2) 
+		emp
+	) )
   )
 )
-(assert
-  (not
-    (and (distinct x1 x1 )    (tobool (ssep (pto x_emp (ref f y_emp)) (pto z_emp (ref f t_emp))))
-)  ))
 
 (check-sat)
+

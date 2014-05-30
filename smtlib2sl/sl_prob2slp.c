@@ -322,7 +322,7 @@ sl_prob_2slp (const char *fname)
     }
 
   // Translated the problem only for entailment
-  fprintf (fout, "fun0: ");
+  fprintf (fout, "fun0 :: ");
 
   // translate positive formula
   sl_form_2slp (fout, sl_prob->pform);
@@ -335,7 +335,7 @@ sl_prob_2slp (const char *fname)
     // translate negative formula
     sl_form_2slp (fout, sl_vector_at (sl_prob->nform, 0));
 
-  fprintf (fout, "\n");
+  fprintf (fout, ".\n");
 
   fclose (fout);
   sl_message ("\nDone\n");

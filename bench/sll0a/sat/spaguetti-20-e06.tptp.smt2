@@ -10,23 +10,17 @@ http://navarroj.com/research/papers.html#pldi11
 (set-info :status unknown)
 (set-info :version "2014-05-28")
 
-(set-logic QF_NOLL)
-
 (declare-sort Sll_t 0)
 
-(declare-fun f () (Field Sll_t Sll_t))
+(declare-fun next () (Field Sll_t Sll_t))
 
 (define-fun ls ((?in Sll_t) (?out Sll_t)) Space
 (tospace (or (= ?in ?out)
 (exists ((?u Sll_t))
 (and (distinct ?in ?out) (tobool
-(ssep (pto ?in (ref f ?u)) (ls ?u ?out)
+(ssep (pto ?in (ref next ?u)) (ls ?u ?out)
 )))))))
 
-(declare-fun x_emp () Sll_t)
-(declare-fun y_emp () Sll_t)
-(declare-fun z_emp () Sll_t)
-(declare-fun t_emp () Sll_t)
 (declare-fun x0 () Sll_t)
 (declare-fun x1 () Sll_t)
 (declare-fun x2 () Sll_t)
@@ -55,34 +49,71 @@ http://navarroj.com/research/papers.html#pldi11
 (assert
   (and 
     (= nil nil)
-(distinct x6 x16 )
-(distinct x6 x9 )
-(distinct x6 x13 )
-(distinct x3 x18 )
-(distinct x3 x16 )
-(distinct x3 x19 )
-(distinct x3 x15 )
-(distinct x7 x11 )
-(distinct x7 x20 )
-(distinct x9 x18 )
-(distinct x9 x16 )
-(distinct x9 x20 )
-(distinct x2 x10 )
-(distinct x15 x17 )
-(distinct x8 x18 )
-(distinct x8 x17 )
-(distinct x1 x13 )
-(distinct x1 x2 )
-(distinct x4 x13 )
-(distinct x4 x20 )
-(distinct x13 x14 )
-(distinct x16 x19 )
-    (tobool  (ssep  (ls x5 x20 ) (ssep  (ls x5 x14 ) (ssep  (ls x5 x2 ) (ssep  (ls x5 x3 ) (ssep  (ls x16 x17 ) (ssep  (ls x18 x7 ) (ssep  (ls x1 x15 ) (ssep  (ls x1 x5 ) (ssep  (ls x1 x10 ) (ssep  (ls x8 x6 ) (ssep  (ls x20 x18 ) (ssep  (ls x2 x15 ) (ssep  (ls x2 x19 ) (ssep  (ls x2 x11 ) (ssep  (ls x9 x1 ) (ssep  (ls x7 x20 ) (ssep  (ls x3 x14 ) (ssep  (ls x6 x19 ) (ssep  (ls x6 x1 )(ssep (pto x_emp (ref f y_emp)) (pto z_emp (ref f t_emp)))))))))))))))))))))))
+(distinct  x6 x16)
+(distinct  x6 x9)
+(distinct  x6 x13)
+(distinct  x3 x18)
+(distinct  x3 x16)
+(distinct  x3 x19)
+(distinct  x3 x15)
+(distinct  x7 x11)
+(distinct  x7 x20)
+(distinct  x9 x18)
+(distinct  x9 x16)
+(distinct  x9 x20)
+(distinct  x2 x10)
+(distinct  x15 x17)
+(distinct  x8 x18)
+(distinct  x8 x17)
+(distinct  x1 x13)
+(distinct  x1 x2)
+(distinct  x4 x13)
+(distinct  x4 x20)
+(distinct  x13 x14)
+(distinct  x16 x19)
+    (tobool 
+	(ssep
+		(ls  x5 x20) 
+		
+		(ls  x5 x14) 
+		
+		(ls  x5 x2) 
+		
+		(ls  x5 x3) 
+		
+		(ls  x16 x17) 
+		
+		(ls  x18 x7) 
+		
+		(ls  x1 x15) 
+		
+		(ls  x1 x5) 
+		
+		(ls  x1 x10) 
+		
+		(ls  x8 x6) 
+		
+		(ls  x20 x18) 
+		
+		(ls  x2 x15) 
+		
+		(ls  x2 x19) 
+		
+		(ls  x2 x11) 
+		
+		(ls  x9 x1) 
+		
+		(ls  x7 x20) 
+		
+		(ls  x3 x14) 
+		
+		(ls  x6 x19) 
+		
+		(ls  x6 x1) 
+		emp
+	) )
   )
 )
-(assert
-  (not
-    (and (distinct x1 x1 )    (tobool (ssep (pto x_emp (ref f y_emp)) (pto z_emp (ref f t_emp))))
-)  ))
 
 (check-sat)
+

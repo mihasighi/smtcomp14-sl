@@ -91,8 +91,8 @@ PrintTerm (TERM term, FILE * out, int seplevel)
 	    }
 	  if (strcmp (term->TheSymbol.NonVariable->NameSymbol, "emp") == 0)
 	    {
-	      fprintf (out,
-		       "(ssep (pto x_emp (ref f y_emp)) (pto z_emp (ref f t_emp)))");
+	      fprintf (out, "emp");
+		       //"(ssep (pto x_emp (ref f y_emp)) (pto z_emp (ref f t_emp)))");
 	      //return;
 	    }
 	  else
@@ -121,7 +121,7 @@ PrintTerm (TERM term, FILE * out, int seplevel)
 	  fprintf (out, "(pto ");
 	  TERM *termeni = term->Arguments;
 	  PrintTerm (*termeni, out, seplevel);
-	  fprintf (out, " (ref f ");
+	  fprintf (out, " (ref next ");
 	  termeni = term->Arguments + 1;
 	  PrintTerm (*termeni, out, seplevel);
 	  fprintf (out, ")) ");	//:sref_end
@@ -428,11 +428,11 @@ main (int argc, char *argv[])
 
   FILE *fdecl = fopen ("file_decl", "w");
 
-  fprintf (fdecl, "(set-logic QF_NOLL)\n\n");
+  //fprintf (fdecl, "(set-logic QF_S)\n\n");
 
   fprintf (fdecl, "(declare-sort Sll_t 0)\n\n");
 
-  fprintf (fdecl, "(declare-fun f () (Field Sll_t Sll_t))\n\n");
+  fprintf (fdecl, "(declare-fun next () (Field Sll_t Sll_t))\n\n");
 
   fprintf (fdecl, "(define-fun ls ((?in Sll_t) (?out Sll_t)) Space\n");
 
@@ -442,19 +442,19 @@ main (int argc, char *argv[])
 
   fprintf (fdecl, "(and (distinct ?in ?out) (tobool\n");
 
-  fprintf (fdecl, "(ssep (pto ?in (ref f ?u)) (ls ?u ?out)\n");
+  fprintf (fdecl, "(ssep (pto ?in (ref next ?u)) (ls ?u ?out)\n");
 
   fprintf (fdecl, ")))))))\n\n");
 
   //fprintf (fdecl, "(declare-fun nil () Sll_t)\n\n");
 
-  fprintf (fdecl, "(declare-fun x_emp () Sll_t)\n");
+  //fprintf (fdecl, "(declare-fun x_emp () Sll_t)\n");
 
-  fprintf (fdecl, "(declare-fun y_emp () Sll_t)\n");
+  //fprintf (fdecl, "(declare-fun y_emp () Sll_t)\n");
 
-  fprintf (fdecl, "(declare-fun z_emp () Sll_t)\n");
+  //fprintf (fdecl, "(declare-fun z_emp () Sll_t)\n");
 
-  fprintf (fdecl, "(declare-fun t_emp () Sll_t)\n");
+  //fprintf (fdecl, "(declare-fun t_emp () Sll_t)\n");
 
   int i;
 

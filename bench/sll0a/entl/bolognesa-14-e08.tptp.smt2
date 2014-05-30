@@ -10,23 +10,17 @@ http://navarroj.com/research/papers.html#pldi11
 (set-info :status unknown)
 (set-info :version "2014-05-28")
 
-(set-logic QF_NOLL)
-
 (declare-sort Sll_t 0)
 
-(declare-fun f () (Field Sll_t Sll_t))
+(declare-fun next () (Field Sll_t Sll_t))
 
 (define-fun ls ((?in Sll_t) (?out Sll_t)) Space
 (tospace (or (= ?in ?out)
 (exists ((?u Sll_t))
 (and (distinct ?in ?out) (tobool
-(ssep (pto ?in (ref f ?u)) (ls ?u ?out)
+(ssep (pto ?in (ref next ?u)) (ls ?u ?out)
 )))))))
 
-(declare-fun x_emp () Sll_t)
-(declare-fun y_emp () Sll_t)
-(declare-fun z_emp () Sll_t)
-(declare-fun t_emp () Sll_t)
 (declare-fun x0 () Sll_t)
 (declare-fun x1 () Sll_t)
 (declare-fun x2 () Sll_t)
@@ -49,12 +43,60 @@ http://navarroj.com/research/papers.html#pldi11
 (assert
   (and 
     (= nil nil)
-    (tobool  (ssep  (ls x8 x9 ) (ssep  (pto x6  (ref f x13 ) ) (ssep  (ls x1 x4 ) (ssep  (pto x11  (ref f x1 ) ) (ssep  (pto x5  (ref f x6 ) ) (ssep  (pto x2  (ref f x1 ) ) (ssep  (pto x3  (ref f x13 ) ) (ssep  (ls x9 x3 ) (ssep  (pto x12  (ref f x13 ) ) (ssep  (pto x10  (ref f x9 ) ) (ssep  (pto x14  (ref f x13 ) ) (ssep  (ls x4 x12 ) (ssep  (ls x7 x13 ) (ssep  (ls x13 x5 )(ssep (pto x_emp (ref f y_emp)) (pto z_emp (ref f t_emp))))))))))))))))))
+    (tobool 
+	(ssep
+		(ls  x8 x9) 
+		
+		(pto x6 (ref next x13)) 
+		
+		(ls  x1 x4) 
+		
+		(pto x11 (ref next x1)) 
+		
+		(pto x5 (ref next x6)) 
+		
+		(pto x2 (ref next x1)) 
+		
+		(pto x3 (ref next x13)) 
+		
+		(ls  x9 x3) 
+		
+		(pto x12 (ref next x13)) 
+		
+		(pto x10 (ref next x9)) 
+		
+		(pto x14 (ref next x13)) 
+		
+		(ls  x4 x12) 
+		
+		(ls  x7 x13) 
+		
+		(ls  x13 x5) 
+		emp
+	) )
   )
 )
 (assert
   (not
-        (tobool  (ssep  (ls x11 x1 ) (ssep  (ls x2 x1 ) (ssep  (ls x14 x13 ) (ssep  (ls x8 x9 ) (ssep  (ls x6 x13 ) (ssep  (ls x7 x13 ) (ssep  (ls x1 x13 ) (ssep  (ls x10 x6 )(ssep (pto x_emp (ref f y_emp)) (pto z_emp (ref f t_emp))))))))))))
+        (tobool 
+	(ssep
+		(ls  x11 x1) 
+		
+		(ls  x2 x1) 
+		
+		(ls  x14 x13) 
+		
+		(ls  x8 x9) 
+		
+		(ls  x6 x13) 
+		
+		(ls  x7 x13) 
+		
+		(ls  x1 x13) 
+		
+		(ls  x10 x6) 
+		emp
+	) )
   ))
 
 (check-sat)

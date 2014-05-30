@@ -10,23 +10,17 @@ http://navarroj.com/research/papers.html#pldi11
 (set-info :status unknown)
 (set-info :version "2014-05-28")
 
-(set-logic QF_NOLL)
-
 (declare-sort Sll_t 0)
 
-(declare-fun f () (Field Sll_t Sll_t))
+(declare-fun next () (Field Sll_t Sll_t))
 
 (define-fun ls ((?in Sll_t) (?out Sll_t)) Space
 (tospace (or (= ?in ?out)
 (exists ((?u Sll_t))
 (and (distinct ?in ?out) (tobool
-(ssep (pto ?in (ref f ?u)) (ls ?u ?out)
+(ssep (pto ?in (ref next ?u)) (ls ?u ?out)
 )))))))
 
-(declare-fun x_emp () Sll_t)
-(declare-fun y_emp () Sll_t)
-(declare-fun z_emp () Sll_t)
-(declare-fun t_emp () Sll_t)
 (declare-fun x0 () Sll_t)
 (declare-fun x1 () Sll_t)
 (declare-fun x2 () Sll_t)
@@ -49,24 +43,42 @@ http://navarroj.com/research/papers.html#pldi11
 (assert
   (and 
     (= nil nil)
-(distinct x6 x13 )
-(distinct x6 x12 )
-(distinct x4 x10 )
-(distinct x1 x8 )
-(distinct x1 x4 )
-(distinct x1 x7 )
-(distinct x1 x14 )
-(distinct x3 x5 )
-(distinct x7 x11 )
-(distinct x7 x10 )
-(distinct x7 x12 )
-(distinct x2 x3 )
-    (tobool  (ssep  (ls x13 x4 ) (ssep  (ls x4 x8 ) (ssep  (ls x9 x10 ) (ssep  (ls x9 x13 ) (ssep  (ls x7 x1 ) (ssep  (ls x3 x4 ) (ssep  (ls x11 x10 ) (ssep  (ls x6 x4 )(ssep (pto x_emp (ref f y_emp)) (pto z_emp (ref f t_emp))))))))))))
+(distinct  x6 x13)
+(distinct  x6 x12)
+(distinct  x4 x10)
+(distinct  x1 x8)
+(distinct  x1 x4)
+(distinct  x1 x7)
+(distinct  x1 x14)
+(distinct  x3 x5)
+(distinct  x7 x11)
+(distinct  x7 x10)
+(distinct  x7 x12)
+(distinct  x2 x3)
+    (tobool 
+	(ssep
+		(ls  x13 x4) 
+		
+		(ls  x4 x8) 
+		
+		(ls  x9 x10) 
+		
+		(ls  x9 x13) 
+		
+		(ls  x7 x1) 
+		
+		(ls  x3 x4) 
+		
+		(ls  x11 x10) 
+		
+		(ls  x6 x4) 
+		emp
+	) )
   )
 )
 (assert
   (not
-    (and (distinct x1 x1 )    (tobool (ssep (pto x_emp (ref f y_emp)) (pto z_emp (ref f t_emp))))
+    (and (distinct  x1 x1)    (tobool emp)
 )  ))
 
 (check-sat)

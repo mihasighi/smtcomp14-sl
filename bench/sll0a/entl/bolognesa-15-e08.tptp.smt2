@@ -10,23 +10,17 @@ http://navarroj.com/research/papers.html#pldi11
 (set-info :status unknown)
 (set-info :version "2014-05-28")
 
-(set-logic QF_NOLL)
-
 (declare-sort Sll_t 0)
 
-(declare-fun f () (Field Sll_t Sll_t))
+(declare-fun next () (Field Sll_t Sll_t))
 
 (define-fun ls ((?in Sll_t) (?out Sll_t)) Space
 (tospace (or (= ?in ?out)
 (exists ((?u Sll_t))
 (and (distinct ?in ?out) (tobool
-(ssep (pto ?in (ref f ?u)) (ls ?u ?out)
+(ssep (pto ?in (ref next ?u)) (ls ?u ?out)
 )))))))
 
-(declare-fun x_emp () Sll_t)
-(declare-fun y_emp () Sll_t)
-(declare-fun z_emp () Sll_t)
-(declare-fun t_emp () Sll_t)
 (declare-fun x0 () Sll_t)
 (declare-fun x1 () Sll_t)
 (declare-fun x2 () Sll_t)
@@ -50,12 +44,58 @@ http://navarroj.com/research/papers.html#pldi11
 (assert
   (and 
     (= nil nil)
-    (tobool  (ssep  (ls x13 x11 ) (ssep  (ls x8 x10 ) (ssep  (pto x4  (ref f x9 ) ) (ssep  (ls x6 x13 ) (ssep  (pto x10  (ref f x4 ) ) (ssep  (pto x2  (ref f x6 ) ) (ssep  (pto x14  (ref f x11 ) ) (ssep  (pto x11  (ref f x9 ) ) (ssep  (pto x12  (ref f x3 ) ) (ssep  (ls x9 x12 ) (ssep  (ls x5 x3 ) (ssep  (pto x15  (ref f x2 ) ) (ssep  (ls x7 x8 ) (ssep  (ls x1 x4 ) (ssep  (ls x3 x5 )(ssep (pto x_emp (ref f y_emp)) (pto z_emp (ref f t_emp)))))))))))))))))))
+    (tobool 
+	(ssep
+		(ls  x13 x11) 
+		
+		(ls  x8 x10) 
+		
+		(pto x4 (ref next x9)) 
+		
+		(ls  x6 x13) 
+		
+		(pto x10 (ref next x4)) 
+		
+		(pto x2 (ref next x6)) 
+		
+		(pto x14 (ref next x11)) 
+		
+		(pto x11 (ref next x9)) 
+		
+		(pto x12 (ref next x3)) 
+		
+		(ls  x9 x12) 
+		
+		(ls  x5 x3) 
+		
+		(pto x15 (ref next x2)) 
+		
+		(ls  x7 x8) 
+		
+		(ls  x1 x4) 
+		
+		(ls  x3 x5) 
+		emp
+	) )
   )
 )
 (assert
   (not
-        (tobool  (ssep  (ls x14 x11 ) (ssep  (ls x15 x6 ) (ssep  (ls x1 x4 ) (ssep  (ls x6 x9 ) (ssep  (ls x7 x5 ) (ssep  (ls x5 x3 )(ssep (pto x_emp (ref f y_emp)) (pto z_emp (ref f t_emp))))))))))
+        (tobool 
+	(ssep
+		(ls  x14 x11) 
+		
+		(ls  x15 x6) 
+		
+		(ls  x1 x4) 
+		
+		(ls  x6 x9) 
+		
+		(ls  x7 x5) 
+		
+		(ls  x5 x3) 
+		emp
+	) )
   ))
 
 (check-sat)

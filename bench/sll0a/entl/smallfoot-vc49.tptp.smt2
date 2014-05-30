@@ -10,23 +10,17 @@ http://navarroj.com/research/papers.html#pldi11
 (set-info :status unknown)
 (set-info :version "2014-05-28")
 
-(set-logic QF_NOLL)
-
 (declare-sort Sll_t 0)
 
-(declare-fun f () (Field Sll_t Sll_t))
+(declare-fun next () (Field Sll_t Sll_t))
 
 (define-fun ls ((?in Sll_t) (?out Sll_t)) Space
 (tospace (or (= ?in ?out)
 (exists ((?u Sll_t))
 (and (distinct ?in ?out) (tobool
-(ssep (pto ?in (ref f ?u)) (ls ?u ?out)
+(ssep (pto ?in (ref next ?u)) (ls ?u ?out)
 )))))))
 
-(declare-fun x_emp () Sll_t)
-(declare-fun y_emp () Sll_t)
-(declare-fun z_emp () Sll_t)
-(declare-fun t_emp () Sll_t)
 (declare-fun x0 () Sll_t)
 (declare-fun x1 () Sll_t)
 (declare-fun x2 () Sll_t)
@@ -37,14 +31,24 @@ http://navarroj.com/research/papers.html#pldi11
 (assert
   (and 
     (= nil nil)
-(distinct nil x1 )
-(distinct x1 x2 )
-    (tobool  (ssep  (ls x2 nil ) (ssep  (ls x1 nil )(ssep (pto x_emp (ref f y_emp)) (pto z_emp (ref f t_emp))))))
+(distinct  nil x1)
+(distinct  x1 x2)
+    (tobool 
+	(ssep
+		(ls  x2 nil) 
+		
+		(ls  x1 nil) 
+		emp
+	) )
   )
 )
 (assert
   (not
-        (tobool  (ssep  (ls x2 nil )(ssep (pto x_emp (ref f y_emp)) (pto z_emp (ref f t_emp)))))
+        (tobool 
+	(ssep
+		(ls  x2 nil) 
+		emp
+	) )
   ))
 
 (check-sat)
