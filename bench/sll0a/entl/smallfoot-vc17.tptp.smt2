@@ -36,12 +36,12 @@ http://navarroj.com/research/papers.html#pldi11
 (distinct  nil x1)
 (distinct  x1 x2)
 (distinct  x1 x3)
-    (tobool emp)
+    (tobool   emp)
   )
 )
 (assert
   (not
-        (tobool emp)
+        (tobool   emp)
   ))
 
 (check-sat)

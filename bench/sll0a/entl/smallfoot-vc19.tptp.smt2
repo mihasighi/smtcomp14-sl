@@ -30,12 +30,12 @@ http://navarroj.com/research/papers.html#pldi11
   (and 
     (= nil nil)
 (distinct  nil x1)
-    (tobool emp)
+    (tobool   emp)
   )
 )
 (assert
   (not
-        (tobool emp)
+        (tobool   emp)
   ))
 
 (check-sat)

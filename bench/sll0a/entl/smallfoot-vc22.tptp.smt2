@@ -32,7 +32,7 @@ http://navarroj.com/research/papers.html#pldi11
   (and 
     (= nil nil)
 (distinct  nil x1)
-    (tobool 
+    (tobool   
 	(ssep
 		(ls  x2 nil) 
 		emp
@@ -41,8 +41,8 @@ http://navarroj.com/research/papers.html#pldi11
 )
 (assert
   (not
-    (and (= x2x2)
-    (tobool emp)
+    (and (=   x2  x2)
+    (tobool   emp)
 )  ))
 
 (check-sat)

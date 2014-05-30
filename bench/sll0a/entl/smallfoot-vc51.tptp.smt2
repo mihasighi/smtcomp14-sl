@@ -33,7 +33,7 @@ http://navarroj.com/research/papers.html#pldi11
     (= nil nil)
 (distinct  nil x1)
 (distinct  x1 x2)
-    (tobool 
+    (tobool   
 	(ssep
 		(ls  x2 nil) 
 		emp
@@ -42,7 +42,7 @@ http://navarroj.com/research/papers.html#pldi11
 )
 (assert
   (not
-        (tobool 
+        (tobool   
 	(ssep
 		(ls  x2 nil) 
 		emp

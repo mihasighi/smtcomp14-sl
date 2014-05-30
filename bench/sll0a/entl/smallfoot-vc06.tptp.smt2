@@ -30,12 +30,12 @@ http://navarroj.com/research/papers.html#pldi11
 (assert
   (and 
     (= nil nil)
-    (tobool emp)
+    (tobool   emp)
   )
 )
 (assert
   (not
-        (tobool 
+        (tobool   
 	(ssep
 		(ls  x1 x1) 
 		emp

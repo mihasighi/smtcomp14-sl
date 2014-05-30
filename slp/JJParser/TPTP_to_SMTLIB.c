@@ -255,6 +255,7 @@ PrintFormula (FORMULA form, FILE * out, int seplevel)
 	  int i;
 	  for (i = 0; i < atom_form->TheSymbol.NonVariable->Arity; i++)
 	    {
+	      fprintf (out, "  ");
 	      PrintTerm (*termeni, out, seplevel);
 	      termeni = atom_form->Arguments + 1;
 	    }
@@ -327,6 +328,7 @@ PrintFormula (FORMULA form, FILE * out, int seplevel)
 	  fprintf (out, "    (and ");
 	  FORMULA atom_left = bform.LHS;
 	  PrintFormula (atom_left, out, seplevel);
+	  fprintf (out, "  ");
 	  FORMULA atom_right = bform.RHS;
 	  PrintFormula (atom_right, out, seplevel);
 	  fprintf (out, "    )\n");

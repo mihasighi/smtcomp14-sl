@@ -34,7 +34,7 @@ http://navarroj.com/research/papers.html#pldi11
     (= nil nil)
 (distinct  nil x1)
 (distinct  x1 x2)
-    (tobool 
+    (tobool   
 	(ssep
 		(ls  x3 nil) 
 		emp
@@ -43,8 +43,8 @@ http://navarroj.com/research/papers.html#pldi11
 )
 (assert
   (not
-    (and (= x3x3)
-    (tobool emp)
+    (and (=   x3  x3)
+    (tobool   emp)
 )  ))
 
 (check-sat)

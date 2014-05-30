@@ -6,7 +6,7 @@ http://www.liafa.univ-paris-diderot.fr/spen
 |)
 (set-info :smt-lib-version 2.0)
 (set-info :category "crafted")
-(set-info :status unsat)
+(set-info :status unknown)
 (set-info :version "2014-05-28")
 
 
@@ -29,14 +29,14 @@ http://www.liafa.univ-paris-diderot.fr/spen
 
 (assert
     (tobool (ssep (pto x_emp (ref next y_emp)) 
-                  (lso y_emp w_emp)
+                  (ls y_emp w_emp)
                   (pto w_emp (ref next z_emp))
             )
     )
 )
 (assert
   (not
-    (tobool (lso x_emp z_emp))
+    (tobool (ls x_emp z_emp))
 ))
 
 (check-sat)

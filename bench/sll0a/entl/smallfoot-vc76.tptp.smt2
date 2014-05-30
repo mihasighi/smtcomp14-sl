@@ -36,7 +36,7 @@ http://navarroj.com/research/papers.html#pldi11
 (distinct  x2 x1)
 (distinct  x2 x3)
 (distinct  x1 x3)
-    (tobool 
+    (tobool   
 	(ssep
 		(pto x1 (ref next x3)) 
 		
@@ -47,7 +47,7 @@ http://navarroj.com/research/papers.html#pldi11
 )
 (assert
   (not
-        (tobool 
+        (tobool   
 	(ssep
 		(ls  x2 nil) 
 		emp
