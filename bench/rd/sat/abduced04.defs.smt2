@@ -41,12 +41,12 @@
 
 (define-fun I16021 ((?a GTyp) (?b GTyp) (?c GTyp) (?d GTyp) (?e GTyp) (?f GTyp) (?g GTyp) (?h GTyp)) Space 
 
-	(tospace (exists ((?a' GTyp))
+	(tospace (exists ((?a00 GTyp))
 		
 		 (and (distinct nil ?h)
 			(tobool 
-	(ssep (pto ?h  (ref f0 ?a') )
-		(I84896 ?a ?b ?c ?d ?e ?f ?g ?h ?a')
+	(ssep (pto ?h  (ref f0 ?a00) )
+		(I84896 ?a ?b ?c ?d ?e ?f ?g ?h ?a00)
 	)
 
 		))
@@ -60,12 +60,12 @@
 
 (define-fun I16052 ((?a GTyp) (?b GTyp) (?c GTyp) (?d GTyp) (?e GTyp) (?f GTyp) (?g GTyp) (?h GTyp)) Space 
 
-	(tospace (exists ((?a' GTyp))
+	(tospace (exists ((?a00 GTyp))
 		
 		 (and (distinct nil ?a)
 			(tobool 
-	(ssep (pto ?a  (ref f0 ?a') )
-		(I50464 ?a ?b ?c ?d ?e ?f ?g ?h ?a')
+	(ssep (pto ?a  (ref f0 ?a00) )
+		(I50464 ?a ?b ?c ?d ?e ?f ?g ?h ?a00)
 	)
 
 		))
@@ -106,12 +106,12 @@
 
 (define-fun I3022 ((?a GTyp) (?b GTyp) (?c GTyp) (?d GTyp) (?e GTyp) (?f GTyp) (?g GTyp)) Space 
 
-	(tospace (exists ((?a' GTyp))
+	(tospace (exists ((?a00 GTyp))
 		
 		 (and (distinct nil ?g)
 			(tobool 
-	(ssep (pto ?g  (ref f0 ?a') )
-		(I15960 ?a ?b ?c ?d ?e ?f ?g ?a')
+	(ssep (pto ?g  (ref f0 ?a00) )
+		(I15960 ?a ?b ?c ?d ?e ?f ?g ?a00)
 	)
 
 		))
@@ -125,12 +125,12 @@
 
 (define-fun I3047 ((?a GTyp) (?b GTyp) (?c GTyp) (?d GTyp) (?e GTyp) (?f GTyp) (?g GTyp)) Space 
 
-	(tospace (exists ((?a' GTyp))
+	(tospace (exists ((?a00 GTyp))
 		
 		 (and (distinct nil ?a)
 			(tobool 
-	(ssep (pto ?a  (ref f0 ?a') )
-		(I9762 ?a ?b ?c ?d ?e ?f ?g ?a')
+	(ssep (pto ?a  (ref f0 ?a00) )
+		(I9762 ?a ?b ?c ?d ?e ?f ?g ?a00)
 	)
 
 		))
@@ -171,12 +171,12 @@
 
 (define-fun I2906 ((?a GTyp) (?b GTyp) (?c GTyp) (?d GTyp) (?e GTyp) (?f GTyp)) Space 
 
-	(tospace (exists ((?a' GTyp))
+	(tospace (exists ((?a00 GTyp))
 		
 		 (and (distinct nil ?f)
 			(tobool 
-	(ssep (pto ?f  (ref f0 ?a') )
-		(I2998 ?a ?b ?c ?d ?e ?f ?a')
+	(ssep (pto ?f  (ref f0 ?a00) )
+		(I2998 ?a ?b ?c ?d ?e ?f ?a00)
 	)
 
 		))
@@ -190,12 +190,12 @@
 
 (define-fun I2955 ((?a GTyp) (?b GTyp) (?c GTyp) (?d GTyp) (?e GTyp) (?f GTyp)) Space 
 
-	(tospace (exists ((?a' GTyp))
+	(tospace (exists ((?a00 GTyp))
 		
 		 (and (distinct nil ?a)
 			(tobool 
-	(ssep (pto ?a  (ref f0 ?a') )
-		(I2964 ?a ?b ?c ?d ?e ?f ?a')
+	(ssep (pto ?a  (ref f0 ?a00) )
+		(I2964 ?a ?b ?c ?d ?e ?f ?a00)
 	)
 
 		))
@@ -236,12 +236,12 @@
 
 (define-fun I482 ((?a GTyp) (?b GTyp) (?c GTyp) (?d GTyp) (?e GTyp)) Space 
 
-	(tospace (exists ((?a' GTyp))
+	(tospace (exists ((?a00 GTyp))
 		
 		 (and (distinct nil ?e)
 			(tobool 
-	(ssep (pto ?e  (ref f0 ?a') )
-		(I2886 ?a ?b ?c ?d ?e ?a')
+	(ssep (pto ?e  (ref f0 ?a00) )
+		(I2886 ?a ?b ?c ?d ?e ?a00)
 	)
 
 		))
@@ -255,12 +255,12 @@
 
 (define-fun I510 ((?a GTyp) (?b GTyp) (?c GTyp) (?d GTyp) (?e GTyp)) Space 
 
-	(tospace (exists ((?a' GTyp))
+	(tospace (exists ((?a00 GTyp))
 		
 		 (and (distinct nil ?b)
 			(tobool 
-	(ssep (pto ?b  (ref f0 ?a') )
-		(I1962 ?a ?b ?c ?d ?e ?a')
+	(ssep (pto ?b  (ref f0 ?a00) )
+		(I1962 ?a ?b ?c ?d ?e ?a00)
 	)
 
 		))
@@ -301,12 +301,12 @@
 
 (define-fun I046 ((?a GTyp) (?b GTyp) (?c GTyp) (?d GTyp)) Space 
 
-	(tospace (exists ((?a' GTyp))
+	(tospace (exists ((?a00 GTyp))
 		
 		 (and (distinct nil ?d)
 			(tobool 
-	(ssep (pto ?d  (ref f0 ?a') )
-		(I466 ?a ?b ?c ?d ?a')
+	(ssep (pto ?d  (ref f0 ?a00) )
+		(I466 ?a ?b ?c ?d ?a00)
 	)
 
 		))
@@ -337,12 +337,12 @@
 
 (define-fun I021 ((?a GTyp) (?b GTyp) (?c GTyp)) Space 
 
-	(tospace (exists ((?a' GTyp))
+	(tospace (exists ((?a00 GTyp))
 		
 		 (and (distinct nil ?c)
 			(tobool 
-	(ssep (pto ?c  (ref f0 ?a') )
-		(I034 ?a ?b ?c ?a')
+	(ssep (pto ?c  (ref f0 ?a00) )
+		(I034 ?a ?b ?c ?a00)
 	)
 
 		))
@@ -373,12 +373,12 @@
 
 (define-fun I007 ((?a GTyp) (?b GTyp)) Space 
 
-	(tospace (exists ((?a' GTyp))
+	(tospace (exists ((?a00 GTyp))
 		
 		 (and (distinct nil ?b)
 			(tobool 
-	(ssep (pto ?b  (ref f0 ?a') )
-		(I013 ?a ?b ?a')
+	(ssep (pto ?b  (ref f0 ?a00) )
+		(I013 ?a ?b ?a00)
 	)
 
 		))
@@ -409,12 +409,12 @@ emp)
 
 (define-fun I001 ((?a GTyp)) Space 
 
-	(tospace (exists ((?a' GTyp))
+	(tospace (exists ((?a00 GTyp))
 		
 		 (and (distinct nil ?a)
 			(tobool 
-	(ssep (pto ?a  (ref f0 ?a') )
-		(I003 ?a ?a')
+	(ssep (pto ?a  (ref f0 ?a00) )
+		(I003 ?a ?a00)
 	)
 
 		))

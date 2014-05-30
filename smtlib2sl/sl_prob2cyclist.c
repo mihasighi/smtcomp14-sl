@@ -33,8 +33,19 @@
 /* Vars */
 /* ====================================================================== */
 
+void
+sl_vname_free (char *vname)
+{
+  if (vname == NULL)
+    return;
+
+  if (vname[strlen (vname) - 2] == '\'')
+    free (vname);
+}
+
 char *
-sl_var_2cyclist (sl_var_array * args, sl_var_array * lvars, uid_t vid)
+sl_var_2cyclist (sl_var_array * args,
+		 sl_var_array * lvars, uint_t argc, uid_t vid)
 {
 
   char *vname;
@@ -42,6 +53,14 @@ sl_var_2cyclist (sl_var_array * args, sl_var_array * lvars, uid_t vid)
   if (vid >= fstlocal)
     {
       vname = sl_var_name (lvars, vid - fstlocal, SL_TYP_RECORD);
+      if (fstlocal == (1 + argc))
+	{
+	  // put a prime at the end!
+	  char *str = (char *) malloc ((strlen (vname) + 2) * sizeof (char));
+	  str[0] = '\0';
+	  sprintf (str, "%s'", vname + 1);
+	  vname = str;
+	}
     }
   else
     vname = sl_var_name (args, vid, SL_TYP_RECORD);
@@ -51,15 +70,17 @@ sl_var_2cyclist (sl_var_array * args, sl_var_array * lvars, uid_t vid)
 
 void
 sl_var_array_2cyclist (FILE * fout, sl_var_array * args, sl_var_array * lvars,
-		       sl_uid_array * va)
+		       uint_t argc, sl_uid_array * va)
 {
 
   for (size_t i = 0; i < sl_vector_size (va); i++)
     {
       if (i > 0)
 	fprintf (fout, ",");
-      fprintf (fout, "%s", sl_var_2cyclist (args, lvars,
-					    sl_vector_at (va, i)));
+      char *vname = sl_var_2cyclist (args, lvars, argc,
+				     sl_vector_at (va, i));
+      fprintf (fout, "%s", vname);
+      sl_vname_free (vname);
     }
 }
 
@@ -68,23 +89,25 @@ sl_var_array_2cyclist (FILE * fout, sl_var_array * args, sl_var_array * lvars,
 /* ====================================================================== */
 
 void
-sl_pure_2cyclist (FILE * fout, sl_var_array * args, sl_var_array * lvars,
-		  sl_pure_t * form)
+sl_pure_2cyclist (FILE * fout, sl_var_array * args,
+		  sl_var_array * lvars, uint_t argc, sl_pure_t * form)
 {
   assert (NULL != form);
 
   // shall always start by the local vars
-  char *vleft = sl_var_2cyclist (args, lvars, form->vleft);
+  char *vleft = sl_var_2cyclist (args, lvars, argc, form->vleft);
 
-  char *vright = sl_var_2cyclist (args, lvars, form->vright);
+  char *vright = sl_var_2cyclist (args, lvars, argc, form->vright);
 
   fprintf (fout, "%s%s%s", vleft,
 	   (form->op == SL_PURE_EQ) ? "=" : "!=", vright);
+  sl_vname_free (vleft);
+  sl_vname_free (vright);
 }
 
 void
 sl_space_2cyclist (FILE * fout, sl_var_array * args, sl_var_array * lvars,
-		   sl_space_t * form)
+		   uint_t argc, sl_space_t * form)
 {
 
   assert (NULL != form);
@@ -94,11 +117,12 @@ sl_space_2cyclist (FILE * fout, sl_var_array * args, sl_var_array * lvars,
     {
     case SL_SPACE_PTO:
       {
+	char *vname = sl_var_2cyclist (args, lvars, argc, form->m.pto.sid);
 	// print source
-	fprintf (fout, "%s->",
-		 sl_var_2cyclist (args, lvars, form->m.pto.sid));
+	fprintf (fout, "%s->", vname);
+	sl_vname_free (vname);
 	// print destinations
-	sl_var_array_2cyclist (fout, args, lvars, form->m.pto.dest);
+	sl_var_array_2cyclist (fout, args, lvars, argc, form->m.pto.dest);
 
 	break;
       }
@@ -108,7 +132,7 @@ sl_space_2cyclist (FILE * fout, sl_var_array * args, sl_var_array * lvars,
 	// print predicate
 	fprintf (fout, "%s(", sl_pred_name (form->m.ls.pid));
 	// print arguments
-	sl_var_array_2cyclist (fout, args, lvars, form->m.ls.args);
+	sl_var_array_2cyclist (fout, args, lvars, argc, form->m.ls.args);
 	fprintf (fout, ")");
 	break;
       }
@@ -133,7 +157,7 @@ sl_form_2cyclist (FILE * fout, sl_form_t * form)
     {
       if (nbc > 0)
 	fprintf (fout, " * ");
-      sl_pure_2cyclist (fout, NULL, form->lvars,
+      sl_pure_2cyclist (fout, NULL, form->lvars, 0,
 			sl_vector_at (form->pure, i));
       fflush (fout);
       nbc++;
@@ -152,7 +176,7 @@ sl_form_2cyclist (FILE * fout, sl_form_t * form)
 
 	if (nbc > 0)
 	  fprintf (fout, " * ");
-	sl_space_2cyclist (fout, NULL, form->lvars, form->space);
+	sl_space_2cyclist (fout, NULL, form->lvars, 0, form->space);
 	nbc++;
 	break;
       }
@@ -162,7 +186,7 @@ sl_form_2cyclist (FILE * fout, sl_form_t * form)
 	  {
 	    if (nbc > 0)
 	      fprintf (fout, " * ");
-	    sl_space_2cyclist (fout, NULL, form->lvars,
+	    sl_space_2cyclist (fout, NULL, form->lvars, 0,
 			       sl_vector_at (form->space->m.sep, i));
 	    fflush (fout);
 	    nbc++;
@@ -181,7 +205,8 @@ sl_form_2cyclist (FILE * fout, sl_form_t * form)
 /* Predicate */
 /* ====================================================================== */
 void
-sl_pred_case_2cyclist (FILE * fout, sl_var_array * args, sl_pred_case_t * c)
+sl_pred_case_2cyclist (FILE * fout, sl_var_array * args, uint_t argc,
+		       sl_pred_case_t * c)
 {
   assert (NULL != fout);
   assert (NULL != args);
@@ -194,7 +219,8 @@ sl_pred_case_2cyclist (FILE * fout, sl_var_array * args, sl_pred_case_t * c)
     {
       if (nbc > 0)
 	fprintf (fout, " * ");
-      sl_pure_2cyclist (fout, args, c->lvars, sl_vector_at (c->pure, i));
+      sl_pure_2cyclist (fout, args, c->lvars, argc,
+			sl_vector_at (c->pure, i));
       fflush (fout);
       nbc++;
     }
@@ -204,22 +230,24 @@ sl_pred_case_2cyclist (FILE * fout, sl_var_array * args, sl_pred_case_t * c)
     {
       if (nbc > 0)
 	fprintf (fout, " * ");
-      sl_space_2cyclist (fout, args, c->lvars, sl_vector_at (c->space, i));
+      sl_space_2cyclist (fout, args, c->lvars, argc,
+			 sl_vector_at (c->space, i));
       fflush (fout);
       nbc++;
     }
 
-  if (nbc == 0) {
-    // maybe emp or junk
-    if (c->is_precise)
-       fprintf (fout, "emp");
-    else
-       fprintf (fout, "true");
-    nbc++;
-  }
+  if (nbc == 0)
+    {
+      // maybe emp or junk
+      if (c->is_precise)
+	fprintf (fout, "emp");
+      else
+	fprintf (fout, "true");
+      nbc++;
+    }
   SL_DEBUG ("\t nbc=%zu\n", nbc);
   assert (nbc > 0);
-  
+
 }
 
 void
@@ -242,7 +270,7 @@ sl_pred_2cyclist (FILE * fout, sl_pred_t * p)
       if (i > 0)
 	fprintf (fout, " |\n  ");
       // print formula
-      sl_pred_case_2cyclist (fout, p->def->args,
+      sl_pred_case_2cyclist (fout, p->def->args, p->def->argc,
 			     sl_vector_at (p->def->cases, i));
       // print predicate instance
       fprintf (fout, " => %s(", p->pname);
@@ -250,7 +278,10 @@ sl_pred_2cyclist (FILE * fout, sl_pred_t * p)
 	{
 	  if (vi > 1)
 	    fprintf (fout, ",");
-	  fprintf (fout, "%s", sl_var_2cyclist (NULL, p->def->args, vi));
+	  char *vname =
+	    sl_var_2cyclist (NULL, p->def->args, p->def->argc, vi);
+	  fprintf (fout, "%s", vname);
+	  sl_vname_free (vname);
 	}
       fprintf (fout, ")");
     }
