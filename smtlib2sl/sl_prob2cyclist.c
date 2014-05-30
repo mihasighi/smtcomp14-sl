@@ -329,7 +329,7 @@ sl_prob_2cyclist (const char *fname)
   if (!sl_vector_empty (sl_prob->nform))
     {
 
-      fprintf (fout, ";\n\n");
+      fprintf (fout, "\n\n");
 
       // translate positive formula
       sl_form_2cyclist (fout, sl_prob->pform);
