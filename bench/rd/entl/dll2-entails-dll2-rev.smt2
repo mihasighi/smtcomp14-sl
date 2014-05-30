@@ -11,24 +11,23 @@
 
 ;generic sort
 
-(declare-sort DLL1_t 0)
 (declare-sort DLL2_t 0)
 
 ;generic fields
 
-(declare-fun prev () (Field DLL1_t DLL1_t))
-(declare-fun next () (Field DLL1_t DLL1_t))
+(declare-fun prev () (Field DLL2_t DLL2_t))
+(declare-fun next () (Field DLL2_t DLL2_t))
 
 (declare-fun prev2 () (Field DLL2_t DLL2_t))
 (declare-fun next2 () (Field DLL2_t DLL2_t))
-(declare-fun down () (Field DLL2_t DLL1_t))
+(declare-fun down () (Field DLL2_t DLL2_t))
 
 ; use this for compact smt2 definition of the points-to proposition
 ; 
-; (define-fun points_to ((?a DLL1_t) (?b DLL1_t) (?c DLL1_t)) Space
+; (define-fun points_to ((?a DLL2_t) (?b DLL2_t) (?c DLL2_t)) Space
 ; 	    (pto ?a (sref (ref next ?b) (ref prev ?c)))
 ; )
-; (define-fun points_to2 ((?a DLL2_t) (?b DLL2_t) (?c DLL2_t) (?d DLL1_t)) Space
+; (define-fun points_to2 ((?a DLL2_t) (?b DLL2_t) (?c DLL2_t) (?d DLL2_t)) Space
 ; 	    (pto ?a (sref (ref next ?b) (ref prev ?c) (ref down ?d)))
 ; )
 
@@ -37,12 +36,12 @@
 
 (define-fun DLL2_plus ((?hd DLL2_t) (?p DLL2_t) (?tl DLL2_t) (?n DLL2_t)) Space
   (tospace (or 
-    (exists ((?down_hd DLL1_t))
+    (exists ((?down_hd DLL2_t))
     	    (and (tobool (ssep 
 	    	 	 (pto ?hd (sref (ref next2 ?n) (ref prev2 ?p) (ref down ?down_hd))) 
 			 (DLL1_plus ?down_hd ?hd)))
 		(= ?hd ?tl)))
-    (exists ((?x DLL1_t) (?down_hd DLL1_t)) 
+    (exists ((?x DLL2_t) (?down_hd DLL2_t)) 
     	    (tobool (ssep (pto ?hd (sref (ref next2 ?x) (ref prev2 ?p) (ref down ?down_hd)))
 	    	    	  (DLL1_plus ?down_hd ?hd)
  	      	      	  (DLL2_plus ?x ?hd ?tl ?n))))
@@ -53,12 +52,12 @@
 
 (define-fun DLL2_plus_rev ((?hd DLL2_t) (?p DLL2_t) (?tl DLL2_t) (?n DLL2_t)) Space
   (tospace (or 
-    (exists ((?down_hd DLL1_t))
+    (exists ((?down_hd DLL2_t))
     	    (and (tobool (ssep 
 	    	 	 (pto ?hd (sref (ref next2 ?n) (ref prev2 ?p) (ref down ?down_hd))) 
 			 (DLL1_plus ?down_hd ?hd)))
 		(= ?hd ?tl)))
-    (exists ((?x DLL1_t) (?down_hd DLL1_t)) 
+    (exists ((?x DLL2_t) (?down_hd DLL2_t)) 
     	    (tobool (ssep (pto ?tl (sref (ref next2 ?n) (ref prev2 ?x) (ref down ?down_hd)))
 	    	    	  (DLL1_plus ?down_hd ?tl)
  	      	      	  (DLL2_plus_rev ?hd ?p ?x ?tl))))
@@ -66,10 +65,10 @@
 
 ;; DLL1_plus(hd,p) ::= hd->nil,p | \E x. hd->x,p * DLL1_plus(x,hd)
 
-(define-fun DLL1_plus ((?hd DLL1_t) (?p DLL1_t)) Space
+(define-fun DLL1_plus ((?hd DLL2_t) (?p DLL2_t)) Space
   (tospace (or 
     (tobool (pto ?hd (sref (ref next nil) (ref prev ?p))))
-    (exists ((?x DLL1_t)) (tobool (ssep (pto ?hd (sref (ref next ?x) (ref prev ?p)))
+    (exists ((?x DLL2_t)) (tobool (ssep (pto ?hd (sref (ref next ?x) (ref prev ?p)))
  	      	      	               	(DLL1_plus ?x ?hd))))
 )))
 
