@@ -45,6 +45,9 @@ sl_prob_init ()
   // init file name
   sl_prob->smt_fname = NULL;
 
+  // init fst pred
+  sl_prob->fst_pid = UNDEFINED_ID;
+
   // init positive formula
   sl_prob->pform = sl_form_new ();
 
@@ -115,6 +118,13 @@ sl_prob_set_cmd (sl_prob_kind_t pb)
   sl_prob->cmd = pb;
 }
 
+void
+sl_prob_set_pid (uid_t pid)
+{
+  if (sl_prob->fst_pid == UNDEFINED_ID)
+    sl_prob->fst_pid = pid;
+}
+
 
 /* ====================================================================== */
 /* Printers */
@@ -136,6 +146,7 @@ sl_prob_fprint (FILE * f)
 
   sl_records_array_fprint (f, "records:");
   sl_fields_array_fprint (f, "fields:");
+  fprintf (f, "\nEntry predicate: %s\n", sl_pred_name(sl_prob->fst_pid));
   sl_pred_array_fprint (f, preds_array, "predicates:");
 
   fprintf (f, "\nPositive formula: ");

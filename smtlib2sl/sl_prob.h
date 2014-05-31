@@ -59,6 +59,7 @@ typedef enum sl_prob_kind_t
 typedef struct sl_prob_t
 {
   char *smt_fname;		// smt file with entailment
+  uid_t fst_pid;                // first predicate definition in file
   sl_form_t *pform;		// positive formula phi
   sl_form_array *nform;		// array of negative formulae psi
   sl_prob_kind_t cmd;		// command given: check-sat (default),
@@ -95,6 +96,7 @@ sl_form_t *sl_prob_get_nform_last (void);
 void sl_prob_set_fname (char *fname);
 /* Set source file information */
 void sl_prob_set_cmd (sl_prob_kind_t pb);
+void sl_prob_set_pid (uid_t pid);
 
 /* ====================================================================== */
 /* Typechecking */

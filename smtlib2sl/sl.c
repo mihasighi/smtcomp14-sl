@@ -375,6 +375,8 @@ sl_mk_fun_def (sl_context_t * ctx, const char *name, uint_t npar,
   /* the predicate may be already included in the preds_array
    * by a forward use */
   uid_t pid = sl_pred_register (name, NULL);
+  // set the initial predicate if not done
+  sl_prob_set_pid(pid);
 
   if (ctx->pname != NULL && strcmp (ctx->pname, name))
     {

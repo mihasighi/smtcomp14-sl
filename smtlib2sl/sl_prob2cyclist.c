@@ -317,12 +317,13 @@ sl_prob_2cyclist (const char *fname)
     }
 
   // Translates predicates
-  size_t last = sl_vector_size (preds_array) - 1;
-  for (size_t i = 0; i <= last; i++)
-    {
+  // start with first
+  assert (UNDEFINED_ID != sl_prob->fst_pid);
+  sl_pred_2cyclist (fout, sl_vector_at (preds_array, sl_prob->fst_pid));
+  for (size_t i = 0; i < sl_vector_size (preds_array); i++)
+    if (i != sl_prob->fst_pid) {
+      fprintf (fout, ";\n\n");
       sl_pred_2cyclist (fout, sl_vector_at (preds_array, i));
-      if (i < last)
-	fprintf (fout, ";\n");
     }
 
   // Translated the problem only for entailment
