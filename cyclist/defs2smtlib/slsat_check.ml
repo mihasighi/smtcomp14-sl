@@ -23,7 +23,7 @@ let defs_of_channel c =
 	| Lexer.Error msg -> print_endline msg ; assert false
 	| Parser.Error -> Printf.fprintf stderr "At offset %d: syntax error.\n%!" (Lexing.lexeme_start lexbuf) ; assert false
 
-let () = F.usage := !F.usage ^ " [-D <file>] -r <def>" (*" [-D <file>] [-C <string>]"*)
+let () = F.usage := !F.usage ^ " [-D <file>] -r <def>" 
 
 let () = F.speclist := !F.speclist @ [
        ("-D", Arg.Set_string defs_path,
@@ -40,13 +40,7 @@ let () = F.speclist := !F.speclist @ [
 
 let () =
 	Arg.parse !F.speclist (fun _ -> raise (Arg.Bad "Stray argument found.")) !F.usage ;
-	(* if !cl_sequent="" then F.die "-C must be specified." ; *)
 	let res = F.check_consistency (defs_of_channel (open_in !defs_path)) in
-  (*
-	let output = "The predicate definitions in file " ^ !defs_path
-	           ^ " are " ^ (if res then "" else "NOT ") ^ "consistent." in
-	let () = print_endline output in
-  *)
   let () = print_endline ("Exit code: " ^ (string_of_int res)) in 
 	exit res
 

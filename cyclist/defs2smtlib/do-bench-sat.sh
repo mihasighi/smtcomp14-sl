@@ -21,7 +21,7 @@ do
 	${CYCTOOL} -r ${ROOT} -D tmp.defs
         FILE=`basename ${i}`
 	FILE=${DSTDIR}/${FILE}.smt2
-	cat set-info.defs.smt2 assert.smt2 info.smt2 &> ${FILE} 
+	cat set-info.sat.smt2 assert.smt2 info.smt2 &> ${FILE} 
 	echo "   into ${FILE}"
 done
 
