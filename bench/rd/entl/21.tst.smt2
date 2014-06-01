@@ -68,7 +68,7 @@
         )
 
 
-        (exists ((?xp GenTyp))
+        (exists ((?xp GTyp))
 
                  (and (distinct nil ?x)
                         (tobool
