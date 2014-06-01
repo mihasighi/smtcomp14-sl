@@ -110,9 +110,6 @@ int sl_prob_type (void);
 /* ====================================================================== */
 
 void sl_prob_fprint (FILE * f);
-void sl_prob_tosleek (const char *f);
-void sl_prob_toslp (const char *f);
-
 
 
 #endif /* SL_PROB_H_ */

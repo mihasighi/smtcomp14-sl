@@ -203,23 +203,3 @@ sl_prob_type ()
 
   return 1;
 }
-
-/*
- * Compile 
- */
-
-void
-sl_prob_tosleek (const char *f)
-{
-  assert (NULL != f);
-  sl_message ("*** Translation to Sleek");
-
-}
-
-void
-sl_prob_toslp (const char *f)
-{
-  assert (NULL != f);
-  sl_message ("*** Translation to SLP");
-
-}

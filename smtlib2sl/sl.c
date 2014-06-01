@@ -534,8 +534,8 @@ sl_assert (sl_context_t * ctx, sl_exp_t * term)
 int
 sl_check (sl_context_t * ctx)
 {
-  assert (NULL != ctx);
-  if (sl_error_parsing > 0)
+  if ((ctx == ctx) && /* To avoid warning */
+      (sl_error_parsing > 0))
     {
       //assert (sl_prob->smt_fname != NULL);
       sl_error (0, "sl_check", "stop check because of parsing error");
@@ -776,7 +776,8 @@ sl_mk_pred (sl_context_t * ctx, const char *name, sl_exp_t ** args,
   assert (ctx != NULL);
   assert (name != NULL);
   assert (args != NULL);
-  if (size < 1)
+  if ((ctx == ctx) && /* To avoid silly warning */
+      (size < 1))
     {
       char *msg = strdup (name);
       sl_error_args (1, msg, size, ">= 1");
