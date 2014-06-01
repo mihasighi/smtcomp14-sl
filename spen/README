@@ -1,3 +1,9 @@
-Benchmarks and tools fo the Spen solver.
+Tools for the Spen solver.
 
-www.liafa.univ-paris-diderot.fr/spen
+
+[1] www.liafa.univ-paris-diderot.fr/spen
+[2] C. Enea, O. Lengal, M. Sighireanu, and T. Vojnar
+    Compositional Entailment Checking for a Fragment of Separation Logic
+    Technical Report FIT-TR-2014-01, FIT BUT, 2014
+[3] C. Enea, O. Lengal, M. Sighireanu, and T. Vojnar
+    Spen, see spen-smtcomp14.pdf

@@ -1,0 +1,31 @@
+
+SPEN
+
+C. Enea, M.Sighireanu, 
+LIAFA, Univ Paris Diderot
+
+and
+
+O. Lengal,  T. Vojnar
+FIT, Brno Univ of Technology
+
+SPEN is an open source solver for checking validity of entailments 
+between formulas in the 'symbolic heaps' fragment of Separation Logic 
+with recursive definitions representing complex list segments. 
+For this edition, SPEN will compete on the following recursive definitions:
+sll0a, nll0a, nlcl0a, skl3.
+
+The solver is based on a method defined in [TR] which reduces the 
+entailment checking to the membership problem in tree automata, 
+problem dealt using VATA. The reduction relies on checking 
+satisfiability (with MINISAT) of boolean formulas built from the 
+formulas in the entailment.
+
+The input of SPEN is a file in the SMTLIB2 format.
+The output of SPEN is 
+- UNSAT for valid entailment
+- SAT for invalid entailment (+ a diagnosis)
+- UNKNOWN for unsupported logic.
+
+[TR] http://www.fit.vutbr.cz/~ilengal/pub/FIT-TR-2014-01.pdf
+[VATA] http://www.fit.vutbr.cz/research/groups/verifit/tools/libvata/
