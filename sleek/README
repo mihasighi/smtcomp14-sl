@@ -7,9 +7,7 @@ Tools
 
 A) Translation from SMTLIB v2 format for SL into Sleek format
 
-See smtlib2sl/sl_prob2sleek.? and run in smtlib2/
-
-./compile -sleek <file>.smt2
+./smt2slk <file>.smt2
 
 Output in <file>.smt2.slk
 
@@ -28,6 +26,6 @@ C) Verification conditions generated from the verification
 of append method for linked lists
 
 D) Verification conditions generated from the verification
-of tree-linked list data structure
+of tree-linked list (TLL) data structure
 
 
