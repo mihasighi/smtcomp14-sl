@@ -2,7 +2,7 @@
 
 FILE=`basename $1`
 cp $1 ${FILE}
-./bin/compile -cyclist ${FILE}
+./bin/smt2slk ${FILE}
 rm ${FILE}
-cat ${FILE}.defs
+cat ${FILE}.slk
 

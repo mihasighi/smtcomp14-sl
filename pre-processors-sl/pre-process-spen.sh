@@ -5,5 +5,4 @@ cp $1 ${FILE}
 ./bin/compile -spen ${FILE}
 rm ${FILE}
 cat ${FILE}.spn
-rm ${FILE}.spn
 
