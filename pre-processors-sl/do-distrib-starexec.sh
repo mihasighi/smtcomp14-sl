@@ -13,13 +13,12 @@ do
 	  COMPILER=smt2slk
 	fi
 	cp bin/${COMPILER} ${ARCH}/preprocess-${i}/bin
-        cd ${ARCH}
-	tar cvf preprocess-${i}.tar preprocess-${i}/
-	gzip preprocess-${i}.tar
+        cd ${ARCH}/preprocess-${i}/
+	tar czvf ../preprocess-${i}.tgz *
+	cd ${ARCH}
         rm -rf preprocess-${i}
         cd ${HDIR}
 done
 
-tar cvf ${ARCH}.tar ${ARCH}/
-gzip ${ARCH}.tar
+tar czvf ${ARCH}.tgz ${ARCH}/
 
