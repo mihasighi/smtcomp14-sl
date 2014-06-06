@@ -7,7 +7,7 @@
 
 (set-info :smt-lib-version 2.0)
 (set-info :category "crafted")
-(set-info :status unknown)
+(set-info :status unsat)
 
 ;generic sort
 
@@ -86,4 +86,4 @@
 
 ;; UNSAT
 
-(check-sat)			   
+(check-sat)

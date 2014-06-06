@@ -7,7 +7,7 @@
 
 (set-info :smt-lib-version 2.0)
 (set-info :category "crafted")
-(set-info :status unknown)
+(set-info :status unsat)
 
 ;generic sort
 
@@ -45,7 +45,7 @@
 (declare-fun a () DLL_t)
 (declare-fun c () DLL_t)
 
-;; \E x,n,b . x ->n,b * DLL_plus_rev(a,nil,b,x) * DLL(n,x,c,nil) |- DLL(a,nil,c,nil)
+;; \E x,n,b . x ->n,b * DLL_plus_rev(a,nil,b,x) * DLL_plus(n,x,c,nil) |- DLL_plus(a,nil,c,nil)
 
 (assert (exists ((?x DLL_t) (?n DLL_t) (?b DLL_t))
 		(tobool (ssep (pto ?x (sref (ref next ?n) (ref prev ?b)))
