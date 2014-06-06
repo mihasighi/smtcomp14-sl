@@ -7,7 +7,7 @@ http://navarroj.com/research/papers.html#pldi11
 |)
 (set-info :smt-lib-version 2.0)
 (set-info :category "random") 
-(set-info :status unknown)
+(set-info :status unsat)
 (set-info :version "2014-05-28")
 
 (declare-sort Sll_t 0)
