@@ -189,9 +189,9 @@ sl_form_2spen (FILE * fout, sl_form_t * form, int idx)
   
   // print 'and', if needed
   if (form->pure != NULL && 
-      (sl_vector_size(form->pure) > 1 ||
-       (sl_vector_size (form->pure) == 1 && form->space != NULL)
-      ))
+      (sl_vector_size(form->pure) >= 1)) // ||
+       // (sl_vector_size (form->pure) == 1 && form->space != NULL)
+      //))
     fprintf (fout, "\n\t(and ");
   
   // start with pure formula
@@ -241,6 +241,8 @@ sl_form_2spen (FILE * fout, sl_form_t * form, int idx)
     }
   fprintf (fout, "\n\t)\n"); // end:tobool
   }
+  else  
+  fprintf (fout, "\n\t(tobool emp)\n"); 
   
   if (nbc > 1)
   fprintf (fout, "\n\t)\n"); // end:and
@@ -415,14 +417,18 @@ sl_prob_2spen (const char *fname)
   int nbalpha = 0;
   
   // translate positive formula
+      if (sl_prob->pform != NULL) {
       fprintf (fprob, "\n(assert ");
       nbalpha += sl_form_2spen (fprob, sl_prob->pform, 0);
       fprintf (fprob, "\n)\n"); // end:assert
+  }
 
   // translate negative formula
+      if (sl_prob->nform != NULL && !sl_vector_empty(sl_prob->nform)) {
       fprintf (fprob, "\n(assert (not ");
       nbalpha += sl_form_2spen (fprob, sl_vector_at (sl_prob->nform, 0), nbalpha);
       fprintf (fprob, "\n))\n"); // end:assert, not
+  }
       
   // print command
       fprintf (fprob, "\n(check-sat)\n"); 
