@@ -241,8 +241,10 @@ sl_form_2spen (FILE * fout, sl_form_t * form, int idx)
     }
   fprintf (fout, "\n\t)\n"); // end:tobool
   }
-  else  
+  else  {
   fprintf (fout, "\n\t(tobool emp)\n"); 
+  nbc++;
+}
   
   if (nbc > 1)
   fprintf (fout, "\n\t)\n"); // end:and
