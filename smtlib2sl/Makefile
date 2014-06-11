@@ -13,7 +13,7 @@ ICFLAGS = -g -I. -I$(SMTLIB2_PREFIX)
 
 LDFLAGS = -L$(SMTLIB2_PREFIX) \
 
-DEBUG=_debug
+#DEBUG=_debug
 
 #---------------------------------------
 # Files
