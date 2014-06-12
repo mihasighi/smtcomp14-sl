@@ -3,7 +3,7 @@
 HDIR=`pwd`
 ARCH=${HDIR}/sl-preprocessor
 mkdir ${ARCH}
-for i in cyclist slsat asterix seloger sleek slide spen
+for i in cyclist slsat seloger sleek slide spen
 do
 	mkdir ${ARCH}/preprocess-${i}
 	mkdir ${ARCH}/preprocess-${i}/bin
