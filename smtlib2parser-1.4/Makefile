@@ -3,7 +3,7 @@ YICES_DIR = /usr/local/yices-1.0.29
 CC = gcc
 FLEX = flex
 BISON = bison
-CFLAGS = -std=c99 -pedantic -g -Wall -fPIC
+CFLAGS = -static -std=c99 -pedantic -g -Wall -fPIC
 LDFLAGS = -g -lgmp -lgmpxx -lstdc++ 
 SHARED = $(CC) -shared
 

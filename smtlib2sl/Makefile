@@ -39,7 +39,7 @@ SHARED_LIBS = -lsmtlib2parser -lm
 all: compile
 
 compile: $(subst .c,$(DEBUG).o,$(CCSRC)) 
-	$(CXX) -o $@ $^ $(LDFLAGS) $(SHARED_LIBS)
+	$(CXX) $(CXXFLAGS) -o $@ $^ $(LDFLAGS) $(SHARED_LIBS)
 
 clean:
 	rm -f *.o *~ *.defs *.slp *.sle *.sld
@@ -51,7 +51,7 @@ install: smtlib2sl_compile
 	mv smtlib2sl_compile $(HOME)/bin
 
 indent: $(CCINC) $(CCSRC)
-	indent  $^
+	indent -nut $^
 
 #---------------------------------------
 # IMPLICIT RULES AND DEPENDENCIES
