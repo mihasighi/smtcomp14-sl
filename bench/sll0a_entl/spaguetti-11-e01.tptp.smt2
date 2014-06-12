@@ -72,6 +72,9 @@ http://navarroj.com/research/papers.html#pldi11
 	) )
   )
 )
+(assert
+  (not
+    (and (distinct  x1 x1)    (tobool emp)
+)  ))
 
 (check-sat)
-
