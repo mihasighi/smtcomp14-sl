@@ -49,8 +49,6 @@ http://www.liafa.univ-paris-diderot.fr/spen
 (declare-fun x2_1 () NLL_lvl1_t)
 (declare-fun x2_2 () NLL_lvl1_t)
 
-(declare-fun alpha1 () SetLoc)
-
 ;
 ; two unfoldings of nll(x1,nil,nil)
 ; exp: unsat

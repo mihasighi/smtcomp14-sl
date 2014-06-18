@@ -224,6 +224,8 @@ sl_pred_case_2cyclist (FILE * fout, sl_var_array * args, uint_t argc,
       fflush (fout);
       nbc++;
     }
+  // TODO: go through the arguments and put first arg != with arguments of <>type
+  
 
   // continue with spatial formulas
   for (size_t i = 0; i < sl_vector_size (c->space); i++)
@@ -319,17 +321,34 @@ sl_prob_2cyclist (const char *fname)
   // Translates predicates
   // start with first
   assert (UNDEFINED_ID != sl_prob->fst_pid);
+  if (sl_vector_empty (sl_prob->nform)) {
+	  // if a sat problem, translate the positive formula as first definition
+	  fprintf (fout, "\nSatProblem {\n");
+      sl_form_2cyclist (fout, sl_prob->pform);
+	  fprintf (fout, "\n\t=> SatProblem(");
+	  // translate all declared variables except nil, at position 0
+  for (size_t i = 1; i < sl_vector_size (sl_prob->pform->lvars); i++)
+    {
+      if (i > 1)
+	fprintf (fout, ",");
+      char *vname = sl_var_name (sl_prob->pform->lvars, i, SL_TYP_RECORD);
+      fprintf (fout, "%s", vname);
+    }
+	  fprintf (fout, ")\n};\n");
+  }
+  
   sl_pred_2cyclist (fout, sl_vector_at (preds_array, sl_prob->fst_pid));
+  
   for (size_t i = 0; i < sl_vector_size (preds_array); i++)
     if (i != sl_prob->fst_pid) {
       fprintf (fout, ";\n\n");
       sl_pred_2cyclist (fout, sl_vector_at (preds_array, i));
     }
-
-  // Translated the problem only for entailment
+ 
+  // Translates the problem for entailment (cyclist) or sat (slsat)
   if (!sl_vector_empty (sl_prob->nform))
     {
-
+	  // for cyclist
       fprintf (fout, "\n\n");
 
       // translate positive formula
