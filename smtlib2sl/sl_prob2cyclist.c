@@ -45,7 +45,7 @@ sl_vname_free (char *vname)
 
 char *
 sl_var_2cyclist (sl_var_array * args,
-		 sl_var_array * lvars, uint_t argc, uid_t vid)
+                 sl_var_array * lvars, uint_t argc, uid_t vid)
 {
 
   char *vname;
@@ -54,13 +54,13 @@ sl_var_2cyclist (sl_var_array * args,
     {
       vname = sl_var_name (lvars, vid - fstlocal, SL_TYP_RECORD);
       if (fstlocal == (1 + argc))
-	{
-	  // put a prime at the end!
-	  char *str = (char *) malloc ((strlen (vname) + 2) * sizeof (char));
-	  str[0] = '\0';
-	  sprintf (str, "%s'", vname + 1);
-	  vname = str;
-	}
+        {
+          // put a prime at the end!
+          char *str = (char *) malloc ((strlen (vname) + 2) * sizeof (char));
+          str[0] = '\0';
+          sprintf (str, "%s'", vname + 1);
+          vname = str;
+        }
     }
   else
     vname = sl_var_name (args, vid, SL_TYP_RECORD);
@@ -70,15 +70,15 @@ sl_var_2cyclist (sl_var_array * args,
 
 void
 sl_var_array_2cyclist (FILE * fout, sl_var_array * args, sl_var_array * lvars,
-		       uint_t argc, sl_uid_array * va)
+                       uint_t argc, sl_uid_array * va)
 {
 
   for (size_t i = 0; i < sl_vector_size (va); i++)
     {
       if (i > 0)
-	fprintf (fout, ",");
+        fprintf (fout, ",");
       char *vname = sl_var_2cyclist (args, lvars, argc,
-				     sl_vector_at (va, i));
+                                     sl_vector_at (va, i));
       fprintf (fout, "%s", vname);
       sl_vname_free (vname);
     }
@@ -90,7 +90,7 @@ sl_var_array_2cyclist (FILE * fout, sl_var_array * args, sl_var_array * lvars,
 
 void
 sl_pure_2cyclist (FILE * fout, sl_var_array * args,
-		  sl_var_array * lvars, uint_t argc, sl_pure_t * form)
+                  sl_var_array * lvars, uint_t argc, sl_pure_t * form)
 {
   assert (NULL != form);
 
@@ -100,14 +100,14 @@ sl_pure_2cyclist (FILE * fout, sl_var_array * args,
   char *vright = sl_var_2cyclist (args, lvars, argc, form->vright);
 
   fprintf (fout, "%s%s%s", vleft,
-	   (form->op == SL_PURE_EQ) ? "=" : "!=", vright);
+           (form->op == SL_PURE_EQ) ? "=" : "!=", vright);
   sl_vname_free (vleft);
   sl_vname_free (vright);
 }
 
 void
 sl_space_2cyclist (FILE * fout, sl_var_array * args, sl_var_array * lvars,
-		   uint_t argc, sl_space_t * form)
+                   uint_t argc, sl_space_t * form)
 {
 
   assert (NULL != form);
@@ -117,29 +117,29 @@ sl_space_2cyclist (FILE * fout, sl_var_array * args, sl_var_array * lvars,
     {
     case SL_SPACE_PTO:
       {
-	char *vname = sl_var_2cyclist (args, lvars, argc, form->m.pto.sid);
-	// print source
-	fprintf (fout, "%s->", vname);
-	sl_vname_free (vname);
-	// print destinations
-	sl_var_array_2cyclist (fout, args, lvars, argc, form->m.pto.dest);
+        char *vname = sl_var_2cyclist (args, lvars, argc, form->m.pto.sid);
+        // print source
+        fprintf (fout, "%s->", vname);
+        sl_vname_free (vname);
+        // print destinations
+        sl_var_array_2cyclist (fout, args, lvars, argc, form->m.pto.dest);
 
-	break;
+        break;
       }
 
     case SL_SPACE_LS:
       {
-	// print predicate
-	fprintf (fout, "%s(", sl_pred_name (form->m.ls.pid));
-	// print arguments
-	sl_var_array_2cyclist (fout, args, lvars, argc, form->m.ls.args);
-	fprintf (fout, ")");
-	break;
+        // print predicate
+        fprintf (fout, "%s(", sl_pred_name (form->m.ls.pid));
+        // print arguments
+        sl_var_array_2cyclist (fout, args, lvars, argc, form->m.ls.args);
+        fprintf (fout, ")");
+        break;
       }
 
     default:
       {
-	sl_error (1, "sl_space_2cyclist:", "spatial formula not LS or PTO");
+        sl_error (1, "sl_space_2cyclist:", "spatial formula not LS or PTO");
       }
     }
 }
@@ -156,9 +156,9 @@ sl_form_2cyclist (FILE * fout, sl_form_t * form)
   for (size_t i = 0; i < sl_vector_size (form->pure); i++)
     {
       if (nbc > 0)
-	fprintf (fout, " * ");
+        fprintf (fout, " * ");
       sl_pure_2cyclist (fout, NULL, form->lvars, 0,
-			sl_vector_at (form->pure, i));
+                        sl_vector_at (form->pure, i));
       fflush (fout);
       nbc++;
     }
@@ -174,29 +174,29 @@ sl_form_2cyclist (FILE * fout, sl_form_t * form)
     case SL_SPACE_LS:
       {
 
-	if (nbc > 0)
-	  fprintf (fout, " * ");
-	sl_space_2cyclist (fout, NULL, form->lvars, 0, form->space);
-	nbc++;
-	break;
+        if (nbc > 0)
+          fprintf (fout, " * ");
+        sl_space_2cyclist (fout, NULL, form->lvars, 0, form->space);
+        nbc++;
+        break;
       }
     case SL_SPACE_SSEP:
       {
-	for (size_t i = 0; i < sl_vector_size (form->space->m.sep); i++)
-	  {
-	    if (nbc > 0)
-	      fprintf (fout, " * ");
-	    sl_space_2cyclist (fout, NULL, form->lvars, 0,
-			       sl_vector_at (form->space->m.sep, i));
-	    fflush (fout);
-	    nbc++;
-	  }
-	break;
+        for (size_t i = 0; i < sl_vector_size (form->space->m.sep); i++)
+          {
+            if (nbc > 0)
+              fprintf (fout, " * ");
+            sl_space_2cyclist (fout, NULL, form->lvars, 0,
+                               sl_vector_at (form->space->m.sep, i));
+            fflush (fout);
+            nbc++;
+          }
+        break;
       }
     default:
       {
-	sl_error (1, "sl_form_2cyclist:", "not a PTO, LS, SSEP formula");
-	return;
+        sl_error (1, "sl_form_2cyclist:", "not a PTO, LS, SSEP formula");
+        return;
       }
     }
 }
@@ -206,7 +206,7 @@ sl_form_2cyclist (FILE * fout, sl_form_t * form)
 /* ====================================================================== */
 void
 sl_pred_case_2cyclist (FILE * fout, sl_var_array * args, uint_t argc,
-		       sl_pred_case_t * c)
+                       sl_pred_case_t * c)
 {
   assert (NULL != fout);
   assert (NULL != args);
@@ -218,22 +218,22 @@ sl_pred_case_2cyclist (FILE * fout, sl_var_array * args, uint_t argc,
   for (size_t i = 0; i < sl_vector_size (c->pure); i++)
     {
       if (nbc > 0)
-	fprintf (fout, " * ");
+        fprintf (fout, " * ");
       sl_pure_2cyclist (fout, args, c->lvars, argc,
-			sl_vector_at (c->pure, i));
+                        sl_vector_at (c->pure, i));
       fflush (fout);
       nbc++;
     }
   // TODO: go through the arguments and put first arg != with arguments of <>type
-  
+
 
   // continue with spatial formulas
   for (size_t i = 0; i < sl_vector_size (c->space); i++)
     {
       if (nbc > 0)
-	fprintf (fout, " * ");
+        fprintf (fout, " * ");
       sl_space_2cyclist (fout, args, c->lvars, argc,
-			 sl_vector_at (c->space, i));
+                         sl_vector_at (c->space, i));
       fflush (fout);
       nbc++;
     }
@@ -242,9 +242,9 @@ sl_pred_case_2cyclist (FILE * fout, sl_var_array * args, uint_t argc,
     {
       // maybe emp or junk
       if (c->is_precise)
-	fprintf (fout, "emp");
+        fprintf (fout, "emp");
       else
-	fprintf (fout, "true");
+        fprintf (fout, "true");
       nbc++;
     }
   SL_DEBUG ("\t nbc=%zu\n", nbc);
@@ -270,21 +270,21 @@ sl_pred_2cyclist (FILE * fout, sl_pred_t * p)
     {
       // print separator
       if (i > 0)
-	fprintf (fout, " |\n  ");
+        fprintf (fout, " |\n  ");
       // print formula
       sl_pred_case_2cyclist (fout, p->def->args, p->def->argc,
-			     sl_vector_at (p->def->cases, i));
+                             sl_vector_at (p->def->cases, i));
       // print predicate instance
       fprintf (fout, " => %s(", p->pname);
       for (size_t vi = 1; vi <= p->def->argc; vi++)
-	{
-	  if (vi > 1)
-	    fprintf (fout, ",");
-	  char *vname =
-	    sl_var_2cyclist (NULL, p->def->args, p->def->argc, vi);
-	  fprintf (fout, "%s", vname);
-	  sl_vname_free (vname);
-	}
+        {
+          if (vi > 1)
+            fprintf (fout, ",");
+          char *vname =
+            sl_var_2cyclist (NULL, p->def->args, p->def->argc, vi);
+          fprintf (fout, "%s", vname);
+          sl_vname_free (vname);
+        }
       fprintf (fout, ")");
     }
 
@@ -321,34 +321,50 @@ sl_prob_2cyclist (const char *fname)
   // Translates predicates
   // start with first
   assert (UNDEFINED_ID != sl_prob->fst_pid);
-  if (sl_vector_empty (sl_prob->nform)) {
-	  // if a sat problem, translate the positive formula as first definition
-	  fprintf (fout, "\nSatProblem {\n");
-      sl_form_2cyclist (fout, sl_prob->pform);
-	  fprintf (fout, "\n\t=> SatProblem(");
-	  // translate all declared variables except nil, at position 0
-  for (size_t i = 1; i < sl_vector_size (sl_prob->pform->lvars); i++)
+  if (sl_vector_empty (sl_prob->nform) && (sl_prob->pform != NULL))
     {
-      if (i > 1)
-	fprintf (fout, ",");
-      char *vname = sl_var_name (sl_prob->pform->lvars, i, SL_TYP_RECORD);
-      fprintf (fout, "%s", vname);
+      // if a sat problem,
+      if (((sl_prob->pform->pure == NULL) ||
+           sl_vector_empty (sl_prob->pform->pure)) &&
+          (sl_prob->pform->space != NULL) &&
+          (sl_prob->pform->space->kind == SL_SPACE_LS))
+        {
+          // if the problem is only a predicate,
+          // then don't translate the formula
+          ;
+        }
+      else
+        {
+          // else translate the positive formula as first definition
+          fprintf (fout, "\nSatProblem {\n");
+          sl_form_2cyclist (fout, sl_prob->pform);
+          fprintf (fout, "\n\t=> SatProblem(");
+          // translate all declared variables except nil, at position 0
+          for (size_t i = 1; i < sl_vector_size (sl_prob->pform->lvars); i++)
+            {
+              if (i > 1)
+                fprintf (fout, ",");
+              char *vname =
+                sl_var_name (sl_prob->pform->lvars, i, SL_TYP_RECORD);
+              fprintf (fout, "%s", vname);
+            }
+          fprintf (fout, ")\n};\n");
+        }
     }
-	  fprintf (fout, ")\n};\n");
-  }
-  
+
   sl_pred_2cyclist (fout, sl_vector_at (preds_array, sl_prob->fst_pid));
-  
+
   for (size_t i = 0; i < sl_vector_size (preds_array); i++)
-    if (i != sl_prob->fst_pid) {
-      fprintf (fout, ";\n\n");
-      sl_pred_2cyclist (fout, sl_vector_at (preds_array, i));
-    }
- 
+    if (i != sl_prob->fst_pid)
+      {
+        fprintf (fout, ";\n\n");
+        sl_pred_2cyclist (fout, sl_vector_at (preds_array, i));
+      }
+
   // Translates the problem for entailment (cyclist) or sat (slsat)
   if (!sl_vector_empty (sl_prob->nform))
     {
-	  // for cyclist
+      // for cyclist
       fprintf (fout, "\n\n");
 
       // translate positive formula
