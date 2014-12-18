@@ -1,0 +1,62 @@
+pair id,benchmark,benchmark id,solver,solver id,configuration,configuration id,status,cpu time,wallclock time,result,expected
+21854208,UDB_sat/succ-circuit18.defs.smt2,945614,SLSAT,1137,quiet,1901,memout,535.29,535.115,starexec-unknown,sat
+21854209,UDB_sat/succ-rec10.defs.smt2,945615,SLSAT,1137,quiet,1901,complete,1066.15,1065.72,sat,sat
+21854210,UDB_sat/succ-circuit11.defs.smt2,945616,SLSAT,1137,quiet,1901,memout,527.96,527.812,starexec-unknown,sat
+21854211,UDB_sat/abduced09.defs.smt2,945617,SLSAT,1137,quiet,1901,complete,0.006998,0.0224371,sat,sat
+21854212,UDB_sat/abduced00.defs.smt2,945618,SLSAT,1137,quiet,1901,complete,0.006998,0.016589,sat,sat
+21854213,UDB_sat/succ-rec08.defs.smt2,945619,SLSAT,1137,quiet,1901,complete,33.126,33.1115,sat,sat
+21854214,UDB_sat/succ-circuit15.defs.smt2,945620,SLSAT,1137,quiet,1901,memout,534.98,534.813,starexec-unknown,sat
+21854215,UDB_sat/abduced05.defs.smt2,945621,SLSAT,1137,quiet,1901,complete,0.005999,0.0161059,sat,sat
+21854216,UDB_sat/abduced08.defs.smt2,945622,SLSAT,1137,quiet,1901,complete,0.005998,0.00952388,sat,sat
+21854217,UDB_sat/succ-rec20.defs.smt2,945623,SLSAT,1137,quiet,1901,timeout (cpu),2400.09,2399.12,starexec-unknown,sat
+21854218,UDB_sat/succ-circuit08.defs.smt2,945624,SLSAT,1137,quiet,1901,timeout (cpu),2400.06,2399.12,starexec-unknown,sat
+21854219,UDB_sat/succ-circuit02.defs.smt2,945625,SLSAT,1137,quiet,1901,complete,0.007998,0.012336,sat,sat
+21854220,UDB_sat/abduced12.defs.smt2,945626,SLSAT,1137,quiet,1901,complete,0.005998,0.00929291,sat,sat
+21854160,UDB_sat/succ-rec12.defs.smt2,945566,SLSAT,1137,quiet,1901,timeout (cpu),2400.08,2399.31,starexec-unknown,sat
+21854161,UDB_sat/succ-rec09.defs.smt2,945567,SLSAT,1137,quiet,1901,complete,190.956,190.913,sat,sat
+21854162,UDB_sat/abduced04.defs.smt2,945568,SLSAT,1137,quiet,1901,complete,0.005998,0.0100019,sat,sat
+21854163,UDB_sat/abduced17.defs.smt2,945569,SLSAT,1137,quiet,1901,complete,0.005998,0.00993312,sat,sat
+21854164,UDB_sat/abduced02.defs.smt2,945570,SLSAT,1137,quiet,1901,complete,0.005998,0.00900908,sat,sat
+21854165,UDB_sat/abduced14.defs.smt2,945571,SLSAT,1137,quiet,1901,complete,0.005998,0.010007,sat,sat
+21854166,UDB_sat/abduced10.defs.smt2,945572,SLSAT,1137,quiet,1901,complete,0.006998,0.00955799,sat,sat
+21854167,UDB_sat/succ-circuit13.defs.smt2,945573,SLSAT,1137,quiet,1901,memout,530.2,530.12,starexec-unknown,sat
+21854168,UDB_sat/succ-circuit12.defs.smt2,945574,SLSAT,1137,quiet,1901,memout,536.62,536.413,starexec-unknown,sat
+21854169,UDB_sat/succ-rec11.defs.smt2,945575,SLSAT,1137,quiet,1901,timeout (cpu),2400.08,2399.61,starexec-unknown,sat
+21854170,UDB_sat/succ-rec13.defs.smt2,945576,SLSAT,1137,quiet,1901,timeout (cpu),2400.08,2399.12,starexec-unknown,sat
+21854171,UDB_sat/succ-circuit19.defs.smt2,945577,SLSAT,1137,quiet,1901,memout,534.21,534.013,starexec-unknown,sat
+21854172,UDB_sat/abduced18.defs.smt2,945578,SLSAT,1137,quiet,1901,complete,0.005998,0.0176881,sat,sat
+21854173,UDB_sat/succ-rec17.defs.smt2,945579,SLSAT,1137,quiet,1901,timeout (cpu),2400.08,2399.12,starexec-unknown,sat
+21854174,UDB_sat/abduced15.defs.smt2,945580,SLSAT,1137,quiet,1901,complete,0.006998,0.013353,sat,sat
+21854175,UDB_sat/abduced11.defs.smt2,945581,SLSAT,1137,quiet,1901,complete,0.005998,0.018125,sat,sat
+21854176,UDB_sat/succ-circuit01.defs.smt2,945582,SLSAT,1137,quiet,1901,complete,0.006998,0.0177031,sat,sat
+21854177,UDB_sat/succ-circuit09.defs.smt2,945583,SLSAT,1137,quiet,1901,timeout (cpu),2400.01,2399.51,starexec-unknown,sat
+21854178,UDB_sat/succ-circuit14.defs.smt2,945584,SLSAT,1137,quiet,1901,memout,534.96,534.813,starexec-unknown,sat
+21854179,UDB_sat/succ-circuit03.defs.smt2,945585,SLSAT,1137,quiet,1901,complete,0.038993,0.041558,sat,sat
+21854180,UDB_sat/succ-rec04.defs.smt2,945586,SLSAT,1137,quiet,1901,complete,0.032994,0.0355979,sat,sat
+21854181,UDB_sat/abduced07.defs.smt2,945587,SLSAT,1137,quiet,1901,complete,0.008997,0.019238,sat,sat
+21854182,UDB_sat/succ-rec19.defs.smt2,945588,SLSAT,1137,quiet,1901,timeout (cpu),2400.0,2399.82,starexec-unknown,sat
+21854183,UDB_sat/abduced19.defs.smt2,945589,SLSAT,1137,quiet,1901,complete,0.006998,0.0144,sat,sat
+21854184,UDB_sat/succ-rec16.defs.smt2,945590,SLSAT,1137,quiet,1901,timeout (cpu),2400.02,2399.31,starexec-unknown,sat
+21854185,UDB_sat/succ-rec03.defs.smt2,945591,SLSAT,1137,quiet,1901,complete,0.010997,0.0142011,sat,sat
+21854186,UDB_sat/succ-rec07.defs.smt2,945592,SLSAT,1137,quiet,1901,complete,5.66914,5.67152,sat,sat
+21854187,UDB_sat/succ-circuit07.defs.smt2,945593,SLSAT,1137,quiet,1901,timeout (cpu),2400.06,2399.21,starexec-unknown,sat
+21854188,UDB_sat/succ-circuit16.defs.smt2,945594,SLSAT,1137,quiet,1901,memout,537.44,537.413,starexec-unknown,sat
+21854189,UDB_sat/abduced06.defs.smt2,945595,SLSAT,1137,quiet,1901,complete,0.005998,0.00990207,sat,sat
+21854190,UDB_sat/succ-circuit06.defs.smt2,945596,SLSAT,1137,quiet,1901,complete,1306.04,1305.52,sat,sat
+21854191,UDB_sat/succ-rec06.defs.smt2,945597,SLSAT,1137,quiet,1901,complete,0.931858,0.94199,sat,sat
+21854192,UDB_sat/succ-circuit17.defs.smt2,945598,SLSAT,1137,quiet,1901,memout,534.21,534.013,starexec-unknown,sat
+21854193,UDB_sat/abduced03.defs.smt2,945599,SLSAT,1137,quiet,1901,complete,0.005998,0.016874,sat,sat
+21854194,UDB_sat/abduced01.defs.smt2,945600,SLSAT,1137,quiet,1901,complete,0.005998,0.00832401,sat,sat
+21854195,UDB_sat/succ-rec02.defs.smt2,945601,SLSAT,1137,quiet,1901,complete,0.006998,0.00955604,sat,sat
+21854196,UDB_sat/succ-circuit10.defs.smt2,945602,SLSAT,1137,quiet,1901,memout,564.28,564.113,starexec-unknown,sat
+21854197,UDB_sat/succ-circuit04.defs.smt2,945603,SLSAT,1137,quiet,1901,complete,1.03384,1.03729,sat,sat
+21854198,UDB_sat/inconsistent-ls-of-ls.defs.smt2,945604,SLSAT,1137,quiet,1901,complete,0.004998,0.0153211,unsat,unsat
+21854199,UDB_sat/succ-rec15.defs.smt2,945605,SLSAT,1137,quiet,1901,timeout (cpu),2400.04,2399.51,starexec-unknown,sat
+21854200,UDB_sat/succ-circuit20.defs.smt2,945606,SLSAT,1137,quiet,1901,memout,531.1,531.013,starexec-unknown,sat
+21854201,UDB_sat/succ-circuit05.defs.smt2,945607,SLSAT,1137,quiet,1901,complete,37.1584,37.1543,sat,sat
+21854202,UDB_sat/abduced13.defs.smt2,945608,SLSAT,1137,quiet,1901,complete,0.005998,0.00926606,sat,sat
+21854203,UDB_sat/succ-rec18.defs.smt2,945609,SLSAT,1137,quiet,1901,timeout (cpu),2400.1,2399.61,starexec-unknown,sat
+21854204,UDB_sat/succ-rec14.defs.smt2,945610,SLSAT,1137,quiet,1901,timeout (cpu),2400.03,2399.02,starexec-unknown,sat
+21854205,UDB_sat/abduced16.defs.smt2,945611,SLSAT,1137,quiet,1901,complete,0.005998,0.0135071,sat,sat
+21854206,UDB_sat/succ-rec05.defs.smt2,945612,SLSAT,1137,quiet,1901,complete,0.153975,0.164458,sat,sat
+21854207,UDB_sat/succ-rec01.defs.smt2,945613,SLSAT,1137,quiet,1901,complete,0.005998,0.00848103,sat,sat
