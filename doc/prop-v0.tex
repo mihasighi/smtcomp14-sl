@@ -1,0 +1,606 @@
+\documentclass{llncs}
+
+%% Macros standard
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{stmaryrd}
+\usepackage{enumerate}
+
+%% Figures
+\usepackage{graphicx}
+\usepackage{tikz}
+\usetikzlibrary{positioning,shapes,shadows,arrows}
+\usetikzlibrary{decorations.pathmorphing,snakes}
+\usepackage{tkz-graph}
+\usepackage{wrapfig}
+
+%% Hyperlinked references
+\usepackage{hyperref}
+
+%% Notes and comments
+\usepackage{todonotes}
+
+\newcommand\todoin[2][]{\todo[inline, caption={2do}, #1]{
+\begin{minipage}{\textwidth-4pt}#2\end{minipage}}}
+
+\newcounter{mycomment}
+\newcommand{\mycomment}[2][]{%
+% initials of the author (optional) + note in the margin
+\refstepcounter{mycomment}%
+{%
+%\setstretch{0.7}% spacing
+\todo[color={red!100!green!33},size=\small]{%
+\textbf{Comment [\uppercase{#1}\themycomment]:}~#2}%
+}}
+
+
+%% Local macros
+\newcommand{\sep}{.\,}
+\newcommand{\limp}{\Rightarrow}
+\newcommand{\posep}{*}
+\newcommand{\points}{\mapsto}
+
+\newcommand{\vars}{\mathit{Vars}}
+\newcommand{\lvars}{\mathit{LVars}}
+\newcommand{\dvars}{\mathit{DVars}}
+\newcommand{\rtypes}{\mathcal{R}}
+\newcommand{\pfields}{\mathbb{F}}
+\newcommand{\preds}{\mathbb{P}}
+\newcommand{\loc}{\mathit{Loc}}
+\newcommand{\vals}{\mathit{Val}}
+\newcommand{\model}[1]{\left[\!\left[#1\right]\!\right]}
+
+\newcommand{\cdr}{\mathtt{tl}}
+\newcommand{\lemp}{\mathit{lemp}}
+\newcommand{\nil}{\mathtt{nil}}
+
+\newcommand{\ls}{\mathtt{ls}}
+\newcommand{\dll}{\mathtt{dll}}
+\newcommand{\nll}{\mathtt{nll}}
+\newcommand{\nlcdl}{\mathtt{nlcdl}}
+\newcommand{\nlcl}{\mathtt{nlcl}}
+\newcommand{\ndll}{\mathtt{ndll}}
+\newcommand{\skl}{\mathtt{skl}}
+
+
+\newcommand{\sllsat}{\texttt{sll}($\models$)}
+\newcommand{\sllent}{\texttt{sll}($\limp$)}
+\newcommand{\FDBent}{\texttt{FDB}($\limp$)}
+\newcommand{\UDBsat}{\texttt{UDB}($\models$)}
+\newcommand{\UDBent}{\texttt{UDB}($\limp$)}
+
+\newcommand{\ASTERIX}{\textsc{Asterix}}
+\newcommand{\CYCLIST}{\textsc{Cyclist-SL}}
+\newcommand{\SLEEK}{\textsc{Sleek}}
+\newcommand{\SLIDE}{\textsc{Slide}}
+\newcommand{\SLSAT}{\textsc{SlSat}}
+\newcommand{\SPEN}{\textsc{Spen}}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Title
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\title{A Proposal for a Theory of Separation Logic Theory in SMT-LIB}
+\author{SMT-LIB\,4\,SL Working Group}
+\institute{Draft of \today}
+\date{Draft of \today}
+
+
+\begin{document}
+
+\sloppy
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Title
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\maketitle
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{abstract}
+Dynamic data structures are used in most programs. 
+Separation Logic is an established Hoare logic for imperative, heap-manipulating programs.
+The program analysis tools dealing with programs annotated with Separation Logic specifications need to decide verification conditions over Separation Logic formulas.
+We propose a new theory for the SMT-Lib standard as the standard format for such formulae.
+\end{abstract}
+
+
+\keywords{Separation Logic, SMT-LIB, SAT Modulo Theory}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Motivation}
+
+Separation Logic (SL) is an established and fairly popular Hoare logic 
+for imperative, heap-manipulating programs, 
+introduced nearly fifteen years ago by Reynolds~\cite{Reynolds99,OHearnRY01,Reynolds02}. 
+%
+Its high expressivity, its ability to generate compact proofs, and 
+its support for local reasoning 
+motivated the development of tools for automatic reasoning about programs using SL.
+For a rather exhaustive list of the past and present tools, see the web site~\cite{OHearn-SLsite}.
+
+These tools seek to establish memory safety properties and/or infer shape properties of the heap at a scale of millions of lines of code.
+They intensively use (semi-)decision procedures for checking satisfiability and entailment problems in SL.
+In the last five years, several papers reported on the design and implementation of such (semi-)decision procedures and compared publicly available tools.
+Moreover, the first competition of SL solvers, SL-COMP'14~\cite{SLCOMP14site}, has been held in 2014 as an ``off'' (unofficial) event \footnote{That is, the competition was executed in conjunction with the games by the SMT-COMP organizing committee, SMT-COMP being an official participant in the games; the results of SL-COMP 2014 were reported at the SMT-2014 workshop at FLoC; however, SL-COMP 2014 was organized too late and was too experimental to be an official part of the FLoC Olympic Games.}
+%% trial section?
+associated with the SMT-COMP 2014 competition~\cite{SMTCOMPsite}, at the FLoC Olympic Games.
+
+The benchmarks of SL-COMP'14 were collected in the input format submitted by the participants.
+This set of problems was translated into a common format designed like a theory of the SMT-LIB format\footnote{\url{www.smtlib.org}}. That is, they used the syntax of SMT-LIBv2, although the SL theory underlying the syntax is not an official SMT-LIB theory or, at this point, even compatible with the theory underlying SMT-LIB.
+This format is presented and commented in this document (Section~\ref{sec:sl14}).
+
+The standardisation of formats in logic has played a major role in accelerating research in the past. We think that having a standard format for SL will have a similar effect.
+For this reason, we propose a way to integrate an SL theory in the SMT-LIB format.
+The rationale for the choice of SMT-LIB as background format is 
+that SL is combined with or translated into first-order theories that are or will be supported by the SMT-LIB format, e.g.,~\cite{ChinDNQ12}.
+Moreover, most of the verification tools are based on a multi-sorted version of SL with inductively defined predicates. SMT-LIB is multi-sorted and allows the definition of recursive predicates (in version 2.5).
+
+\todoin{
+TODO: Discuss FO constraint of SMT-LIB. \\
+TODO: Discuss pro and cons for using the set theory and reachability constraints.
+}{}
+
+
+This document is structured as follows. 
+Section~\ref{sec:sl} presents the abstract syntax and the semantics of a fragment of Separation Logic that is standardized by the new SMT-LIB theory.
+The theory used for SL-COMP'14 is presented in Section~\ref{sec:sl14}; we also discuss its advantages and drawbacks.
+Finally, Section~\ref{sec:sl-v0} proposes a new theory for SL and  provides some examples.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{The Target Theory}
+\label{sec:sl}
+
+The program analysis tools based on SL use different fragments or extensions of this logic. However, most of these fragments have as common factor for the specification of the heap  
+the \emph{symbolic heaps} fragment, also known as 
+the Separation Logic with Recursive Definitions (SLRD)~\cite{IosifRS13} or
+the positive flat SL fragment~\cite{AntonopoulosGHKO14}. 
+In the following, we call this fragment SLRD.
+
+The fragment specifies configurations of programs manipulating variables that are references to record types. 
+The records are defined by the user as a set of fields typed as reference or data.
+Such configurations are modeled by
+(i) a heap that is a set of records and
+(ii) a stack that maps program variables to record addresses.
+When the program and the record types include variables resp. fields in some numerical domain, the model is extended to represent such data.
+
+The SLRD fragment includes four atoms to specify the heap, also called \emph{spatial atoms}:
+(i) the empty heap, 
+(ii) any heap (unspecified),
+(iii) a heap consisting of one allocated record, and
+(iv) an unbounded heap segment corresponding to a data structure whose shape is defined inductively using a \emph{recursive definition}. 
+Examples of such recursive definitions are provided in Table~\ref{tab:RD}.
+These atoms are connected via a separating conjunction primitive $\posep$. 
+Only the existential quantification is allowed and 
+the use of disjunction and negation is restricted.
+
+When data fields and variables are used in the program, the recursive definitions are extended with data parameters or collections (sets, multisets) over such data.
+The data parameters are constrained inside the recursive definitions using a catamorphic schema~\cite{SuterDK10}.
+
+An important feature of this fragment is its \emph{flatness}: a formula has the following form:\mycomment[MS]{DNF}
+$$
+\bigvee_i \exists\vec{X}_i\sep \Sigma_i \land \Pi_i \land \Delta_i
+$$
+where the disjuncts are built from a 
+the \emph{spatial part} $\Sigma_i$, combining by $\posep$ the spatial atoms, 
+the \emph{pure part} $\Pi_i$, built as a conjunction of equalities and diséqualities between reference variables, and the data constraints $\Delta_i$.
+This flat form is not mandatory, but it usually facilitates the decision procedures.
+\mycomment[MS]{Give examples of translation to flat form.}
+
+%%develop by showing that this is enough for tools that deal with disjunction 
+%%in an incomplete manner?
+
+%%%%%%%%%%
+\paragraph{Syntax:}
+More formally, the syntax of formulas in the SLRD fragment of Separation Logic
+is given by the following grammar: \mycomment[MS]{Add loop?}
+$$
+\begin{array}{c}
+\begin{array}{ll}
+f \in \pfields \mbox{ field names} ~&~
+P \in \preds \mbox{ recursive definition name}
+\\[0.8mm]
+x,y \in \vars \mbox{ reference program vars} ~&~
+X,Y \in \lvars \mbox{ reference logical vars}
+\\[0.8mm]
+d,D \in \dvars \mbox{ data variables}  ~&~
+\Delta \mbox{ data constraints}
+\end{array}
+\\[2mm]
+%
+%
+E,F\ ::=\ x \mid X 
+\hfill \mbox{reference variables}
+\\[1mm]
+\rho\ ::=\ \{ (f,E) \} \mid \{ (f,D) \} \mid \rho\cup\rho 
+\hfill \mbox{set of field references}
+\\[2mm]
+%
+% pure part
+\Pi\ ::=\ E = F \mid E \neq F \mid \Pi \land \Pi \hfill 
+\mbox{pure formulas}\\[1mm]
+%
+% spatial part
+\Sigma\ ::=\
+\mathit{emp} \mid \mathit{junk} \mid 
+E \points \rho \mid 
+P(\vec{E},\vec{D}) \mid
+\Sigma \posep \Sigma 
+%
+\hspace{1cm}\hfill \mbox{spatial formulas}
+\\[2mm]
+A,B\ \triangleq\ \exists \vec{X},\vec{D}\sep \Pi\land\Sigma\land\Delta \hfill \mbox{formulas} %
+\end{array}
+$$
+The program variable $\nil\in\vars$ has a fixed meaning representing an undefined (not allocated) reference.
+
+The fragment is parameterized by a set $\preds$ of
+\emph{recursive definitions} defined using the following syntax:
+
+\begin{equation}\label{eq:RD}
+P(\vec{E},\vec{D}) \triangleq \bigvee_i \exists \vec{X}_i,\vec{D}_i\sep \Pi_i \land \Sigma_i \land \Delta_i
+\end{equation}
+
+\noindent where the spatial formulas $\Sigma_i$ may call $P$ or other predicates from $\preds$.
+Table~\ref{tab:RD} gives several common examples of recursive data structures (without data constraints) definable using the syntax above. 
+\mycomment[MS]{Defs with data constraints.}
+
+
+\begin{table}
+\begin{eqnarray}
+%
+\lefteqn{\textit{singly linked lists}} \nonumber \\
+\ls(E,F) & \triangleq & (E=F\land\mathit{emp}) \lor (E\neq F \land 
+\exists X\sep E\points\{(f,X)\}\posep \ls(X,F)) 
+\\[1mm]
+%  
+\lefteqn{\textit{nested linked lists}} \nonumber \\ 
+\nll(E,F,B) & \triangleq & (E=F\land\mathit{emp}) \lor (E\neq \{F,B\} \land \\
+&& \exists X,Z\sep E\points\{(s,X),(h,Z)\}\posep \ls(Z,B) \posep\nll(X,F,B)) \nonumber
+\\[1mm]
+%  
+\lefteqn{\textit{doubly linked lists}} \nonumber \\ 
+\dll(E, L, P, F) & \triangleq & (E=F\land L=P\land \mathit{emp}) \lor \big( E\neq F \land L\neq P \land \\
+&& \exists X\sep E\points \{(n,X),(p,P)\} \posep\ \dll(X,L,E,F)\ \big)\nonumber
+\\[1mm]
+%  
+\lefteqn{\textit{binary tree}} \nonumber \\ 
+\mathtt{btree}(E) & \triangleq & (E=\nil\land \mathit{emp}) \lor \big( E\neq \nil \land 
+\\
+&& \exists X,Y\sep E\points \{(r,X),(l,Y)\} \posep \mathtt{btree}(X) \posep \mathtt{btree}(X)\big)
+\nonumber 
+\\[1mm]
+%  
+\lefteqn{\textit{tree with linked leaves}} \nonumber \\ 
+\mathtt{tll}(R,P,E,F) & \triangleq & (R=E \land R\points \{(l,\nil),(r,\nil),(p,P),(n,F)\}) \\
+&& \lor~\big( R\neq E \land \exists X,Y,Z\sep 
+\begin{array}[t]{l}
+R\points \{(l,X),(r,Y),(p,P),(n,Z)\} \ \posep \\
+\mathtt{tll}(X,R,E,Z) \posep \mathtt{tll}(Y,R,Z,F)\big)
+\end{array} \nonumber  
+\end{eqnarray}
+
+\caption{Examples of recursive definitions used in the benchmark}
+\label{tab:RD}
+
+\end{table}
+
+%%%%%%%%%%
+\paragraph{Semantics:}
+Let $\loc$ be a set of locations and $\vals$ a set of data values.
+A stack $S : (\vars\cup\lvars\rightarrow \loc) \cup (\dvars\rightarrow\vals)$ maps
+reference variables to locations and data variables to values. 
+A heap $H:\loc\times\pfields\rightharpoonup\loc\cup\vals$ is a partial
+function that defines values of fields for some of the locations in $\loc$.
+%
+The domain of $H$ is denoted by $\mathit{dom}(H)$ and
+the set of locations in the domain of $H$ is denoted by $\mathit{ldom}(H)$.  
+As expected, $\nil$ is interpreted to a location $S(\nil)\not\in \mathit{ldom}(H)$.
+
+The set of configurations satisfying a formula $\varphi$ is defined by the relation
+$(S,H)\models \varphi$ defined in Table~\ref{tab:sem} ($\uplus$
+denotes the disjoint union of sets and $S[X\gets\ell]$ denotes the function
+$S'$ s.t.  $S'(X)=\ell$ and $S'(Y)=S(Y)$ for any $Y\neq X$).
+Note that a configuration $(S,H)$ satisfies a predicate atom 
+$P(\vec{E})$ if it belongs to the least fixed point of the set of recursive definitions $\preds$ for the actual parameters $\vec{E}$ of $P$.
+The set of models of a formula $\varphi$ is denoted by $\model{\varphi}$. Given two
+formulas $\varphi_1$ and $\varphi_2$, we say that $\varphi_1$ entails
+$\varphi_2$, denoted by $\varphi_1\limp\varphi_2$, iff
+$\model{\varphi_1}\subseteq \model{\varphi_2}$. 
+
+Notice that this semantics is a \emph{precise} semantics. It was chosen because it is the most used in tools and in the verification of concurrent programs.
+%%give more details on difference between intuitionistic/precise, 
+%%why precise? needed for concurrent program analysis
+
+
+
+\begin{table}
+\begin{center}
+%\begin{footnotesize}
+\begin{tabular}{lcl}
+$(S,H) \models E=F$ & iff &  $S(E)=S(F)$
+%, where $\model{x}_{S,I}= S(x)$ and $\model{X}_{S,I}= I(X)$ for $x \in \vars$,
+% $X \in \lvars$
+\\[.5mm]
+$(S,H) \models E\ne F$ & iff &  $S(E)\neq S(F)$ \\[.5mm]$(S,H) \models \varphi\land\psi$ & iff &  $(S,H) \models \varphi$ and $(S,H) \models \psi$ 
+\\[.5mm]
+$(S,H) \models \mathit{emp}$ & iff & $\mathit{dom}(H)=\emptyset$
+\\[.5mm]
+$(S,H) \models \mathit{junk}$ &  & always
+\\[.5mm]
+$(S,H) \models E\points \{\rho\}$ & iff &
+  $\mathit{dom}(H)=\{(S(E),f_i)\mid (f_i,E_i)\in \{ \rho \} \}$ and\\[.5mm]
+  & & for every $(f_i,E_i)\in \{ \rho \}$, $H(S(E),f_i)=S(E_i)$
+\\[.5mm]
+%%MS: per-object separation of formulas
+$(S,H) \models \Sigma_1\posep\Sigma_2$ & iff & $\exists H_1,H_2$ s.t.
+  $\mathit{ldom}(H)=\mathit{ldom}(H_1)\uplus\mathit{ldom}(H_2)$,\\[.5mm]
+  & & $(S,H_1)\models\Sigma_1$, and $(S,H_2)\models\Sigma_2$
+\\[.5mm]
+%preds
+$(S,H) \models P(\vec{E})$ & iff &
+$(S,H)\in \model{\preds}(P(\vec{E}))$
+\\[.5mm]
+$(S,H) \models \exists X\sep\varphi$ & iff & there exists $\ell\in\loc$ s.t. $(S[X\gets\ell],H)\models \varphi$
+\end{tabular}
+%\end{footnotesize}
+\end{center}
+\caption{Semantics of the Separation Logic fragment}
+\label{tab:sem}
+
+\end{table}
+
+
+
+%%%%%%%%%%%
+\paragraph{Decidability and complexity properties:}
+\mycomment[MS]{Usually not commented in SMT-LIB theories.}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{The Theory at SL-COMP'14}
+\label{sec:sl14}
+
+The theory defined for SL-COMP'14 considers only the fragment of SLRD without data.
+
+%-------------------------------------------------
+\paragraph{Name for the theory:} The name \texttt{QF\_S} has been used for the 2014 edition.
+It shall be reconsidered in the presence of a SMT-LIB theory of sets.
+
+%-------------------------------------------------
+\paragraph{Records:} The user has to declare the sorts corresponding to types \emph{reference to record}. 
+For example, consider the following C code defining a binary tree type:
+\begin{verbatim}
+typedef struct btree_s {
+  struct btree_s* lson;
+  struct btree_s* rson;
+  }* btree_t;
+\end{verbatim}
+The sort for this type is declared as follows:
+\begin{verbatim}
+(declare-sort Btree_t () 0)
+\end{verbatim}
+
+The SL theory defines the sort \texttt{Void} to denote the reference to any user record.
+
+\begin{remark}\label{rem:sort-ref}
+A solution that follows closely the C definition is   
+(i) to consider that user declared sorts correspond to record types, and
+(ii) to define a parameterized sort in the theory corresponding to a reference type, e.g.:
+\begin{verbatim}
+(declare-sort Ref () 1)
+\end{verbatim}
+This solution requires to use the \texttt{Ref} in most places where record sorts appear.
+\end{remark}
+
+
+%-------------------------------------------------
+\paragraph{Fields:} The set of field names, $\pfields$, is defined using the \texttt{Field} sort of arity 2 defined in the theory.
+Each field is declared as a function symbol of arity 0 and result type \texttt{Field A B} where \texttt{A} is the sort corresponding to the record type declaring the field and 
+\texttt{B} is the sort typing the field.
+For example, the following code declares the fields of a binary tree with an integer field \texttt{data}:
+\begin{verbatim}
+(declare-fun lson () (Field Btree_t Btree_t))
+(declare-fun rson () (Field Btree_t Btree_t))
+(declare-fun data () (Field Btree_t Int))
+\end{verbatim}
+
+
+%-------------------------------------------------
+\paragraph{Variables:} The set of reference variables (program or existentially quantified) are declared in a classic way.
+For example:
+\begin{verbatim}
+(declare-fun root () Btree_t)
+\end{verbatim}
+declares the variable \texttt{root} to be a reference to a binary tree.
+
+The theory declares \texttt{nil} to be a special variable typed by the \texttt{Void} sort.
+
+%-------------------------------------------------
+\paragraph{Flat formulas:}
+The flatness of formulas is not ensured by the 2014 format. 
+The format discourages the nesting of spatial and pure formulas by requiring heavy type casting.
+Indeed, the spatial atoms are typed in the theory by the \texttt{Space} sort (arity 0) and their combination with a pure (boolean) formula requires to cast \texttt{Space} to \texttt{Bool}.
+The space atoms are built using the following theory operators:
+
+\medskip
+\noindent
+\begin{tabular}{l@{\hskip 4mm}l@{\hskip 4mm}p{5cm}}
+Abstr. syntax & SMT-LIB notation & SMT-LIB typing
+\\\hline
+$\mathit{emp}$ & \texttt{emp} & \texttt{Space} 
+\\
+$\mathit{junk}$ & \texttt{junk} & \texttt{Space} 
+\\
+$\Sigma_1\posep\ldots\posep\Sigma_n$ & 
+\texttt{(ssep $\langle\mathit{form}\rangle^+$ )} & 
+\texttt{(Space$^+$ Space)} % :left-assoc)} 
+\\
+$E \points \rho$ & 
+\texttt{(pto $\langle\mathit{var}\rangle$ $\rho$)} &
+\texttt{(par (A) (pto A (SetRef A) Space)} % :left-assoc))}
+\\
+none & 
+\texttt{(tobool $\langle\mathit{form}\rangle$ $\langle\mathit{form}\rangle$)} &
+\texttt{(Space Bool)}
+\\
+none & 
+\texttt{(tospace $\langle\mathit{form}\rangle$ $\langle\mathit{form}\rangle$)} &
+\texttt{(Bool Space)}
+\\
+$\{(f,E)\}$ & 
+\texttt{(ref $\langle$f$\rangle$ $\langle\mathit{var}\rangle$)} &
+\texttt{(par (A B) (ref (Field A B) B (SetRef A)))}
+\\
+$\rho\cup\rho$ &
+\texttt{(sref $\langle\rho\rangle^+$)} &
+\texttt{(par (A) (sref (SetRef A) (SetRef A) (SetRef A))} %:left-assoc))
+\end{tabular}
+
+For example, the following SLRD formula: 
+\begin{equation}\label{eq:ex1}
+X\points\{(lson,Y),(rson,Z)\} \land X\neq Y
+\end{equation}
+is encoded in the SL theory in SMT-LIB as follows:
+\begin{verbatim}
+(and (tobool (pto (sref (ref lson Y) (ref rson Z))))
+     (distinct X Y)
+)
+\end{verbatim}
+
+\begin{remark}\label{rem:tobool}
+A solution to simplify the syntax is to replace the \texttt{Space} sort by the \texttt{Bool} sort in the above typing.
+This solution eliminates the cast operators \texttt{tobool} and \texttt{tospace}.
+The flatness of formulas could be then ensured by some transformations or by (sound) syntactic checks.
+\end{remark}
+
+
+%-------------------------------------------------
+\paragraph{Recursive definitions:}
+These definitions are introduced by the \texttt{define-fun-rec} operator.
+
+\begin{remark}\label{rem:def-rec}
+The version 2.0 of SMT-LIB forbids the recursive calls in the term defining a function 
+(\texttt{efine-fun}). 
+The new version allows recursive calls introduced by \texttt{define-fun-rec} which defines a set of (mutually recursive) functions.
+\end{remark}
+
+Because recursive definitions are spatial atoms, their result type shall be \texttt{Space}. 
+The syntax of such definitions looks heavy because conversions are needed between space and boolean formula to be able to use the built-in boolean operators in SMT-LIB (exists, and, or).
+For example, the binary tree definition from Table~\ref{tab:RD} is encoded as follows:
+\begin{verbatim}
+(define-fun btree ((?root Btree_t)) Space (tospace 
+   (or (and (= ?root nil) (tobool emp))
+       (exists ((?X Btree_t) (?Y Btree_t)) 
+          (and (distinct ?root nil) 
+               (tobool (ssep (pto ?root (sref (ref lson ?Y) (ref rson ?Z)))
+                             (btree ?X) (btree ?Y)
+       ))))
+)))
+\end{verbatim}
+
+\begin{remark}\label{rem:def-rec-bool}
+If the \texttt{Space} sort is eliminated, the recursive definitions are typed as boolean predicates. The definition above becomes:
+\begin{verbatim}
+(define-fun-rec btree ((?root Btree_t)) Bool
+   (or (and (= ?root nil) emp)
+       (exists ((?X Btree_t) (?Y Btree_t))
+          (and (distinct ?root nil)  
+               (ssep (pto ?root (sref (ref lson ?Y) (ref rson ?Z)))
+                     (btree ?X) (btree ?Y)
+       )))
+))
+\end{verbatim}
+Notice the absence of two `\texttt{)}'!
+\end{remark}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Proposal for a Simplified Theory}
+\label{sec:sl-v0}
+
+This section defines an SMT-LIB theory for SLRD which changes as follows the SL-COMP'14 format:
+\begin{itemize}
+\item The unary sort \texttt{Ref} is introduced for reference types (cf. Remark~\ref{rem:sort-ref}).
+\item The sort \texttt{Space} is removed from the theory (cf. Remark~\ref{rem:tobool}).
+\end{itemize}
+
+
+%-------------------------------------------------
+\paragraph{Records:} The user has to declare the sorts corresponding to \emph{record} types.
+Then, a sort encoding a reference to record type is declared using the \texttt{Ref} sort.
+For example, the declaration of a binary tree variable is given by:
+\begin{verbatim}
+(declare-sort Btree_s () 0)
+(declare-fun root () (Ref Btree_s))
+\end{verbatim}
+
+The theory keeps the sort \texttt{Void} to denote the reference to any user record.
+
+
+%-------------------------------------------------
+\paragraph{Fields:} The set of field names, $\pfields$, is defined using the \texttt{Field} sort of arity 2.
+A field is declared as a 0-arity function of result typed by \texttt{Field A B} because \texttt{A} and \texttt{B} will be some \texttt{(Ref R)}.\mycomment[MS]{Impact on pto?}
+%
+For example:
+\begin{verbatim}
+(declare-fun lson () (Field (Ref Btree_s) (Ref Btree_s)))
+(declare-fun rson () (Field (Ref Btree_s) (Ref Btree_s)))
+(declare-fun data () (Field (Ref Btree_s) Int))
+\end{verbatim}
+
+
+%-------------------------------------------------
+\paragraph{Variables:} The set of reference variable are declared as before but the type is always \texttt{(Ref A)} where \texttt{A} is some sort.
+
+
+%-------------------------------------------------
+\paragraph{Flat formulas:}
+Formulas are typed by \texttt{Bool}. The following operators are proposed:
+
+
+\medskip
+\noindent
+\begin{tabular}{l@{\hskip 4mm}l@{\hskip 4mm}p{6cm}}
+Abstr. syntax & SMT-LIB notation & SMT-LIB typing
+\\\hline
+$\mathit{emp}$ & \texttt{emp} & \texttt{Bool} 
+\\
+$\mathit{junk}$ & \texttt{junk} & \texttt{Bool} 
+\\
+$\Sigma_1\posep\ldots\posep\Sigma_n$ & 
+\texttt{(ssep $\langle\mathit{form}\rangle^+$ )} & 
+\texttt{(Bool$^+$ Bool)} % :left-assoc)} 
+\\
+$E \points \rho$ & 
+\texttt{(pto $\langle\mathit{var}\rangle$ $\rho$)} &
+\texttt{(par (A) (pto A (SetRef A) Bool)} % :left-assoc))}
+\\
+$\{(f,E)\}$ & 
+\texttt{(ref $\langle$f$\rangle$ $\langle\mathit{var}\rangle$)} &
+\texttt{(par (A B) (ref (Field A B) B (SetRef A)))}
+\\
+$\rho\cup\rho$ &
+\texttt{(sref $\langle\rho\rangle^+$)} &
+\texttt{(par (A) (sref (SetRef A) (SetRef A) (SetRef A))} %:left-assoc))
+\end{tabular}
+
+For example, the formula~(\ref{eq:ex1}) is encoded as follows:
+\begin{verbatim}
+(and (pto (sref (ref lson Y) (ref rson Z)))
+     (distinct X Y)
+)
+\end{verbatim}
+
+
+\todoin{
+TODO: discuss extension with a data theory.
+}{}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\bibliographystyle{plain}
+\bibliography{bibliography}
+
+\end{document}
