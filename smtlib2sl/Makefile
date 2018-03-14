@@ -22,12 +22,12 @@ LDFLAGS = -L$(SMTLIB2_PREFIX) \
 CCINC = sl_vector.h sl_util.h \
 	sl_type.h sl_var.h sl_pred.h sl_form.h sl_prob.h \
 	sl.h smtlib2sl.h \
-	sl_prob2cyclist.h sl_prob2sleek.h sl_prob2slp.h sl_prob2slide.h sl_prob2spen.h
+	sl_prob2cyclist.h sl_prob2sleek.h sl_prob2slp.h sl_prob2sl.h sl_prob2slide.h sl_prob2spen.h
 
 CCSRC = sl_util.c \
 	sl_type.c sl_var.c sl_pred.c sl_form.c sl_prob.c \
 	sl.c smtlib2sl.c \
-	sl_prob2cyclist.c sl_prob2sleek.c  sl_prob2slp.c sl_prob2slide.c sl_prob2spen.c \
+	sl_prob2cyclist.c sl_prob2sleek.c  sl_prob2slp.c sl_prob2sl.c sl_prob2slide.c sl_prob2spen.c \
  	smtlib2sl_compile.c
 
 #---------------------------------------

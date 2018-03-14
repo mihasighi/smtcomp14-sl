@@ -534,8 +534,7 @@ sl_assert (sl_context_t * ctx, sl_exp_t * term)
 int
 sl_check (sl_context_t * ctx)
 {
-  if ((ctx == ctx) && /* To avoid warning */
-      (sl_error_parsing > 0))
+  if (sl_error_parsing > 0)
     {
       //assert (sl_prob->smt_fname != NULL);
       sl_error (0, "sl_check", "stop check because of parsing error");
@@ -615,7 +614,7 @@ sl_pop_quant (sl_context_t * ctx)
   if (sl_vector_size (ctx->lvar_stack) == 3)
     {
       uint_t nb_exists = sl_vector_last (ctx->lvar_stack);
-      for (uint i = 0; i < nb_exists; i++)
+      for (uint_t i = 0; i < nb_exists; i++)
 	sl_var_array_pop (ctx->lvar_env);
     }
   sl_uint_array_pop (ctx->lvar_stack);
