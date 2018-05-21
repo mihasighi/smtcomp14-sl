@@ -8,12 +8,12 @@ is included in the following directories:
 * sll0a_entl : all problems belong to division sll0a_entl
 * sll0a_sat  : all problems belong to division sll0a_sat
 * slrd_entl  : problems belong to divisions FDB_entl and UDB_entl 
-		- FDB_entl : 46 problems
+- FDB_entl : 46 problems
 			dll-vc??.smt2, 
 			lss-vc??.smt2, 
 			nll-vc??.smt2, 
 			skl?-vc??.smt2
-		- UDB_entl : 136 problems
+- UDB_entl : 136 problems
 			??.tst.smt2, 
 			append_*.smt2, 
 			dll-*.smt2, 
