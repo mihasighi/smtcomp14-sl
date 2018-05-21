@@ -17,7 +17,6 @@
 
 ;generic fields
 (declare-fun f0 () (Field GTyp GTyp))
-(declare-fun f1 () (Field GTyp GTyp))
 
 
 
