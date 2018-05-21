@@ -4,7 +4,7 @@ Benchmarks for SL-COMP 2014
 
 The set of problems used for SL-COMP 2014 
 has been divided in the following divisions
-(see also file ../divisions.html)
+(see also Wiki and file ../divisions.html)
 * sll0a_sat  : satisfiability problems for symbolic heaps with list segment predicate
 * sll0a_entl : entailment problems for symbolic heaps with list segment predicate
 * FDB_entl   : entailment problems for symbolic heaps with composed lists
