@@ -79,7 +79,7 @@ print_help (void)
 {
   printf
     ("smtlib2sl_compile: compiling SMTLIB v2 format for Separation Logic\n");
-  printf ("Usage: smtlib2sl_compile [-cyclist|-sleek|-slide|-slp|-sl] <file>\n");
+  printf ("Usage: smtlib2sl_compile [-cyclist|-sleek|-slide|-slp|-sl|-spen] <file>\n");
   printf ("\t<file>: input file in the SMTLIB v2 format for QF_S\n");
 }
 
