@@ -1,8 +1,8 @@
-#SL-COMP 2014#
+# SL-COMP 2014 #
 
 **IMPORTANT: this project has been forked to https://github.com/sl-comp/SL-COMP14**
 
-Benchmark and tools for the theory of Separation Logic (QF_S) at SMTCOMP 2014
+Benchmark and tools for SL-COMP 2014, the competition of solvers for the theory of Separation Logic (`QF_S` at SMT-COMP 2014)
 
 * _bench_ : set of problems used split in divisions
 * _divisions.html_ : description of divisions with the participating solvers
