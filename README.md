@@ -12,7 +12,7 @@ SL-COMP is a competition of solvers for the theory of Separation Logic
 
 * _bench_ : set of problems used split in divisions
 * _divisions.html_ : description of divisions with the participating solvers
-* _doc_ : a posteriori paper on the event
+* _doc_ : archive of cfp, web sites, and the JSAT paper on the event
 * _input_ : input format description and SMT-lib definition
 * _smtlib2parser-1.4_ : parser for the SMT-lib format 
 * _smtlib2sl_ : translators from the input format of the competition to input
