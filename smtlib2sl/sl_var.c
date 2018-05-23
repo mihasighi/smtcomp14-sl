@@ -134,7 +134,7 @@ sl_var_record (sl_var_array * a, uid_t vid)
 
   if (vid == VNIL_ID)
     return SL_TYP_VOID;
-  if (vid != VNIL_ID && vid >= sl_vector_size (a))
+  if (vid >= sl_vector_size (a))
     {
       if (vid >= sl_vector_capacity (a))
 	{

@@ -1,5 +1,4 @@
-SL-COMP 2014
-============
+#SL-COMP 2014#
 
 **IMPORTANT: this project has been forked to https://github.com/sl-comp/SL-COMP14**
 

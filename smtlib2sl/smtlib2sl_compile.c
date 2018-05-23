@@ -62,7 +62,7 @@ sl_set_option (char *option)
     sl_compile[SL_FORMAT_SLIDE] = true;
   else if (0 == strcmp (option, "-slp"))
     sl_compile[SL_FORMAT_SLP] = true;
-  else if (0 == strcmp (option, "-sl2"))
+  else if (0 == strcmp (option, "-sl18"))
     sl_compile[SL_FORMAT_SL2] = true;
   else if (0 == strcmp (option, "-spen"))
     sl_compile[SL_FORMAT_SPEN] = true;
@@ -79,7 +79,7 @@ print_help (void)
 {
   printf
     ("smtlib2sl_compile: compiling SMTLIB v2 format for Separation Logic\n");
-  printf ("Usage: smtlib2sl_compile [-cyclist|-sleek|-slide|-slp|-sl|-spen] <file>\n");
+  printf ("Usage: smtlib2sl_compile [-cyclist|-sleek|-slide|-slp|-sl18|-spen] <file>\n");
   printf ("\t<file>: input file in the SMTLIB v2 format for QF_S\n");
 }
 
