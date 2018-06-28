@@ -1,0 +1,15 @@
+#!/bin/bash
+
+# Tjark Weber
+# SMT-COMP 2014 post-processor for the application track
+
+set -e
+set -u
+
+if grep -qsw 'WRONG solver response: got' "$1"; then
+    echo "wrong-answers=1"
+else
+    echo "wrong-answers=0"
+fi
+
+echo correct-answers="$(sed 's/.*SOLVED \(.*\) PROBLEMS IN .* SECONDS/\1/;t;d' "$1")"
